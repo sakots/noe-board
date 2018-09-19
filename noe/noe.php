@@ -1,22 +1,32 @@
 <?php
 //--------------------------------------------------
-//　おえかきけいじばん「noe-board」v0.0.1
+//　おえかきけいじばん「noe-board」v0.0.2
 //　by sakots https://sakots.red/
 //--------------------------------------------------
 
 //設定の読み込み
 require("config.php");
+require("template_ini.php");
 
 //Skinny 0.4.1
 include_once( "Skinny.php" );
 $out = array();
+$out["ver"] = "v0.0.2";
+
 $out["btitle"] = $btitle;
 $out["home"] = $home;
 $out["self"] = $self;
 $out["message"] = $message;
-$out["ver"] = "v0.0.1";
+$out["pdefw"] = $pdefw;
+$out["pdefh"] = $pdefh;
 
 //var_dump($_POST);
+
+//ログファイル名
+$logfile = "data.txt";
+
+$path = realpath("./").'/'.IMG_DIR;
+$temppath = realpath("./").'/'.TEMP_DIR;
 
 //スパム無効化関数
 function newstring($string) {
@@ -56,14 +66,14 @@ if (  isset($_POST["send"] ) ===  true ) {
 
 	if( $err_msg1 === "" && $err_msg2 ==="" ){
 		$str = $thtitle.",".$name.",".$comment."\n";
-		$file_name = "data.txt";
+		$file_name = $logfile;
 		addFirstRow($str, $file_name);
 		$out["message"] ="書き込みに成功しました。";
 	}
 
 }
 
-$fp = fopen("data.txt","r");
+$fp = fopen( $logfile,"r");
 
 while( $res = fgets( $fp)){
 	$tmp = explode(",",$res);
@@ -76,7 +86,7 @@ while( $res = fgets( $fp)){
 }
 fclose( $fp );
 
-$Skinny->SkinnyDisplay( $skinfile, $out );
+$Skinny->SkinnyDisplay( $mainfile, $out );
 exit;
 
 ?>
