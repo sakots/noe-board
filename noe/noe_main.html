@@ -5,7 +5,7 @@
 		<title><% echo (btitle) %></title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 		<link rel="stylesheet" href="noe_main.css" type="text/css">
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.6/css/all.css">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/css/lightbox.css">
 		<link rel="stylesheet" href="neo.css" type="text/css">
 		<script src="neo.js" charset="utf-8"></script>
@@ -17,9 +17,9 @@
 			<div>
 				<section>
 					<p class="top">
-						[<a href="<% echo (home) %>">ホーム</a>]
-						[<a href="<% echo (self) %>">リロード</a>]
-						[<a href="#footer">▼</a>]
+						<a href="<% echo (home) %>"><i class="fas fa-home fa-fw fa-lg" title="ホーム"></i></a>
+						<a href="<% echo (self) %>"><i class="fas fa-sync fa-fw fa-lg" title="リロード"></i></a>
+						<a href="#footer"><i class="fas fa-arrow-down fa-fw fa-lg" title="一番下へ"></i></a>
 					</p>
 				</section>
 				<section>
@@ -52,6 +52,7 @@
 					</form>
 				</section>
 			</div>
+			<hr>
 		</header>
 		<main>
 			<div>
