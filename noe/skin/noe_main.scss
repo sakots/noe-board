@@ -209,6 +209,9 @@ ul {
 		border: 1px solid $ushiro;
 	}
 }
+.ppost {
+	clear: left;
+}
 
 //以下レスポンシブ対応
 @media screen and (max-width: 1024px) {

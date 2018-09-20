@@ -74,16 +74,16 @@ select {
 	padding: 2px;
 }
 
-input[name="picw"], select[name="picw"], em.thispage[name="picw"], .se[name="picw"], input[name="pich"], select[name="pich"], em.thispage[name="pich"], .se[name="pich"], input[name="del[]"], select[name="del[]"], em.thispage[name="del[]"], .se[name="del[]"], input[name="pwd"], select[name="pwd"], em.thispage[name="pwd"], .se[name="pwd"] {
+input[name="picw"], select[name="picw"], em[name="picw"].thispage, [name="picw"].se, input[name="pich"], select[name="pich"], em[name="pich"].thispage, [name="pich"].se, input[name="del[]"], select[name="del[]"], em[name="del[]"].thispage, [name="del[]"].se, input[name="pwd"], select[name="pwd"], em[name="pwd"].thispage, [name="pwd"].se {
 	width: 3em;
 }
 
-input[type="submit"], select[type="submit"], em.thispage[type="submit"], .se[type="submit"], .button {
+input[type="submit"], select[type="submit"], em[type="submit"].thispage, [type="submit"].se, .button {
 	background-color: #396;
 	color: #FFF;
 }
 
-input[name="upfile"], select[name="upfile"], em.thispage[name="upfile"], .se[name="upfile"] {
+input[name="upfile"], select[name="upfile"], em[name="upfile"].thispage, [name="upfile"].se {
 	width: 10em;
 }
 
@@ -267,6 +267,10 @@ ul {
 	border: 1px solid #222;
 }
 
+.ppost {
+	clear: left;
+}
+
 @media screen and (max-width: 1024px) {
 	.res {
 		clear: left;
@@ -307,5 +311,3 @@ ul {
 		display: block;
 	}
 }
-
-/*# sourceMappingURL=noe_main.css.map */

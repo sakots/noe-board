@@ -10,6 +10,9 @@ $mainfile = "noe_main.html";
 //レスのテンプレートファイル
 $resfile = "noe_main.html";
 
+//お絵かき投稿テンプレートファイル
+$picpfile = "noe_picpost.html";
+
 //その他のテンプレートファイル
 $otherfile = "noe_other.html";
 
@@ -17,6 +20,6 @@ $otherfile = "noe_other.html";
 $paintfile = "noe_paint.html";
 
 //カタログのテンプレートファイル
-$catfile = "noe_catalog.html";
+//$catfile = "noe_catalog.html";
 
 ?>

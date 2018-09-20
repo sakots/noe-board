@@ -14,6 +14,8 @@ $def_name = "名無し";
 $def_thtitle = "無題";
 //本文が空のとき
 $def_comment = "本文なし";
+//スキンのディレクトリ
+$skindir = "./skin/";
 
 //お絵かきデフォルトサイズ縦
 $pdefh = "300";
@@ -23,6 +25,9 @@ $pdefw = "300";
 //画像保存ディレクトリ
 define('IMG_DIR', 'src/');
 
+//一時保存ディレクトリ
+define('TEMP_DIR', 'tmp/');
+
 //サムネイル保存ディレクトリ
 define('THUMB_DIR', 'thumb/');
 
@@ -30,6 +35,9 @@ define('THUMB_DIR', 'thumb/');
 //最小値は幅、高さともに 100 固定です
 define('PMAX_W', '600');	//幅
 define('PMAX_H', '800');	//高さ
+
+//ログファイル名
+$logfile = "data.txt";
 
 //ログ数
 $def_log = "300";
@@ -56,4 +64,21 @@ $err_msg16 = "";
 $err_msg17 = "";
 $err_msg18 = "";
 $err_msg19 = "";
+
+$out["btitle"] = $btitle;
+$out["home"] = $home;
+$out["self"] = $self;
+$out["message"] = $message;
+$out["pdefw"] = $pdefw;
+$out["pdefh"] = $pdefh;
+$out["skindir"] = $skindir;
+
+$out["picw"] = $_POST["picw"];
+$out["pich"] = $_POST["pich"];
+$out["w"] = $_POST["picw"] + 150;
+$out["h"] = $_POST["pich"] + 170;
+
+$path = realpath("./").'/'.IMG_DIR;
+$temppath = realpath("./").'/'.TEMP_DIR;
+
 ?>

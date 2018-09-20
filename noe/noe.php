@@ -1,32 +1,25 @@
 <?php
 //--------------------------------------------------
-//　おえかきけいじばん「noe-board」v0.0.2
+//　おえかきけいじばん「noe-board」v0.0.3
 //　by sakots https://sakots.red/
 //--------------------------------------------------
-
-//設定の読み込み
-require("config.php");
-require("template_ini.php");
 
 //Skinny 0.4.1
 include_once( "Skinny.php" );
 $out = array();
-$out["ver"] = "v0.0.2";
+$out["ver"] = "v0.0.3";
 
-$out["btitle"] = $btitle;
-$out["home"] = $home;
-$out["self"] = $self;
-$out["message"] = $message;
-$out["pdefw"] = $pdefw;
-$out["pdefh"] = $pdefh;
+//設定の読み込み
+require("config.php");
+require($skindir."template_ini.php");
+$mainfile = $skindir.$mainfile;
+$resfile = $skindir.$resfile;
+$picpfile = $skindir.$picpfile;
+$otherfile = $skindir.$otherfile;
+$paintfile = $skindir.$paintfile;
 
 //var_dump($_POST);
 
-//ログファイル名
-$logfile = "data.txt";
-
-$path = realpath("./").'/'.IMG_DIR;
-$temppath = realpath("./").'/'.TEMP_DIR;
 
 //スパム無効化関数
 function newstring($string) {
@@ -44,6 +37,7 @@ $message ="";
 $thtitle = ( isset( $_POST["thtitle"] ) === true ) ? newstring($_POST["thtitle"]): "";
 $name = ( isset( $_POST["name"] ) === true ) ? newstring($_POST["name"]): "";
 $comment = ( isset( $_POST["comment"] )  === true ) ? newstring(trim($_POST["comment"]))  : "";
+$picfile = newstring(trim($_POST["picfile"]));
 
 //投稿がある場合のみ処理を行う
 
@@ -65,7 +59,7 @@ if (  isset($_POST["send"] ) ===  true ) {
 	if ( $thtitle  === "" ) $thtitle  = $def_thtitle;
 
 	if( $err_msg1 === "" && $err_msg2 ==="" ){
-		$str = $thtitle.",".$name.",".$comment."\n";
+		$str = $thtitle.",".$name.",".$comment.",".$picfile.",\n";
 		$file_name = $logfile;
 		addFirstRow($str, $file_name);
 		$out["message"] ="書き込みに成功しました。";
@@ -80,7 +74,8 @@ while( $res = fgets( $fp)){
 	$arr = array(
 		"thtitle"=>$tmp[0],
 		"name"=>$tmp[1],
-		"comment"=>$tmp[2]
+		"comment"=>$tmp[2],
+		"picfile"=>$tmp[3]
 	);
 	$out["bbsline"][] = $arr;
 }

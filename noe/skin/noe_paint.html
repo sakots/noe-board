@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<meta charset="utf-8">
+		<title><% echo (btitle) %></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+		<link rel="stylesheet" href="<% echo (skindir) %>noe_main.css" type="text/css">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/css/lightbox.css">
+		<link rel="stylesheet" href="neo.css" type="text/css">
+		<script src="neo.js" charset="utf-8"></script>
+	</head>
+	<body id="paintmode">
+		<header>
+			<h1><% echo (btitle) %></h1>
+			<hr>
+			<section>
+				<p class="top menu">
+					<a href="<% echo (self) %>"><i class="fas fa-star fa-fw fa-lg" title="トップ"></i></a>
+					<a href="<% echo (home) %>" target="_top"><i class="fas fa-home fa-fw fa-lg" title="ホーム"></i></a>
+				</p>
+			</section>
+			<hr>
+			<h2 class="oekaki">OEKAKI MODE</h2>
+			<hr>
+			<div class="timeid">
+				<form class="watch" action="index.html" name="watch">
+					<p>
+						PaintTime :
+						<input type="text" size="24" name="count">
+					</p>
+					<script type="text/javascript">
+					<!--
+					timerID = 10;
+					stime = new Date();
+					function SetTimeCount() {
+						now = new Date();
+						s = Math.floor((now.getTime() - stime.getTime())/1000);
+						disp = '';
+						if(s >= 86400){
+							d = Math.floor(s/86400);
+							disp += d+"day ";
+							s -= d*86400;
+						}
+						if(s >= 3600){
+							h = Math.floor(s/3600);
+							disp += h+"hr ";
+							s -= h*3600;
+						}
+						if(s >= 60){
+							m = Math.floor(s/60);
+							disp += m+"min ";
+							s -= m*60;
+						}
+						document.watch.count.value = disp+s+"sec";
+						clearTimeout(timerID);
+						timerID = setTimeout('SetTimeCount()',250);
+					}
+					SetTimeCount();
+					//-->
+					</script>
+				</form>
+			</div>
+		</header>
+
+		<main>
+			<section id="appstage">
+				<div class="app">
+					<applet-dummy code="pbbs.PaintBBS.class" archive="./PaintBBS.jar" name="paintbbs" width="<% echo (w) %>" height="<% echo (h) %>" mayscript>
+						<param name="image_width" value="<% echo (picw) %>">
+						<param name="image_height" value="<% echo (pich) %>">
+						<param name="image_jpeg" value="<% echo (image_jpeg) %>">
+						<param name="image_size" value="<% echo (image_size) %>">
+						<param name="compress_level" value="<% echo (compress_level) %>">
+						<!-- param name="undo" value="<% echo (undo) %>" -->
+						<!-- param name="undo_in_mg" value="<% echo (undo_in_mg) %>" -->
+						<param name="url_save" value="picpost.php">
+						<param name="url_exit" value="noe_picpost2.php">
+						<% def(imgfile) %><param name="image_canvas" value="<% echo (imgfile) %>"><% /def %>
+						<!-- def usercode ><param name="send_header" value="usercode={$usercode}">< /def -->
+						<param name="poo" value="false">
+						<param name="send_advance" value="true">
+						<param name="thumbnail_width" value="100%">
+						<param name="thumbnail_height" value="100%">
+						<param name="tool_advance" value="true">
+					</applet-dummy>
+				</div>
+			</section>
+		<footer id="footer">
+			<div class="copy">
+				<p><a href="https://sakots.red/">noe-board <% echo (ver) %></a></p>
+				<p>
+					UseFunction -
+					<a href="https://github.com/funige/neo/">PaintBBS NEO</a>
+					<a href="http://skinny.sx68.net/">skinny</a>
+				</p>
+			</div>
+		</footer>
+	</body>
+</html>
