@@ -81,4 +81,6 @@ $out["h"] = $_POST["pich"] + 170;
 $path = realpath("./").'/'.IMG_DIR;
 $temppath = realpath("./").'/'.TEMP_DIR;
 
+$out["path"] = IMG_DIR;
+
 ?>

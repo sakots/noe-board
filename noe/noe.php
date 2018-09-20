@@ -1,13 +1,13 @@
 <?php
 //--------------------------------------------------
-//　おえかきけいじばん「noe-board」v0.0.3
+//　おえかきけいじばん「noe-board」v0.1.0
 //　by sakots https://sakots.red/
 //--------------------------------------------------
 
 //Skinny 0.4.1
 include_once( "Skinny.php" );
 $out = array();
-$out["ver"] = "v0.0.3";
+$out["ver"] = "v0.1.0";
 
 //設定の読み込み
 require("config.php");
@@ -59,10 +59,16 @@ if (  isset($_POST["send"] ) ===  true ) {
 	if ( $thtitle  === "" ) $thtitle  = $def_thtitle;
 
 	if( $err_msg1 === "" && $err_msg2 ==="" ){
-		$str = $thtitle.",".$name.",".$comment.",".$picfile.",\n";
+		$str = $thtitle.",".$name.",".$picfile.",".$comment.",\n";
 		$file_name = $logfile;
 		addFirstRow($str, $file_name);
 		$out["message"] ="書き込みに成功しました。";
+		if ( $picfile == true ) {
+			rename( TEMP_DIR.$picfile , IMG_DIR.$picfile );
+			chmod( IMG_DIR.$picfile , 0666);
+			$picdat = strtr($picfile , png, dat);
+			unlink( TEMP_DIR.$picdat );
+		}
 	}
 
 }
@@ -70,12 +76,12 @@ if (  isset($_POST["send"] ) ===  true ) {
 $fp = fopen( $logfile,"r");
 
 while( $res = fgets( $fp)){
-	$tmp = explode(",",$res);
+	$tmp1 = explode(",",$res);
 	$arr = array(
-		"thtitle"=>$tmp[0],
-		"name"=>$tmp[1],
-		"comment"=>$tmp[2],
-		"picfile"=>$tmp[3]
+		"thtitle"=>$tmp1[0],
+		"name"=>$tmp1[1],
+		"picfile"=>$tmp1[2],
+		"comment"=>$tmp1[3]
 	);
 	$out["bbsline"][] = $arr;
 }
