@@ -1,13 +1,13 @@
 <?php
 //--------------------------------------------------
-//　おえかきけいじばん「noe-board」v0.1.0
+//　おえかきけいじばん「noe-board」v0.1.1
 //　by sakots https://sakots.red/
 //--------------------------------------------------
 
 //Skinny 0.4.1
 include_once( "Skinny.php" );
 $out = array();
-$out["ver"] = "v0.1.0";
+$out["ver"] = "v0.1.1";
 
 //設定の読み込み
 require("config.php");
@@ -59,7 +59,7 @@ if (  isset($_POST["send"] ) ===  true ) {
 	if ( $thtitle  === "" ) $thtitle  = $def_thtitle;
 
 	if( $err_msg1 === "" && $err_msg2 ==="" ){
-		$str = $thtitle.",".$name.",".$picfile.",".$comment.",\n";
+		$str = count( file( $logfile ) ).",".$thtitle.",".$name.",".$picfile.",".$comment.",\n";
 		$file_name = $logfile;
 		addFirstRow($str, $file_name);
 		$out["message"] ="書き込みに成功しました。";
@@ -67,21 +67,23 @@ if (  isset($_POST["send"] ) ===  true ) {
 			rename( TEMP_DIR.$picfile , IMG_DIR.$picfile );
 			chmod( IMG_DIR.$picfile , 0666);
 			$picdat = strtr($picfile , png, dat);
-			unlink( TEMP_DIR.$picdat );
+			rename( TEMP_DIR.$picdat, IMG_DIR.$picdat );
+			chmod( IMG_DIR.$picdat , 0666);
 		}
 	}
 
 }
 
 $fp = fopen( $logfile,"r");
-
 while( $res = fgets( $fp)){
+
 	$tmp1 = explode(",",$res);
 	$arr = array(
-		"thtitle"=>$tmp1[0],
-		"name"=>$tmp1[1],
-		"picfile"=>$tmp1[2],
-		"comment"=>$tmp1[3]
+		"lognum"=>$tmp1[0],
+		"thtitle"=>$tmp1[1],
+		"name"=>$tmp1[2],
+		"picfile"=>$tmp1[3],
+		"comment"=>$tmp1[4]
 	);
 	$out["bbsline"][] = $arr;
 }

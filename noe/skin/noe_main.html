@@ -61,6 +61,7 @@
 									<input type="text" name="thtitle" size="12" value="">
 									<input type="submit" name="send" value="書き込む">
 									<input type="hidden" name="picfile" value="">
+									<input type="hidden" name="lognum" value="<% echo (lognum) %>">
 								</td>
 							</tr>
 							<tr>
@@ -81,7 +82,7 @@
 				<% def(bbsline) %>
 				<% each(bbsline) %>
 				<section class="thread">
-					<h3>■<% echo(bbsline/thtitle) %></h3>
+					<h3><span class="oyano"><% echo(bbsline/lognum) %></span><% echo(bbsline/thtitle) %></h3>
 					<section>
 						<h4>名前：<% echo(bbsline/name) %></h4>
 						<% def(bbsline/picfile) %>
