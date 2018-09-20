@@ -82,7 +82,13 @@ $upfile_name = $picfile;
 $picfile = str_replace(strrchr($picfile,"."),"",$picfile); //拡張子除去
 
 $out["tmp"][] = $tmp;
-$out["lognum"] = count( file( $logfile ) );
+
+if( file_exists( $logfile ) ) {
+	$lognum = count( file( $logfile ) ) + 1;
+} else {
+	$lognum = 1;
+}
+$out["lognum"] = $lognum;
 
 $Skinny->SkinnyDisplay( $picpfile, $out );
 exit;

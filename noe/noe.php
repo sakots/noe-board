@@ -59,7 +59,12 @@ if (  isset($_POST["send"] ) ===  true ) {
 	if ( $thtitle  === "" ) $thtitle  = $def_thtitle;
 
 	if( $err_msg1 === "" && $err_msg2 ==="" ){
-		$str = count( file( $logfile ) ).",".$thtitle.",".$name.",".$picfile.",".$comment.",\n";
+		if( file_exists( $logfile ) ) {
+			$lognum = count( file( $logfile ) ) + 1;
+		} else {
+			$lognum = 1;
+		}
+		$str = $lognum.",".$thtitle.",".$name.",".$picfile.",".$comment.",\n";
 		$file_name = $logfile;
 		addFirstRow($str, $file_name);
 		$out["message"] ="書き込みに成功しました。";
