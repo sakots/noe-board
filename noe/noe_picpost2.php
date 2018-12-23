@@ -1,22 +1,28 @@
 <?php
 //--------------------------------------------------
-//　おえかきけいじばん「noe-board」v0.1.1
+//　おえかきけいじばん「noe-board」v0.2.0
 //　by sakots https://sakots.red/
 //--------------------------------------------------
 
 //Skinny 0.4.1
 include_once( "Skinny.php" );
 $out = array();
-$out["ver"] = "v0.1.1";
+$out["ver"] = "v0.2.0";
 
 //設定の読み込み
 require("config.php");
-require($skindir."template_ini.php");
-$mainfile = $skindir.$mainfile;
-$resfile = $skindir.$resfile;
-$picpfile = $skindir.$picpfile;
-$otherfile = $skindir.$otherfile;
-$paintfile = $skindir.$paintfile;
+require("template_ini.php");
+
+$out["btitle"] = TITLE;
+$out["home"] = HOME;
+$out["self"] = PHP_SELF;
+$out["message"] = $message;
+$out["pdefw"] = PDEF_W;
+$out["pdefh"] = PDEF_H;
+$out["skindir"] = SKINDIR;
+$out["tver"] = TEMPLATE_VER;
+$out["picw"] = $_POST["picw"];
+$out["pich"] = $_POST["pich"];
 
 //----------
 
@@ -90,7 +96,7 @@ if( file_exists( $logfile ) ) {
 }
 $out["lognum"] = $lognum;
 
-$Skinny->SkinnyDisplay( $picpfile, $out );
+$Skinny->SkinnyDisplay( SKINDIR.PICFILE, $out );
 exit;
 
 ?>

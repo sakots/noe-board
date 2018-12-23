@@ -30,7 +30,6 @@
 						<input type="text" size="24" name="count">
 					</p>
 					<script type="text/javascript">
-					<!--
 					timerID = 10;
 					stime = new Date();
 					function SetTimeCount() {
@@ -57,7 +56,6 @@
 						timerID = setTimeout('SetTimeCount()',250);
 					}
 					SetTimeCount();
-					//-->
 					</script>
 				</form>
 			</div>
@@ -69,15 +67,11 @@
 					<applet-dummy code="pbbs.PaintBBS.class" archive="./PaintBBS.jar" name="paintbbs" width="<% echo (w) %>" height="<% echo (h) %>" mayscript>
 						<param name="image_width" value="<% echo (picw) %>">
 						<param name="image_height" value="<% echo (pich) %>">
-						<param name="image_jpeg" value="<% echo (image_jpeg) %>">
-						<param name="image_size" value="<% echo (image_size) %>">
-						<param name="compress_level" value="<% echo (compress_level) %>">
-						<!-- param name="undo" value="<% echo (undo) %>" -->
-						<!-- param name="undo_in_mg" value="<% echo (undo_in_mg) %>" -->
+						<param name="undo" value="<% echo (undo) %>">
+						<param name="undo_in_mg" value="<% echo (undo_in_mg) %>">
 						<param name="url_save" value="picpost.php">
 						<param name="url_exit" value="noe_picpost2.php">
 						<% def(imgfile) %><param name="image_canvas" value="<% echo (imgfile) %>"><% /def %>
-						<!-- def usercode ><param name="send_header" value="usercode={$usercode}">< /def -->
 						<param name="poo" value="false">
 						<param name="send_advance" value="true">
 						<param name="thumbnail_width" value="100%">

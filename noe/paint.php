@@ -1,24 +1,44 @@
 <?php
 //--------------------------------------------------
-//　おえかきけいじばん「noe-board」v0.1.1
+//　おえかきけいじばん「noe-board」v0.2.0
 //　by sakots https://sakots.red/
 //--------------------------------------------------
 
 //Skinny 0.4.1
 include_once( "Skinny.php" );
 $out = array();
-$out["ver"] = "v0.1.1";
+$out["ver"] = "v0.2.0";
 
 //設定の読み込み
 require("config.php");
-require($skindir."template_ini.php");
-$mainfile = $skindir.$mainfile;
-$resfile = $skindir.$resfile;
-$picpfile = $skindir.$picpfile;
-$otherfile = $skindir.$otherfile;
-$paintfile = $skindir.$paintfile;
+require("template_ini.php");
 
-$Skinny->SkinnyDisplay( $paintfile, $out );
+$message = "";
+
+$out["btitle"] = TITLE;
+$out["home"] = HOME;
+$out["self"] = PHP_SELF;
+$out["message"] = $message;
+$out["pdefw"] = PDEF_W;
+$out["pdefh"] = PDEF_H;
+$out["skindir"] = SKINDIR;
+$out["tver"] = TEMPLATE_VER;
+
+$out["picw"] = $_POST["picw"];
+$out["pich"] = $_POST["pich"];
+$out["w"] = $_POST["picw"] + 150;
+$out["h"] = $_POST["pich"] + 170;
+
+$out["undo"] = UNDO;
+$out["undo_in_mg"] = UNDO_IN_MG;
+
+
+$path = realpath("./").'/'.IMG_DIR;
+$temppath = realpath("./").'/'.TEMP_DIR;
+
+$out["path"] = IMG_DIR;
+
+$Skinny->SkinnyDisplay( SKINDIR.PAINTFILE, $out );
 exit;
 
 ?>

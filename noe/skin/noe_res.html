@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<title><% echo (btitle) %></title>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="stylesheet" href="<% echo (skindir) %>noe_main.css" type="text/css">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/css/lightbox.css">
@@ -30,11 +30,7 @@
 				<section class="epost">
 					<form action="paint.php" method="post">
 						<p>
-							<% def(applet) %>
-							<select class="form" name="shi">
-								<option value="0" selected>NEO</option>
-							</select>
-							<% /def %>
+							<% def(applet) %><input type="hidden" class="form" name="shi" value="0"><% /def %>
 							<label>幅：<input class="form" type="text" name="picw" value="<% echo(pdefw) %>"></label>
 							<label>高さ：<input class="form" type="text" name="pich" value="<% echo(pdefh) %>"></label>
 							<% def(resno) %>
@@ -56,36 +52,19 @@
 								<td><input type="text" name="name" size="12" value=""></td>
 							</tr>
 							<tr>
-								<td>mail</td>
-								<td><input type="text" name="mail" size="12" value=""></td>
-							</tr>
-							<tr>
-								<td>URL</td>
-								<td><input type="text" name="url" size="12" value=""></td>
-							</tr>
-							<tr>
 								<td>title</td>
 								<td>
-									<input type="text" name="sub" size="12" value="">
+									<input type="text" name="thtitle" size="12" value="">
 									<input type="submit" name="send" value="書き込む">
 									<input type="hidden" name="picfile" value="">
-									<input type="hidden" name="tree" value="0">
-									<input type="hidden" name="invz" value="0">
-									<input type="hidden" name="img_w" value="0">
-									<input type="hidden" name="img_h" value="0">
-									<input type="hidden" name="time" value="0">
-									<input type="hidden" name="exid" value="0">
+									<input type="hidden" name="lognum" value="<% echo (lognum) %>">
 								</td>
 							</tr>
 							<tr>
 								<td>comment</td>
 								<td>
-									<textarea name="com" rows="4" cols="28"></textarea>
+									<textarea name="comment" rows="4" cols="28"></textarea>
 								</td>
-							</tr>
-							<tr>
-								<td>pass</td>
-								<td><input type="password" name="pwd" size="8" value=""></td>
 							</tr>
 						</table>
 					</form>
@@ -99,16 +78,16 @@
 				<% def(bbsline) %>
 				<% each(bbsline) %>
 				<section class="thread">
-					<h3><span class="oyano"><% echo(bbsline/id) %></span><% echo(bbsline/sub) %></h3>
+					<h3><span class="oyano"><% echo(bbsline/lognum) %></span><% echo(bbsline/thtitle) %></h3>
 					<section>
-						<h4>名前：<% echo(bbsline/name) %>：<% echo(bbsline/date) %></h4>
+						<h4>名前：<% echo(bbsline/name) %></h4>
 						<% def(bbsline/picfile) %>
 						<figure>
 							<figcaption><a href="<% echo(path) %><% echo(bbsline/picfile) %>" target="_blank" data-lightbox="a<% echo(bbsline/picfile) %>" data-title="<% echo(bbsline/picfile) %>"><% echo(bbsline/picfile) %></a></figcaption>
 							<a href="<% echo(path) %><% echo(bbsline/picfile) %>" target="_blank"data-lightbox="b<% echo(bbsline/picfile) %>" data-title="<% echo(bbsline/picfile) %>"><img src="<% echo(path) %><% echo(bbsline/picfile) %>" alt="<% echo(bbsline/picfile) %>"></a>
 						</figure>
 						<% /def %>
-						<p class="comment"><% echo(bbsline/com) %></p>
+						<p class="comment"><% echo(bbsline/comment) %></p>
 					</section>
 				</section>
 				<hr>

@@ -53,11 +53,25 @@
 								<td><input type="text" name="name" size="28" autocomplete="username"></td>
 							</tr>
 							<tr>
+								<td>mail</td>
+								<td><input type="text" name="mail" size="28" value=""></td>
+							</tr>
+							<tr>
+								<td>URL</td>
+								<td><input type="text" name="url" size="28" value=""></td>
+							</tr>
+							<tr>
 								<td>title</td>
 								<td>
 									<input type="text" name="thtitle" size="35" autocomplete="section-sub">
 									<input type="submit" name="send" value="書き込む">
 									<input type="hidden" name="lognum" value="<% echo (lognum) %>">
+									<input type="hidden" name="tree" value="0">
+									<input type="hidden" name="invz" value="0">
+									<input type="hidden" name="img_w" value="0">
+									<input type="hidden" name="img_h" value="0">
+									<input type="hidden" name="time" value="0">
+									<input type="hidden" name="exid" value="0">
 								</td>
 							</tr>
 							<tr>
