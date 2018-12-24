@@ -66,7 +66,7 @@
 									<input type="text" name="thtitle" size="35" autocomplete="section-sub">
 									<input type="submit" name="send" value="書き込む">
 									<input type="hidden" name="lognum" value="<% echo (lognum) %>">
-									<input type="hidden" name="tree" value="0">
+									<input type="hidden" name="parent" value="<% echo (parent) %>">
 									<input type="hidden" name="invz" value="0">
 									<input type="hidden" name="img_w" value="0">
 									<input type="hidden" name="img_h" value="0">
@@ -86,6 +86,10 @@
 								</select></td>
 							</tr>
 							<% /def %>
+							<tr>
+								<td>pass</td>
+								<td><input type="password" name="pass" size="8" value=""></td>
+							</tr>
 						</table>
 					</form>
 				</div>

@@ -1,17 +1,19 @@
 <?php
 //--------------------------------------------------
-//　おえかきけいじばん「noe-board」v0.2.0
+//　おえかきけいじばん「noe-board」v0.3.0
 //　by sakots https://sakots.red/
 //--------------------------------------------------
 
 //Skinny 0.4.1
 include_once( "Skinny.php" );
 $out = array();
-$out["ver"] = "v0.2.0";
 
 //設定の読み込み
 require("config.php");
 require("template_ini.php");
+
+//スクリプトのバージョン
+$out["ver"] = "v0.3.0";
 
 $out["btitle"] = TITLE;
 $out["home"] = HOME;
@@ -23,6 +25,8 @@ $out["skindir"] = SKINDIR;
 $out["tver"] = TEMPLATE_VER;
 $out["picw"] = $_POST["picw"];
 $out["pich"] = $_POST["pich"];
+
+$out["parent"] = $_SERVER['REQUEST_TIME'];
 
 //----------
 

@@ -7,11 +7,17 @@
 //Skinny 0.4.1
 include_once( "Skinny.php" );
 $out = array();
-$out["ver"] = "v0.3.0";
 
 //設定の読み込み
 require("config.php");
 require("template_ini.php");
+//DB接続
+require("dbconnect.php");
+
+//スクリプトのバージョン
+$out["ver"] = "v0.3.0";
+
+//var_dump($_POST);
 
 $message = "";
 
@@ -24,21 +30,17 @@ $out["pdefh"] = PDEF_H;
 $out["skindir"] = SKINDIR;
 $out["tver"] = TEMPLATE_VER;
 
-$out["picw"] = $_POST["picw"];
-$out["pich"] = $_POST["pich"];
-$out["w"] = $_POST["picw"] + 150;
-$out["h"] = $_POST["pich"] + 170;
+$out["parent"] = $_GET['res'];
+$resno =  $_GET['res'];
 
-$out["undo"] = UNDO;
-$out["undo_in_mg"] = UNDO_IN_MG;
+//読み込み
+$sql = "SELECT id,date,name,sub,com,mail,url,picfile FROM logs WHERE parent=".$resno." ORDER BY tree DESC";
+$posts = $db->query($sql);
+while ($out['bbsline'][] = $posts->fetch() ) {
+	$out['bbsline'];
+}
 
-
-$path = realpath("./").'/'.IMG_DIR;
-$temppath = realpath("./").'/'.TEMP_DIR;
-
-$out["path"] = IMG_DIR;
-
-$Skinny->SkinnyDisplay( SKINDIR.PAINTFILE, $out );
-exit;
+$Skinny->SkinnyDisplay( SKINDIR.RESFILE, $out );
+//var_dump($out['bbsline']);
 
 ?>

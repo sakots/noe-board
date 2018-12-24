@@ -1,6 +1,6 @@
 <?php
 //--------------------------------------------------
-//　おえかきけいじばん「noe-board」v0.2.0
+//　おえかきけいじばん「noe-board」v0.3.0
 //　by sakots https://sakots.red/
 //--------------------------------------------------
 
@@ -15,7 +15,7 @@ require("template_ini.php");
 require("dbconnect.php");
 
 //スクリプトのバージョン
-$out["ver"] = "v0.2.0";
+$out["ver"] = "v0.3.0";
 
 //var_dump($_POST);
 
@@ -49,8 +49,8 @@ $name = ( isset( $_POST["name"] ) === true ) ? newstring($_POST["name"]): "";
 $url = ( isset( $_POST["url"] )  === true ) ? newstring(trim($_POST["url"]))  : "";
 $mail = ( isset( $_POST["mail"] )  === true ) ? newstring(trim($_POST["mail"]))  : "";
 $com = ( isset( $_POST["com"] )  === true ) ? newstring(trim($_POST["com"]))  : "";
+$parent = ( isset( $_POST["parent"] )  === true ) ? newstring(trim($_POST["parent"]))  : "";
 $picfile = ( isset( $_POST["picfile"] )  === true ) ? newstring(trim($_POST["picfile"]))  : "";
-$tree = ( isset( $_POST["tree"] )  === true ) ? newstring(trim($_POST["tree"]))  : "";
 $invz = ( isset( $_POST["invz"] )  === true ) ? newstring(trim($_POST["invz"]))  : "";
 $img_w = ( isset( $_POST["img_w"] )  === true ) ? newstring(trim($_POST["img_w"]))  : "";
 $img_h = ( isset( $_POST["img_h"] )  === true ) ? newstring(trim($_POST["img_h"]))  : "";
@@ -69,8 +69,16 @@ if (isset($_POST["send"] ) ===  true) {
 	if ( $sub  === "" ) $sub  = DEF_SUB;
 
 	$host = $_SERVER["REMOTE_ADDR"];
+	$utime = $_SERVER['REQUEST_TIME'];
+
+	if ($parent == 0 ) {
+		$parent = $utime;
+	}
+
+	$tree = ($parent * 1000000000) - $utime;
+
 	// 値を追加する
-	$sql = "INSERT INTO logs SET date=NOW() ,name='$name', sub='$sub', com='$com', mail='$mail', url='$url',picfile='$picfile', tree='$tree', img_w='$img_w', img_h='$img_h', time='$time', pwd='$pwd', exid='$exid', invz='$invz', host='$host'";
+	$sql = "INSERT INTO logs SET date=NOW() ,name='$name', sub='$sub', com='$com', mail='$mail', url='$url',picfile='$picfile', utime='$utime', parent='$parent', time='$time', pwd='$pwd', exid='$exid', tree='$tree', invz='$invz', host='$host'";
 	$dh = $db->exec($sql);
 	$out["message"] = $dh ."件の書き込みに成功しました。";
 
@@ -83,10 +91,17 @@ if (isset($_POST["send"] ) ===  true) {
 	}
 }
 
+//ページング
+if (isset($_GET['page']) && is_numeric($_GET['page'])) {
+	$page = $_GET['page'];
+} else {
+	$page = 1;
+}
+$start = PAGE_DEF * ($page - 1);
 //読み込み
-$sql = "SELECT id,date,name,sub,com,mail,url,picfile FROM logs ORDER BY id DESC LIMIT 0,".LOG_MAX;
+$sql = "SELECT id,date,name,sub,com,mail,url,picfile,parent FROM logs ORDER BY tree DESC LIMIT ".$start.",".PAGE_DEF;
 $posts = $db->query($sql);
-while ($out['bbsline'][] = $posts->fetch()) {
+while ($out['bbsline'][] = $posts->fetch() ) {
 	$out['bbsline'];
 }
 
