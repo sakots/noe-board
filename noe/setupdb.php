@@ -18,7 +18,7 @@ try {
 	echo "DB接続エラー:" .$e->getMessage();
 }
 
-mkdir(IMG_DIR);
-mkdir(TEMP_DIR);
+mkdir(IMG_DIR,0777);
+mkdir(TEMP_DIR,0777);
 
 ?>
