@@ -15,7 +15,7 @@ require("template_ini.php");
 require("dbconnect.php");
 
 //スクリプトのバージョン
-$out["ver"] = "v0.5.1";
+$out["ver"] = "v0.5.2";
 
 //var_dump($_POST);
 
@@ -32,6 +32,8 @@ $out["tver"] = TEMPLATE_VER;
 
 $out["parent"] = $_GET['res'];
 $resno =  $_GET['res'];
+
+$out["base"] = BASE;
 
 //読み込み
 $sql = "SELECT id,date,name,sub,com,mail,url,picfile FROM logs WHERE (invz=0 AND parent=".$resno.") ORDER BY tree DESC";
