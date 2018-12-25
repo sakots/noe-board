@@ -24,23 +24,20 @@ $out["pdefh"] = PDEF_H;
 $out["skindir"] = SKINDIR;
 $out["tver"] = TEMPLATE_VER;
 
-$out["picw"] = $_POST["picw"];
-$out["pich"] = $_POST["pich"];
-$out["w"] = $_POST["picw"] + 150;
-$out["h"] = $_POST["pich"] + 170;
+$out["picw"] = $_GET["img_w"];
+$out["pich"] = $_GET["img_h"];
+$out["w"] = $_GET["img_w"];
+$out["h"] = $_GET["img_h"] + 26;
+$out["pchfile"] = $_GET["pch"];
 
-$out["undo"] = UNDO;
-$out["undo_in_mg"] = UNDO_IN_MG;
-
-$out["useanime"] = $_POST["anime"];
-
+$out["speed"] = PCH_SPEED;
 
 $path = realpath("./").'/'.IMG_DIR;
 $temppath = realpath("./").'/'.TEMP_DIR;
 
 $out["path"] = IMG_DIR;
 
-$Skinny->SkinnyDisplay( SKINDIR.PAINTFILE, $out );
+$Skinny->SkinnyDisplay( SKINDIR.ANIMEFILE, $out );
 exit;
 
 ?>

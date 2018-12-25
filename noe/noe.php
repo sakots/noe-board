@@ -1,6 +1,6 @@
 <?php
 //--------------------------------------------------
-//　おえかきけいじばん「noe-board」v0.5.2
+//　おえかきけいじばん「noe-board」v0.6.0
 //　by sakots https://sakots.red/
 //--------------------------------------------------
 
@@ -15,7 +15,7 @@ require("template_ini.php");
 require("dbconnect.php");
 
 //スクリプトのバージョン
-$out["ver"] = "v0.5.2";
+$out["ver"] = "v0.6.0";
 
 //var_dump($_POST);
 
@@ -29,6 +29,9 @@ $out["pdefw"] = PDEF_W;
 $out["pdefh"] = PDEF_H;
 $out["skindir"] = SKINDIR;
 $out["tver"] = TEMPLATE_VER;
+
+$out["useanime"] = USE_ANIME;
+$out["defanime"] = DEF_ANIME;
 
 //スパム無効化関数
 function newstring($string) {
@@ -77,18 +80,32 @@ if (isset($_POST["send"] ) ===  true) {
 
 	$tree = ($parent * 1000000000) - $utime;
 
-	// 値を追加する
-	$sql = "INSERT INTO logs SET date=NOW() ,name='$name', sub='$sub', com='$com', mail='$mail', url='$url',picfile='$picfile', utime='$utime', parent='$parent', time='$time', pwd='$pwd', exid='$exid', tree='$tree', invz='$invz', host='$host'";
-	$dh = $db->exec($sql);
-	$out["message"] = $dh ."件の書き込みに成功しました。";
-
+	//画像ファイルとか処理
 	if ( $picfile == true ) {
+		$imagesize = getimagesize(TEMP_DIR.$picfile);
+		$img_w = $imagesize[0];
+		$img_h = $imagesize[1];
 		rename( TEMP_DIR.$picfile , IMG_DIR.$picfile );
 		chmod( IMG_DIR.$picfile , 0666);
 		$picdat = strtr($picfile , png, dat);
 		rename( TEMP_DIR.$picdat, IMG_DIR.$picdat );
 		chmod( IMG_DIR.$picdat , 0666);
+		$pchfile = strtr($picfile , png, pch);
+		if ( file_exists(TEMP_DIR.$pchfile) == TRUE ) {
+			rename( TEMP_DIR.$pchfile, IMG_DIR.$pchfile );
+			chmod( IMG_DIR.$pchfile , 0666);
+		} else {
+			$pchfile = "";
+		}
+	} else {
+		$img_w = 0;
+		$img_h = 0;
 	}
+
+	// 値を追加する
+	$sql = "INSERT INTO ".TABLE." SET date=NOW() ,name='$name', sub='$sub', com='$com', mail='$mail', url='$url',picfile='$picfile', pchfile='$pchfile', img_w='$img_w', img_h='$img_h', utime='$utime', parent='$parent', time='$time', pwd='$pwd', exid='$exid', tree='$tree', invz='$invz', host='$host'";
+	$dh = $db->exec($sql);
+	$out["message"] = $dh ."件の書き込みに成功しました。";
 }
 
 //ページング
@@ -101,7 +118,7 @@ if (isset($_GET['page']) && is_numeric($_GET['page'])) {
 $start = PAGE_DEF * ($page - 1);
 
 //最大何ページあるのか
-$sql = "SELECT COUNT(*) as cnt FROM logs WHERE invz=0";
+$sql = "SELECT COUNT(*) as cnt FROM ".TABLE." WHERE invz=0";
 $counts = $db->query("$sql");
 $count = $counts->fetch();
 $max_page = floor($count["cnt"] / PAGE_DEF) + 1;
@@ -119,11 +136,11 @@ if ($out["next"] > $max_page) {
 }
 
 //読み込み
-$sql = "SELECT id,date,name,sub,com,mail,url,picfile,parent FROM logs WHERE invz=0 ORDER BY tree DESC LIMIT ".$start.",".PAGE_DEF;
+$sql = "SELECT * FROM ".TABLE." WHERE invz=0 ORDER BY tree DESC LIMIT ".$start.",".PAGE_DEF;
 $posts = $db->query($sql);
 while ($out['bbsline'][] = $posts->fetch() ) {
 	$out['bbsline'];
-}
+} 
 
 $Skinny->SkinnyDisplay( SKINDIR.MAINFILE, $out );
 //var_dump($out['bbsline']);

@@ -1,6 +1,6 @@
 <?php
 /*
-  * noe-board v0.5.1 lot.181226
+  * noe-board v0.6.0 lot.181226
   * by sakots >> https://sakots.red/
   *
   * noe-boardの設定ファイルです。
@@ -8,12 +8,15 @@
 */
 
 //設置URL /まで
-define('BASE', 'https://sakots.red/');
+define('BASE', 'https://sakots.red/noe/');
 
 //データベース設定
 
 //ログDB名
 define('LOGDB', 'noe.db');
+
+//DBテーブル名
+define('TABLE', 'noelogs');
 
 //DBのアドレス
 define('DBHOST', 'localhost');
@@ -30,11 +33,6 @@ define('DBPASS', '');
 //.htaccessでキャッシュの有効期限を過去にしている場合は設定不要。
 
 define('URL_PARAMETER', '1');
-
-//シェアボタンを表示する する:1 しない:0
-//対応テンプレートが必要
-//設置場所のURL ROOT_URL で設定したurlをもとにリンクを作成
-define('SHARE_BUTTON', '0');
 
 //本文に日本語がなければ拒絶
 define('USE_JAPANESEFILTER', '1');
@@ -75,7 +73,7 @@ define('COMMENT_LIMIT_HIGH', '80');
 // 言語設定
 define('LANG', 'Japanese');
 
-//ユーザー削除権限 (0:不可 1:treeのみ許可 2:treeと画像のみ許可 3:tree,log,画像全て許可)
+//ユーザー削除権限 (0:不可 1:許可)
 //※treeのみを消して後に残ったlogは管理者のみ削除可能
 define('USER_DEL', '1');
 
@@ -203,14 +201,6 @@ define('DEF_SUB', '無題');	//未入力時の題名
 
 //レス時にスレ題名を引用する する:1 しない:0
 define('USE_RESUB', '0');
-
-//各スレにレスフォームを表示する する:1 しない:0
-define('RES_FORM', '0');
-
-//フォーム下の追加お知らせ
-//(例)'<LI>お知らせデース
-//     <LI>サーバの規約で<font color=red><big><B>アダルト禁止</B></big></font>'
-$addinfo='';
 
 //拒絶する文字列
 $badstring = array("irc.s16.xrea.com","著作権の侵害","未承諾広告","URL]");

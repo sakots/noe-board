@@ -21,65 +21,27 @@
 				</p>
 			</section>
 			<hr>
-			<h2 class="oekaki">OEKAKI MODE</h2>
+			<h2 class="oekaki">PCH MODE</h2>
 			<hr>
-			<div class="timeid">
-				<form class="watch" action="index.html" name="watch">
-					<p>
-						PaintTime :
-						<input type="text" size="24" name="count">
-					</p>
-					<script type="text/javascript">
-					timerID = 10;
-					stime = new Date();
-					function SetTimeCount() {
-						now = new Date();
-						s = Math.floor((now.getTime() - stime.getTime())/1000);
-						disp = '';
-						if(s >= 86400){
-							d = Math.floor(s/86400);
-							disp += d+"day ";
-							s -= d*86400;
-						}
-						if(s >= 3600){
-							h = Math.floor(s/3600);
-							disp += h+"hr ";
-							s -= h*3600;
-						}
-						if(s >= 60){
-							m = Math.floor(s/60);
-							disp += m+"min ";
-							s -= m*60;
-						}
-						document.watch.count.value = disp+s+"sec";
-						clearTimeout(timerID);
-						timerID = setTimeout('SetTimeCount()',250);
-					}
-					SetTimeCount();
-					</script>
-				</form>
-			</div>
 		</header>
 
 		<main>
 			<section id="appstage">
 				<div class="app">
-					<applet-dummy code="pbbs.PaintBBS.class" archive="./PaintBBS.jar" name="paintbbs" width="<% echo (w) %>" height="<% echo (h) %>" mayscript>
+					<applet-dummy name="pch" code="pch.PCHViewer.class" archive="PCHViewer.jar,PaintBBS.jar" width="<% echo (w) %>" height="<% echo (h) %>" mayscript>
 						<param name="image_width" value="<% echo (picw) %>">
 						<param name="image_height" value="<% echo (pich) %>">
-						<param name="undo" value="<% echo (undo) %>">
-						<param name="undo_in_mg" value="<% echo (undo_in_mg) %>">
-						<param name="url_save" value="picpost.php">
-						<param name="url_exit" value="noe_picpost2.php">
-						<% def(imgfile) %><param name="image_canvas" value="<% echo (imgfile) %>"><% /def %>
-						<param name="poo" value="false">
-						<param name="send_advance" value="true">
-						<param name="thumbnail_width" value="100%">
-						<param name="thumbnail_height" value="100%">
-						<param name="tool_advance" value="true">
-						<% if(useanime,==,true) %><param name="thumbnail_type" value="animation"><% /if %>
+						<param name="pch_file" value="<% echo (path) %><% echo (pchfile) %>">
+						<param name="speed" value="<% echo (speed) %>">
+						<param name="buffer_progress" value="false">
+						<param name="buffer_canvas" value="false">
 					</applet-dummy>
 				</div>
+			</section>
+			<section>
+				<p>
+					<a href="<% echo (path) %><% echo (pchfile) %>" target="_blank">Download</a>
+				</p>
 			</section>
 		</main>
 		<footer id="footer">

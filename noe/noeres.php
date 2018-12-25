@@ -36,7 +36,7 @@ $resno =  $_GET['res'];
 $out["base"] = BASE;
 
 //読み込み
-$sql = "SELECT id,date,name,sub,com,mail,url,picfile FROM logs WHERE (invz=0 AND parent=".$resno.") ORDER BY tree DESC";
+$sql = "SELECT id,date,name,sub,com,mail,url,picfile,pchfile FROM ".TABLE." WHERE (invz=0 AND parent=".$resno.") ORDER BY tree DESC";
 $posts = $db->query($sql);
 while ($out['bbsline'][] = $posts->fetch() ) {
 	$out['bbsline'];

@@ -15,17 +15,17 @@ require("dbconnect.php");
 $delno = $_POST["delno"];
 
 //記事呼び出し
-$sql ="SELECT * FROM logs WHERE id=".$delno;
+$sql ="SELECT * FROM ".TABLE." WHERE id=".$delno;
 $msgs = $db->prepare($sql);
 $msgs->execute(array($delno));
 $msg = $msgs->fetch();
 
 if (password_verify($_POST["pwd"],$msg['pwd']) == true) {
-	$sql = "DELETE FROM logs WHERE id=".$delno;
+	$sql = "DELETE FROM ".TABLE." WHERE id=".$delno;
 	$del = $db->prepare($sql);
 	$del->execute(array($delno));
 } elseif (ADMIN_PASS == $_POST["pwd"]) {
-	$sql = "UPDATE logs SET invz=1 WHERE id=".$delno;
+	$sql = "UPDATE ".TABLE." SET invz=1 WHERE id=".$delno;
 	$del = $db->exec($sql);
 } else {
 	echo "パスワードまたは記事番号が違います";

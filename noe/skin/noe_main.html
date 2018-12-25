@@ -30,13 +30,9 @@
 				<section class="epost">
 					<form action="paint.php" method="post">
 						<p>
-							<% def(applet) %>
-							<select class="form" name="shi">
-								<option value="0" selected>NEO</option>
-							</select>
-							<% /def %>
 							<label>幅：<input class="form" type="text" name="picw" value="<% echo(pdefw) %>"></label>
 							<label>高さ：<input class="form" type="text" name="pich" value="<% echo(pdefh) %>"></label>
+							<% if(useanime,==,1) %><input type="checkbox" value="true" name="anime" title="動画記録"<% if(defanime,==,1) %> checked<% /if %>><% /if %>
 							<input type="hidden" name="mode" value="paint">
 							<input class="button" type="submit" value="お絵かき">
 						</p>
@@ -82,7 +78,7 @@
 						<h4>名前：<% echo(bbsline/name) %>：<% echo(bbsline/date) %><% def(bbsline/url) %> <span class="button"><a href="<% echo(bbsline/url) %>" target="_blank" rel="nofollow noopener noreferrer"><i class="fas fa-flag-checkered"></i> URL</a></span><% /def %></h4>
 						<% def(bbsline/picfile) %>
 						<figure>
-							<figcaption><a href="<% echo(path) %><% echo(bbsline/picfile) %>" target="_blank" data-lightbox="a<% echo(bbsline/picfile) %>" data-title="<% echo(bbsline/picfile) %>"><% echo(bbsline/picfile) %></a></figcaption>
+							<figcaption><a href="<% echo(path) %><% echo(bbsline/picfile) %>" target="_blank" data-lightbox="a<% echo(bbsline/picfile) %>" data-title="<% echo(bbsline/picfile) %>"><% echo(bbsline/picfile) %></a>｜<% def(bbsline/pchfile) %>●<a href="anime.php?pch=<% echo(bbsline/pchfile) %>&amp;img_w=<% echo(bbsline/img_w) %>&amp;img_h=<% echo(bbsline/img_h) %>">動画再生</a><% /def %></figcaption>
 							<a href="<% echo(path) %><% echo(bbsline/picfile) %>" target="_blank"data-lightbox="b<% echo(bbsline/picfile) %>" data-title="<% echo(bbsline/picfile) %>"><img src="<% echo(path) %><% echo(bbsline/picfile) %>" alt="<% echo(bbsline/picfile) %>"></a>
 						</figure>
 						<% /def %>

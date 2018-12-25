@@ -1,6 +1,6 @@
 <?php
 //--------------------------------------------------
-//　「noe」v0.5.0～用スキン「noedef」設定ファイル
+//　「noe」v0.6.0～用スキン「noedef」設定ファイル
 //　by sakots https://sakots.red/
 //--------------------------------------------------
 
@@ -20,6 +20,9 @@ define('RESFILE', "noe_res.html");
 
 //お絵かきのテンプレートファイル
 define('PAINTFILE', "noe_paint.html");
+
+//動画再生のテンプレートファイル
+define('ANIMEFILE', "noe_anime.html");
 
 //投稿時のテンプレートファイル
 define('PICFILE', "noe_picpost.html");
