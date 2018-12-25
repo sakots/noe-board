@@ -51,8 +51,8 @@
 		<main>
 			<div>
 				<hr>
-				<% def(bbsline) %>
 				<% each(bbsline) %>
+				<% def(bbsline/com) %>
 				<section class="thread">
 					<h3><span class="oyano"><% echo(bbsline/id) %></span><% echo(bbsline/sub) %></h3>
 					<section>
@@ -68,8 +68,8 @@
 					</section>
 				</section>
 				<hr>
-				<% /each %>
 				<% /def %>
+				<% /each %>
 			</div>
 		</main>
 		<footer id="footer">
