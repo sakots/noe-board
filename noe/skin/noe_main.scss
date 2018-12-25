@@ -71,7 +71,7 @@ select {
 	@extend input;
 	padding: 2px;
 }
-input[name="picw"], input[name="pich"], input[name="del[]"], input[name="pwd"] {
+input[name="picw"], input[name="pich"], input[name="delno"], input[name="pwd"] {
 	width: 3em;
 }
 input[type="submit"] {
@@ -93,9 +93,6 @@ em.thispage {
 	background-color: $ushiro;
 	color: $moji;
 	font-style: normal;
-}
-.pn {
-
 }
 figure {
 	float: left;

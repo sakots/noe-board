@@ -1,6 +1,6 @@
 <?php
 //--------------------------------------------------
-//　おえかきけいじばん「noe-board」v0.3.1
+//　おえかきけいじばん「noe-board」v0.4.0
 //　by sakots https://sakots.red/
 //--------------------------------------------------
 
@@ -15,7 +15,7 @@ require("template_ini.php");
 require("dbconnect.php");
 
 //スクリプトのバージョン
-$out["ver"] = "v0.3.1";
+$out["ver"] = "v0.4.0";
 
 //var_dump($_POST);
 
@@ -34,7 +34,7 @@ $out["parent"] = $_GET['res'];
 $resno =  $_GET['res'];
 
 //読み込み
-$sql = "SELECT id,date,name,sub,com,mail,url,picfile FROM logs WHERE parent=".$resno." ORDER BY tree DESC";
+$sql = "SELECT id,date,name,sub,com,mail,url,picfile FROM logs WHERE (invz=0 AND parent=".$resno.") ORDER BY tree DESC";
 $posts = $db->query($sql);
 while ($out['bbsline'][] = $posts->fetch() ) {
 	$out['bbsline'];

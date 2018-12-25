@@ -1,6 +1,6 @@
 <?php
 //--------------------------------------------------
-//　おえかきけいじばん「noe-board」v0.3.1
+//　おえかきけいじばん「noe-board」v0.4.0
 //　by sakots https://sakots.red/
 //--------------------------------------------------
 
@@ -15,7 +15,7 @@ require("template_ini.php");
 require("dbconnect.php");
 
 //スクリプトのバージョン
-$out["ver"] = "v0.3.1";
+$out["ver"] = "v0.4.0";
 
 //var_dump($_POST);
 
@@ -56,7 +56,7 @@ $img_w = ( isset( $_POST["img_w"] )  === true ) ? newstring(trim($_POST["img_w"]
 $img_h = ( isset( $_POST["img_h"] )  === true ) ? newstring(trim($_POST["img_h"]))  : "";
 $time = ( isset( $_POST["time"] )  === true ) ? newstring(trim($_POST["time"]))  : "";
 $pwd = ( isset( $_POST["pwd"] )  === true ) ? newstring(trim($_POST["pwd"]))  : "";
-$pwd = sha1($pwd);
+$pwd = password_hash($pwd,PASSWORD_DEFAULT);
 $exid = ( isset( $_POST["exid"] )  === true ) ? newstring(trim($_POST["exid"]))  : "";
 
 //投稿があればデータベースへ保存する
@@ -99,7 +99,7 @@ if (isset($_GET['page']) && is_numeric($_GET['page'])) {
 }
 $start = PAGE_DEF * ($page - 1);
 //読み込み
-$sql = "SELECT id,date,name,sub,com,mail,url,picfile,parent FROM logs ORDER BY tree DESC LIMIT ".$start.",".PAGE_DEF;
+$sql = "SELECT id,date,name,sub,com,mail,url,picfile,parent FROM logs WHERE invz=0 ORDER BY tree DESC LIMIT ".$start.",".PAGE_DEF;
 $posts = $db->query($sql);
 while ($out['bbsline'][] = $posts->fetch() ) {
 	$out['bbsline'];

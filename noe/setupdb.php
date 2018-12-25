@@ -4,6 +4,7 @@
 require("config.php");
 require("template_ini.php");
 
+
 try {
 	if (file_exists(LOGDB) == FALSE) {
 		// はじめての実行なら、テーブルを作成
@@ -17,8 +18,5 @@ try {
 } catch (PDOException $e) {
 	echo "DB接続エラー:" .$e->getMessage();
 }
-
-mkdir(IMG_DIR,0777);
-mkdir(TEMP_DIR,0777);
 
 ?>

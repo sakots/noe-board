@@ -1,13 +1,13 @@
 <?php
 /*
-  * noe-board v0.2.0 lot.181223
+  * noe-board v0.4.0 lot.181225
   * by sakots >> https://sakots.red/
   *
   * noe-boardの設定ファイルです。
   *
 */
 
-//データベース設定
+//データベース設定　これだけは設置前に！
 
 //ログDB名
 define('LOGDB', 'noe.db');
