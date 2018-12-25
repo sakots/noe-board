@@ -1,13 +1,13 @@
 <?php
 /*
-  * noe-board v0.4.0 lot.181225
+  * noe-board v0.5.0 lot.181226
   * by sakots >> https://sakots.red/
   *
   * noe-boardの設定ファイルです。
   *
 */
 
-//データベース設定　これだけは設置前に！
+//データベース設定
 
 //ログDB名
 define('LOGDB', 'noe.db');
@@ -71,18 +71,6 @@ define('COMMENT_LIMIT_HIGH', '80');
 
 // 言語設定
 define('LANG', 'Japanese');
-
-// 出力文字コード指定 1:EUC-JP, 2:Shift_JIS, 3:ISO-2022-JP(JIS), 4:UTF-8
-//※1～4に該当しない場合は、直接文字コード名を入れて下さい
-define('CHARSET_OUT', '4');
-
-// 文字コード変換対象指定 0:出力HTMLとログも含むすべて, 1:クッキーとメールのみ
-define('CHARSET_CONVERT', '0');
-
-// 内部文字コード指定 1:EUC-JP, 2:Shift_JIS, 3:ISO-2022-JP(JIS), 4:UTF-8
-//※1～4に該当しない場合は、直接文字コード名を入れて下さい
-//★上のCHARSET_CONVERTで 0 を指定した場合に有効★
-define('CHARSET_IN', '4');
 
 //ユーザー削除権限 (0:不可 1:treeのみ許可 2:treeと画像のみ許可 3:tree,log,画像全て許可)
 //※treeのみを消して後に残ったlogは管理者のみ削除可能
@@ -160,8 +148,8 @@ define('MAX_URL', '100');
 //本文の制限文字数。半角で
 define('MAX_COM', '1000');
 
-//一ページに表示する記事(レス含む)
-define('PAGE_DEF', '70');
+//一ページに表示する記事
+define('PAGE_DEF', '20');
 
 //最大ログ数
 define('LOG_MAX', '900');

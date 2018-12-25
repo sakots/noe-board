@@ -1,6 +1,6 @@
 <?php
 //--------------------------------------------------
-//　おえかきけいじばん「noe-board」v0.4.0
+//　おえかきけいじばん「noe-board」v0.5.0
 //　by sakots https://sakots.red/
 //--------------------------------------------------
 
@@ -15,7 +15,7 @@ require("template_ini.php");
 require("dbconnect.php");
 
 //スクリプトのバージョン
-$out["ver"] = "v0.4.0";
+$out["ver"] = "v0.5.0";
 
 //var_dump($_POST);
 
@@ -94,10 +94,30 @@ if (isset($_POST["send"] ) ===  true) {
 //ページング
 if (isset($_GET['page']) && is_numeric($_GET['page'])) {
 	$page = $_GET['page'];
+	$page = max($page,1);
 } else {
 	$page = 1;
 }
 $start = PAGE_DEF * ($page - 1);
+
+//最大何ページあるのか
+$sql = "SELECT COUNT(*) as cnt FROM logs WHERE invz=0";
+$counts = $db->query("$sql");
+$count = $counts->fetch();
+$max_page = floor($count["cnt"] / PAGE_DEF) + 1;
+
+//リンク作成用
+$out["nowpage"] = $page;
+
+$out["back"] = $page - 1;
+if ($out["back"] == 0) {
+	$out["back"] = NULL;
+}
+$out["next"] = $page + 1;
+if ($out["next"] > $max_page) {
+	$out["next"] = NULL;
+}
+
 //読み込み
 $sql = "SELECT id,date,name,sub,com,mail,url,picfile,parent FROM logs WHERE invz=0 ORDER BY tree DESC LIMIT ".$start.",".PAGE_DEF;
 $posts = $db->query($sql);

@@ -37,9 +37,6 @@
 							<% /def %>
 							<label>幅：<input class="form" type="text" name="picw" value="<% echo(pdefw) %>"></label>
 							<label>高さ：<input class="form" type="text" name="pich" value="<% echo(pdefh) %>"></label>
-							<% def(resno) %>
-							<input type="hidden" name="resto" value="<% echo(resno) %>">
-							<% /def %>
 							<input type="hidden" name="mode" value="paint">
 							<input class="button" type="submit" value="お絵かき">
 						</p>
@@ -54,6 +51,22 @@
 							<input class="button" type="submit" value=" 削除 ">
 						</p>
 					</form>
+				</section>
+				<hr>
+				<section class="paging">
+					<p>
+						<% def(back) %>
+						<span class="button"><a href="<% echo (self) %>?page=<% echo (back) %>">BACK</a></span> 
+						<% elsedef %>
+						<span class="se">START</span>
+						<% /def %>
+						[page<% echo (nowpage) %>]
+						<% def(next) %>
+						<span class="button"><a href="<% echo (self) %>?page=<% echo (next) %>">NEXT</a></span> 
+						<% elsedef %>
+						<span class="se">END</span>
+						<% /def %>
+					</p>
 				</section>
 			</div>
 			<hr>
