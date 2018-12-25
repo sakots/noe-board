@@ -7,7 +7,12 @@
 		<link rel="stylesheet" href="<% echo (skindir) %>noe_main.css" type="text/css">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/css/lightbox.css">
-
+		<% each(bbsline) %><% def(bbsline/picfile) %>
+		<meta name="twitter:card" content="summary">
+		<meta property="og:title" content="[<% echo (bbsline/id) %>] <% echo(bbsline/sub) %> by <% echo(bbsline/name) %> - <% echo(btitle) %>">
+		<meta property="og:type" content="article">
+		<meta property="og:url" content="<% echo (base) %><% echo (self) %>?res=<% echo (parent) %>">
+		<% /def %><% /each %>
 	</head>
 	<body>
 		<header id="header">
@@ -90,6 +95,14 @@
 						</figure>
 						<% /def %>
 						<p class="comment"><% echo(bbsline/com) %></p>
+						<% def(bbsline/picfile) %><div class="thfoot">
+							<script>
+								(function(){ //さとぴあさんのPOTI-boardスキンより
+									var url = encodeURIComponent('<% echo (base) %><% echo (self) %>?res=<% echo (parent) %>'); //ページURL
+									var title = encodeURIComponent('[<% echo (bbsline/id) %>] <% echo(bbsline/sub) %> by <% echo(bbsline/name) %> - <% echo(btitle) %>'); //ページタイトル
+								document.write( '<span class="button"><a target="_blank" href="https://twitter.com/intent/tweet?&amp;text=' + title + '&amp;url=' + url + '"><i class="fab fa-twitter fa-fw fa-lg"></i>tweet</a></span> <span class="button"><a target="_blank" class="fb btn" href="http://www.facebook.com/share.php?u=' + url + '"><i class="fab fa-facebook fa-fw fa-lg"></i>share</a></span>' );})();
+							</script>
+						</div><% /def %>
 					</section>
 				</section>
 				<hr>

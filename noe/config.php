@@ -1,11 +1,14 @@
 <?php
 /*
-  * noe-board v0.5.0 lot.181226
+  * noe-board v0.5.1 lot.181226
   * by sakots >> https://sakots.red/
   *
   * noe-boardの設定ファイルです。
   *
 */
+
+//設置URL /まで
+define('BASE', 'https://sakots.red/');
 
 //データベース設定
 
