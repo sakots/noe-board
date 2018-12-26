@@ -102,7 +102,7 @@
 						<% def(bbsline/picfile) %><div class="thfoot">
 							<script>
 								(function(){ //さとぴあさんのPOTI-boardスキンより
-									var url = encodeURIComponent('<% echo (base) %><% echo (self) %>?res=<% echo (parent) %>'); //ページURL
+									var url = encodeURIComponent('<% echo (base) %>noeres.php?res=<% echo (parent) %>'); //ページURL
 									var title = encodeURIComponent('[<% echo (bbsline/id) %>] <% echo(bbsline/sub) %> by <% echo(bbsline/name) %> - <% echo(btitle) %>'); //ページタイトル
 								document.write( '<span class="button"><a target="_blank" href="https://twitter.com/intent/tweet?&amp;text=' + title + '&amp;url=' + url + '"><i class="fab fa-twitter fa-fw fa-lg"></i>tweet</a></span> <span class="button"><a target="_blank" class="fb btn" href="http://www.facebook.com/share.php?u=' + url + '"><i class="fab fa-facebook fa-fw fa-lg"></i>share</a></span>' );})();
 							</script>
