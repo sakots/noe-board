@@ -72,12 +72,11 @@
 		<main>
 			<div>
 				<hr>
-				<% each(bbsline) %>
-				<% def(bbsline/com) %>
+				<% each(bbsline) %><% def(bbsline/com) %>
 				<section class="thread">
-					<h3><span class="oyano"><% echo(bbsline/id) %></span><% echo(bbsline/sub) %></h3>
+					<h3><span class="oyano"><% echo(bbsline/tid) %></span><% echo(bbsline/sub) %></h3>
 					<section>
-						<h4>名前：<% echo(bbsline/name) %>：<% echo(bbsline/date) %><% def(bbsline/url) %> <span class="button"><a href="<% echo(bbsline/url) %>" target="_blank" rel="nofollow noopener noreferrer"><i class="fas fa-flag-checkered"></i> URL</a></span><% /def %></h4>
+						<h4>名前：<% echo(bbsline/name) %>：<% echo(bbsline/modified) %><% def(bbsline/url) %> <span class="button"><a href="<% echo(bbsline/url) %>" target="_blank" rel="nofollow noopener noreferrer"><i class="fas fa-flag-checkered"></i> URL</a></span><% /def %></h4>
 						<% def(bbsline/picfile) %>
 						<figure>
 							<figcaption><a href="<% echo(path) %><% echo(bbsline/picfile) %>" target="_blank" data-lightbox="a<% echo(bbsline/picfile) %>" data-title="<% echo(bbsline/picfile) %>"><% echo(bbsline/picfile) %></a>｜<% def(bbsline/pchfile) %>●<a href="anime.php?pch=<% echo(bbsline/pchfile) %>&amp;img_w=<% echo(bbsline/img_w) %>&amp;img_h=<% echo(bbsline/img_h) %>">動画再生</a><% /def %></figcaption>
@@ -85,14 +84,27 @@
 						</figure>
 						<% /def %>
 						<p class="comment"><% echo(bbsline/com) %></p>
-						<% if(bbsline/exid,==,0) %>
-						<div class="thfoot"><span class="button"><a href="noeres.php?res=<% echo (bbsline/parent) %>&amp;id=<% echo(bbsline/id) %>"><i class="fas fa-reply-all"></i> 返信</a></span></div>
-						<% /if %>
+						<% each(ko) %><% def(ko/com) %><% ifs(bbsline/tid,==,ko/tid) %>
+						<section class="res">
+							<section>
+								<hr>
+								<h3><span class="oyano"><% echo(ko/iid) %></span><% echo(ko/sub) %></h3>
+								<h4>名前：<% echo(ko/name) %>：<% echo(ko/modified) %><% def(ko/url) %><span class="button"><a href="<% echo(ko/url) %>" target="_blank" rel="nofollow noopener noreferrer"><i class="fas fa-flag-checkered"></i> URL</a></span><% /def %></h4>
+								<% def(ko/picfile) %>
+								<figure>
+									<figcaption><a href="<% echo(path) %><% echo(ko/picfile) %>" target="_blank" data-lightbox="a<% echo(ko/picfile) %>" data-title="<% echo(ko/picfile) %>"><% echo(ko/picfile) %></a>｜<% def(ko/pchfile) %>●<a href="anime.php?pch=<% echo(ko/pchfile) %>&amp;img_w=<% echo(ko/img_w) %>&amp;img_h=<% echo(ko/img_h) %>">動画再生</a><% /def %></figcaption>
+									<a href="<% echo(path) %><% echo(ko/picfile) %>" target="_blank"data-lightbox="b<% echo(ko/picfile) %>" data-title="<% echo	(ko/picfile) %>"><img src="<% echo(path) %><% echo(ko/picfile) %>" alt="<% echo	(ko/picfile) %>"></a>
+								</figure>
+								<% /def %>
+								<p class="comment"><% echo(ko/com) %></p>
+							</section>
+						</section>
+						<% /ifs %><% /def %><% /each %>
+						<div class="thfoot"><span class="button"><a href="noeres.php?res=<% echo (bbsline/tid) %>"><i class="fas fa-reply-all"></i> 返信</a></span></div>
 					</section>
 				</section>
-				<% if(bbsline/exid,==,0) %><hr><% /if %><hr>
-				<% /def %>
-				<% /each %>
+				<hr><hr>
+				<% /def %><% /each %>
 			</div>
 		</main>
 		<footer id="footer">

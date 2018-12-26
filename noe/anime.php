@@ -1,13 +1,13 @@
 <?php
 //--------------------------------------------------
-//　おえかきけいじばん「noe-board」v0.7.2
+//　おえかきけいじばん「noe-board」v0.8.0
 //　by sakots https://sakots.red/
 //--------------------------------------------------
 
 //Skinny 0.4.1
 include_once( "Skinny.php" );
 $out = array();
-$out["ver"] = "v0.7.2";
+$out["ver"] = "v0.8.0";
 
 //設定の読み込み
 require("config.php");

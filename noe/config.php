@@ -1,6 +1,6 @@
 <?php
 /*
-  * noe-board v0.6.0 lot.181226
+  * noe-board v0.8.0～ lot.181226
   * by sakots >> https://sakots.red/
   *
   * noe-boardの設定ファイルです。
@@ -15,8 +15,11 @@ define('BASE', 'https://sakots.red/noe/');
 //ログDB名
 define('LOGDB', 'noe.db');
 
-//DBテーブル名
+//DBテーブル名1
 define('TABLE', 'noelogs');
+
+//DBテーブル名2
+define('TABLETREE', 'noetree');
 
 //DBのアドレス
 define('DBHOST', 'localhost');

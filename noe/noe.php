@@ -1,6 +1,6 @@
 <?php
 //--------------------------------------------------
-//　おえかきけいじばん「noe-board」v0.7.2
+//　おえかきけいじばん「noe-board」v0.8.0
 //　by sakots https://sakots.red/
 //--------------------------------------------------
 
@@ -15,7 +15,7 @@ require("template_ini.php");
 require("dbconnect.php");
 
 //スクリプトのバージョン
-$out["ver"] = "v0.7.2";
+$out["ver"] = "v0.8.0";
 
 //var_dump($_POST);
 
@@ -72,7 +72,7 @@ if (isset($_POST["send"] ) ===  true) {
 	if ( $sub  === "" ) $sub  = DEF_SUB;
 
 	$host = $_SERVER["REMOTE_ADDR"];
-	$utime = $_SERVER['REQUEST_TIME'];
+	$utime = time();
 
 	if ($parent == 0 ) {
 		$parent = $utime;
@@ -103,14 +103,17 @@ if (isset($_POST["send"] ) ===  true) {
 	}
 
 	// 値を追加する
-	$sql = "INSERT INTO ".TABLE." SET date=NOW() ,name='$name', sub='$sub', com='$com', mail='$mail', url='$url',picfile='$picfile', pchfile='$pchfile', img_w='$img_w', img_h='$img_h', utime='$utime', parent='$parent', time='$time', pwd='$pwd', exid='$exid', tree='$tree', invz='$invz', host='$host'";
-	$dh = $db->exec($sql);
-	//レスの場合
-	if ($_POST["modid"] != "") {
-		$mod = $_POST["modid"];
-		$sql = "UPDATE ".TABLE." SET exid=1 WHERE id=".$mod;
-		$update = $db->exec($sql);
+	// スレ建ての場合
+	if ($_POST["modid"] == "") {
+		$sql = "INSERT INTO ".TABLE." SET created=NOW() ,name='$name', sub='$sub', com='$com', mail='$mail', url='$url',picfile='$picfile', pchfile='$pchfile', img_w='$img_w', img_h='$img_h', utime='$utime', parent='$parent', time='$time', pwd='$pwd', exid='$exid', tree='$tree', invz='$invz', host='$host'";
+		$dh = $db->exec($sql);
+	} else {
+		//レスの場合
+		$tid = $_POST["modid"];
+		$sql = "INSERT INTO ".TABLETREE." SET created=NOW() , tid='$tid', name='$name', sub='$sub', com='$com', mail='$mail', url='$url',picfile='$picfile', pchfile='$pchfile', img_w='$img_w', img_h='$img_h', utime='$utime', parent='$parent', time='$time', pwd='$pwd', exid='$exid', tree='$tree', invz='$invz', host='$host'";
+		$dh = $db->exec($sql);
 	}
+	
 	$out["message"] = "書き込みに成功しました。";
 }
 
@@ -147,11 +150,18 @@ if ($out["next"] > $max_page) {
 }
 
 //読み込み
+//1ページの全スレッド取得
 $sql = "SELECT * FROM ".TABLE." WHERE invz=0 ORDER BY tree DESC LIMIT ".$start.",".PAGE_DEF;
 $posts = $db->query($sql);
 while ($out['bbsline'][] = $posts->fetch() ) {
 	$out['bbsline'];
 } 
+//スレッドの記事を取得
+$sqli = "SELECT * FROM ".TABLETREE." WHERE invz=0 ORDER BY tree DESC";
+$postsi = $db->query($sqli);
+while ($out['ko'][] = $postsi->fetch()){
+	$out['bbsline']['ko'];
+}
 
 $Skinny->SkinnyDisplay( SKINDIR.MAINFILE, $out );
 //var_dump($out['bbsline']);
