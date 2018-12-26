@@ -24,7 +24,11 @@ if (password_verify($_POST["pwd"],$msg['pwd']) == true) {
 	$sql = "DELETE FROM ".TABLE." WHERE id=".$delno;
 	$del = $db->prepare($sql);
 	$del->execute(array($delno));
-} elseif (ADMIN_PASS == $_POST["pwd"]) {
+} elseif (ADMIN_PASS == $_POST["pwd"] && $_POST["admindel"] == 1) {
+	$sql = "DELETE FROM ".TABLE." WHERE id=".$delno;
+	$del = $db->prepare($sql);
+	$del->execute(array($delno));
+} elseif (ADMIN_PASS == $_POST["pwd"] && $_POST["admindel"] != 1) {
 	$sql = "UPDATE ".TABLE." SET invz=1 WHERE id=".$delno;
 	$del = $db->exec($sql);
 } else {

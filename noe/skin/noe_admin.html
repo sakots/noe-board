@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<meta charset="utf-8">
+		<title><% echo (btitle) %></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+		<link rel="stylesheet" href="<% echo (skindir) %>noe_main.css" type="text/css">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/css/lightbox.css">
+
+	</head>
+	<body>
+		<header id="header">
+			<h1><% echo (btitle) %></h1>
+			<hr>
+			<div>
+				<section>
+					<p class="top menu">
+						<a href="<% echo (home) %>"><i class="fas fa-home fa-fw fa-lg" title="ホーム"></i></a>
+						<a href="<% echo (self) %>"><i class="fas fa-sync fa-fw fa-lg" title="リロード"></i></a>
+						<a href="#footer"><i class="fas fa-arrow-down fa-fw fa-lg" title="一番下へ"></i></a>
+					</p>
+				</section>
+				<section>
+					<p class="sysmsg"><% echo (message) %></p>
+				</section>
+			</div>
+			<hr>
+			<div>
+				<section class="epost">
+					<p>ADMIN MODE</p>
+				</section>
+				<hr>
+				<section class="delf">
+					<form action="noedel.php" method="post">
+						<p>
+							No <input class="form" type="text" name="delno" value="" autocomplete="section-no">
+							Pass <input class="form" type="password" name="pwd" value="" autocomplete="new-password">
+							<input class="button" type="submit" value=" 削除 ">
+							<input type="hidden" name="admindel" value="1">
+						</p>
+					</form>
+				</section>
+				<hr>
+				<section class="paging">
+					<p>
+						<% def(back) %>
+						<span class="button"><a href="<% echo (self) %>?page=<% echo (back) %>">BACK</a></span> 
+						<% elsedef %>
+						<span class="se">START</span>
+						<% /def %>
+						<% each(paging) %>
+						<% ifs(paging/p,==,nowpage) %><em class="thispage"><% else %><a href="<% echo (self) %>?page=<% echo (paging/p) %>">[<% /ifs %><% echo (paging/p) %><% ifs(paging/p,==,nowpage) %></em><% else %>]</a><% /ifs %>
+						<% /each %>
+						<% def(next) %>
+						<span class="button"><a href="<% echo (self) %>?page=<% echo (next) %>">NEXT</a></span> 
+						<% elsedef %>
+						<span class="se">END</span>
+						<% /def %>
+					</p>
+				</section>
+			</div>
+			<hr>
+		</header>
+		<main>
+			<div>
+				<hr>
+				<section class="thread">
+					<table>
+						<tr>
+							<th>ID</th>
+							<th>name</th>
+							<th>date</th>
+							<th>sub</th>
+							<th>pic</th>
+							<th>com</th>
+							<th>host</th>
+							<th>invz</th>
+						</tr>
+						<% each(bbsline) %>
+						<% def(bbsline/com) %>
+						<tr>
+							<td><% echo(bbsline/id) %></td>
+							<td><% echo(bbsline/name) %></td>
+							<td><% echo(bbsline/date) %></td>
+							<td><% echo(bbsline/sub) %></td>
+							<td><% echo(bbsline/picfile) %></td>
+							<td><% echo(bbsline/com) %></td>
+							<td><% echo(bbsline/host) %></td>
+							<td><% if(bbsline/invz,==,1) %>invz<% /if %></td>
+						</tr>
+						<% /def %>
+						<% /each %>
+					</table>
+				</section>
+				<hr>
+			</div>
+		</main>
+		<footer id="footer">
+			<div class="copy">
+				<p>
+					<a href="https://sakots.red/" target="_top">noe-board <% echo (ver) %></a>
+					Web Style by <a href="https://sakots.red/" target="_top" title="noedef <% echo(tver) %> (by 赤原文庫)">noedef</a>
+				</p>
+				<p>
+					UseFunction -
+					<a href="https://github.com/funige/neo/">PaintBBS NEO</a>
+					<a href="http://skinny.sx68.net/">skinny</a>
+				</p>
+			</div>
+		</footer>
+		<script src="https://code.jquery.com/jquery-1.12.4.min.js" type="text/javascript"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/js/lightbox.min.js" type="text/javascript"></script>
+	</body>
+</html>

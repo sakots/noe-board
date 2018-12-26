@@ -1,11 +1,11 @@
 <?php
 //--------------------------------------------------
-//　「noe」v0.6.2～用スキン「noedef」設定ファイル
+//　「noe」v0.7.0～用スキン「noedef」設定ファイル
 //　by sakots https://sakots.red/
 //--------------------------------------------------
 
 //テンプレートのバージョン
-define('TEMPLATE_VER', "v0.05 lot.181226");
+define('TEMPLATE_VER', "v0.0.7 lot.181226");
 
 /* -------------------- */
 
@@ -26,6 +26,9 @@ define('ANIMEFILE', "noe_anime.html");
 
 //投稿時のテンプレートファイル
 define('PICFILE', "noe_picpost.html");
+
+//管理モードのテンプレートファイル
+define('ADMINFILE', "noe_admin.html");
 
 //その他のテンプレートファイル
 define('OTHERFILE', "noe_other.html");
