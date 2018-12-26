@@ -1,6 +1,6 @@
 <?php
 //--------------------------------------------------
-//　おえかきけいじばん「noe-board」v0.6.1
+//　おえかきけいじばん「noe-board」v0.6.2
 //　by sakots https://sakots.red/
 //--------------------------------------------------
 
@@ -15,7 +15,7 @@ require("template_ini.php");
 require("dbconnect.php");
 
 //スクリプトのバージョン
-$out["ver"] = "v0.6.1";
+$out["ver"] = "v0.6.2";
 
 //var_dump($_POST);
 
@@ -31,7 +31,8 @@ $out["skindir"] = SKINDIR;
 $out["tver"] = TEMPLATE_VER;
 
 $out["parent"] = $_GET['res'];
-$resno =  $_GET['res'];
+$resno = $_GET['res'];
+$out["modid"] = $_GET['id'];
 
 $out["base"] = BASE;
 

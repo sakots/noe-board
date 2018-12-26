@@ -85,10 +85,12 @@
 						</figure>
 						<% /def %>
 						<p class="comment"><% echo(bbsline/com) %></p>
-						<div class="thfoot"><span class="button"><a href="noeres.php?res=<% echo (bbsline/parent) %>"><i class="fas fa-reply-all"></i> 返信</a></span></div>
+						<% if(bbsline/exid,==,0) %>
+						<div class="thfoot"><span class="button"><a href="noeres.php?res=<% echo (bbsline/parent) %>&amp;id=<% echo(bbsline/id) %>"><i class="fas fa-reply-all"></i> 返信</a></span></div>
+						<% /if %>
 					</section>
 				</section>
-				<hr>
+				<% if(bbsline/exid,==,0) %><hr><% /if %><hr>
 				<% /def %>
 				<% /each %>
 			</div>
