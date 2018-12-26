@@ -1,6 +1,6 @@
 <?php
 //--------------------------------------------------
-//　おえかきけいじばん「noe-board」v0.6.0
+//　おえかきけいじばん「noe-board」v0.6.1
 //　by sakots https://sakots.red/
 //--------------------------------------------------
 
@@ -15,7 +15,7 @@ require("template_ini.php");
 require("dbconnect.php");
 
 //スクリプトのバージョン
-$out["ver"] = "v0.6.0";
+$out["ver"] = "v0.6.1";
 
 //var_dump($_POST);
 
@@ -125,6 +125,11 @@ $max_page = floor($count["cnt"] / PAGE_DEF) + 1;
 
 //リンク作成用
 $out["nowpage"] = $page;
+$p = 1;
+while ($p <= $max_page) {
+	$out["paging"][($p -1)] = compact(p);
+	$p++;
+}
 
 $out["back"] = $page - 1;
 if ($out["back"] == 0) {

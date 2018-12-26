@@ -5,7 +5,7 @@
 //--------------------------------------------------
 
 //テンプレートのバージョン
-define('TEMPLATE_VER', "v0.03 lot.181226");
+define('TEMPLATE_VER', "v0.04 lot.181226");
 
 /* -------------------- */
 
@@ -45,15 +45,6 @@ define('PTIME_S', '秒');
 //cssで設定するの推奨
 define('RE_START', '<span class="resma">');
 define('RE_END', '</span>');
-
-//現在のページの書式
-//※<PAGE> にページ数が入ります
-define('NOW_PAGE', '<em class="thispage"><PAGE></em>');
-
-//他のページの書式
-//※<PAGE> にページ数が入ります
-//※<PURL> にURLが入ります
-define('OTHER_PAGE', '[<a href="<PURL>"><PAGE></a>]');
 
 //編集したときの目印
 //※記事を編集したら日付の後ろに付きます

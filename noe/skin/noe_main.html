@@ -56,7 +56,9 @@
 						<% elsedef %>
 						<span class="se">START</span>
 						<% /def %>
-						[page<% echo (nowpage) %>]
+						<% each(paging) %>
+						<% ifs(paging/p,==,nowpage) %><em class="thispage"><% else %><a href="<% echo (self) %>?page=<% echo (paging/p) %>">[<% /ifs %><% echo (paging/p) %><% ifs(paging/p,==,nowpage) %></em><% else %>]</a><% /ifs %>
+						<% /each %>
 						<% def(next) %>
 						<span class="button"><a href="<% echo (self) %>?page=<% echo (next) %>">NEXT</a></span> 
 						<% elsedef %>
