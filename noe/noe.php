@@ -1,6 +1,6 @@
 <?php
 //--------------------------------------------------
-//　おえかきけいじばん「noe-board」v0.8.0
+//　おえかきけいじばん「noe-board」v0.8.1
 //　by sakots https://sakots.red/
 //--------------------------------------------------
 
@@ -15,7 +15,7 @@ require("template_ini.php");
 require("dbconnect.php");
 
 //スクリプトのバージョン
-$out["ver"] = "v0.8.0";
+$out["ver"] = "v0.8.1";
 
 //var_dump($_POST);
 
@@ -105,12 +105,12 @@ if (isset($_POST["send"] ) ===  true) {
 	// 値を追加する
 	// スレ建ての場合
 	if ($_POST["modid"] == "") {
-		$sql = "INSERT INTO ".TABLE." SET created=NOW() ,name='$name', sub='$sub', com='$com', mail='$mail', url='$url',picfile='$picfile', pchfile='$pchfile', img_w='$img_w', img_h='$img_h', utime='$utime', parent='$parent', time='$time', pwd='$pwd', exid='$exid', tree='$tree', invz='$invz', host='$host'";
+		$sql = "INSERT INTO ".TABLE." SET created=NOW() ,modified=NOW() ,name='$name', sub='$sub', com='$com', mail='$mail', url='$url',picfile='$picfile', pchfile='$pchfile', img_w='$img_w', img_h='$img_h', utime='$utime', parent='$parent', time='$time', pwd='$pwd', exid='$exid', tree='$tree', invz='$invz', host='$host'";
 		$dh = $db->exec($sql);
 	} else {
 		//レスの場合
 		$tid = $_POST["modid"];
-		$sql = "INSERT INTO ".TABLETREE." SET created=NOW() , tid='$tid', name='$name', sub='$sub', com='$com', mail='$mail', url='$url',picfile='$picfile', pchfile='$pchfile', img_w='$img_w', img_h='$img_h', utime='$utime', parent='$parent', time='$time', pwd='$pwd', exid='$exid', tree='$tree', invz='$invz', host='$host'";
+		$sql = "INSERT INTO ".TABLETREE." SET created=NOW() , modified=NOW() , tid='$tid', name='$name', sub='$sub', com='$com', mail='$mail', url='$url',picfile='$picfile', pchfile='$pchfile', img_w='$img_w', img_h='$img_h', utime='$utime', parent='$parent', time='$time', pwd='$pwd', exid='$exid', tree='$tree', invz='$invz', host='$host'";
 		$dh = $db->exec($sql);
 	}
 	
