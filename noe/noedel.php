@@ -20,20 +20,25 @@ $msgs = $db->prepare($sql);
 $msgs->execute(array($delno));
 $msg = $msgs->fetch();
 
-if (password_verify($_POST["pwd"],$msg['pwd']) == true) {
-	$sql = "DELETE FROM ".TABLE." WHERE id=".$delno;
-	$del = $db->prepare($sql);
-	$del->execute(array($delno));
-} elseif (ADMIN_PASS == $_POST["pwd"] && $_POST["admindel"] == 1) {
-	$sql = "DELETE FROM ".TABLE." WHERE id=".$delno;
-	$del = $db->prepare($sql);
-	$del->execute(array($delno));
-} elseif (ADMIN_PASS == $_POST["pwd"] && $_POST["admindel"] != 1) {
-	$sql = "UPDATE ".TABLE." SET invz=1 WHERE id=".$delno;
-	$del = $db->exec($sql);
+if ($msg['exid'] == 1) {
+	if (password_verify($_POST["pwd"],$msg['pwd']) == true) {
+		$sql = "DELETE FROM ".TABLE." WHERE id=".$delno;
+		$del = $db->prepare($sql);
+		$del->execute(array($delno));
+	} elseif (ADMIN_PASS == $_POST["pwd"] && $_POST["admindel"] == 1) {
+		$sql = "DELETE FROM ".TABLE." WHERE id=".$delno;
+		$del = $db->prepare($sql);
+		$del->execute(array($delno));
+	} elseif (ADMIN_PASS == $_POST["pwd"] && $_POST["admindel"] != 1) {
+		$sql = "UPDATE ".TABLE." SET invz=1 WHERE id=".$delno;
+		$del = $db->exec($sql);
+	} else {
+		echo "パスワードまたは記事番号が違います";
+		exit();
+	}
 } else {
-	echo "パスワードまたは記事番号が違います";
-	exit();
+	echo "レスが付くまで削除できません";
+		exit();
 }
 
 header('Location:'.PHP_SELF);
