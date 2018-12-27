@@ -84,15 +84,27 @@
 						<% each(bbsline) %>
 						<% def(bbsline/com) %>
 						<tr>
-							<td><% echo(bbsline/id) %></td>
+							<td><% echo(bbsline/tid) %></td>
 							<td><% echo(bbsline/name) %></td>
-							<td><% echo(bbsline/date) %></td>
+							<td><% echo(bbsline/modified) %></td>
 							<td><% echo(bbsline/sub) %></td>
 							<td><% echo(bbsline/picfile) %></td>
 							<td><% echo(bbsline/com) %></td>
 							<td><% echo(bbsline/host) %></td>
 							<td><% if(bbsline/invz,==,1) %>invz<% /if %></td>
 						</tr>
+						<% each(ko) %><% def(ko/com) %><% ifs(bbsline/tid,==,ko/tid) %>
+						<tr>
+							<td>└<% echo(ko/iid) %></td>
+							<td><% echo(ko/name) %></td>
+							<td><% echo(ko/modified) %></td>
+							<td><% echo(ko/sub) %></td>
+							<td><% echo(ko/picfile) %></td>
+							<td><% echo(ko/com) %></td>
+							<td><% echo(ko/host) %></td>
+							<td><% if(ko/invz,==,1) %>invz<% /if %></td>
+						</tr>
+						<% /ifs %><% /def %><% /each %>
 						<% /def %>
 						<% /each %>
 					</table>

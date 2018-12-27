@@ -1,6 +1,6 @@
 <?php
 //--------------------------------------------------
-//　おえかきけいじばん「noe-board」v0.8.3
+//　おえかきけいじばん「noe-board」v0.8.4
 //　by sakots https://sakots.red/
 //--------------------------------------------------
 
@@ -15,7 +15,7 @@ require("template_ini.php");
 require("dbconnect.php");
 
 //スクリプトのバージョン
-$out["ver"] = "v0.8.3";
+$out["ver"] = "v0.8.4";
 
 //var_dump($_POST);
 
@@ -73,6 +73,12 @@ if ($_GET["adminpass"] == ADMIN_PASS) {
 	while ($out['bbsline'][] = $posts->fetch() ) {
 		$out['bbsline'];
 	} 
+	//スレッドの記事を取得
+	$sqli = "SELECT * FROM ".TABLETREE." WHERE invz=0 ORDER BY tree DESC";
+	$postsi = $db->query($sqli);
+	while ($out['ko'][] = $postsi->fetch()){
+		$out['bbsline']['ko'];
+	}
 	$Skinny->SkinnyDisplay( SKINDIR.ADMINFILE, $out );
 } else {
 	echo "エラーです";
