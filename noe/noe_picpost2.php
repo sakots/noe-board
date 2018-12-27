@@ -1,6 +1,6 @@
 <?php
 //--------------------------------------------------
-//　おえかきけいじばん「noe-board」v0.8.2
+//　おえかきけいじばん「noe-board」v0.8.3
 //　by sakots https://sakots.red/
 //--------------------------------------------------
 
@@ -13,7 +13,7 @@ require("config.php");
 require("template_ini.php");
 
 //スクリプトのバージョン
-$out["ver"] = "v0.8.2";
+$out["ver"] = "v0.8.3";
 
 $out["btitle"] = TITLE;
 $out["home"] = HOME;

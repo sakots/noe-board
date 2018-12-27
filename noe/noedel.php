@@ -13,24 +13,33 @@ require("dbconnect.php");
 //var_dump($_POST);
 
 $delno = $_POST["delno"];
+$delt = $_POST["delt"]; //0親1レス削除
+
+if ($delt == 0) {
+	$deltable = TABLE;
+	$id = "tid";
+} else {
+	$deltable = TABLETREE;
+	$id = "iid";
+}
 
 //記事呼び出し
-$sql ="SELECT * FROM ".TABLE." WHERE id=".$delno;
+$sql ="SELECT * FROM ".$deltable." WHERE ".$id."=".$delno;
 $msgs = $db->prepare($sql);
 $msgs->execute(array($delno));
 $msg = $msgs->fetch();
 
 
 if (password_verify($_POST["pwd"],$msg['pwd']) == true) {
-	$sql = "DELETE FROM ".TABLE." WHERE id=".$delno;
+	$sql = "DELETE FROM ".$deltable." WHERE ".$id."=".$delno;
 	$del = $db->prepare($sql);
 	$del->execute(array($delno));
 } elseif (ADMIN_PASS == $_POST["pwd"] && $_POST["admindel"] == 1) {
-	$sql = "DELETE FROM ".TABLE." WHERE id=".$delno;
+	$sql = "DELETE FROM ".$deltable." WHERE ".$id."=".$delno;
 	$del = $db->prepare($sql);
 	$del->execute(array($delno));
 } elseif (ADMIN_PASS == $_POST["pwd"] && $_POST["admindel"] != 1) {
-	$sql = "UPDATE ".TABLE." SET invz=1 WHERE id=".$delno;
+	$sql = "UPDATE ".$deltable." SET invz=1 WHERE ".$id."=".$delno;
 	$del = $db->exec($sql);
 } else {
 	echo "パスワードまたは記事番号が違います";
