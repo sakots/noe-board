@@ -71,7 +71,7 @@ $skConf['ERRORLOG']['FLG']    = false;      // エラーログを出力      [tr
 $skConf['ERRORLOG']['DIR']    = './logs';   // エラーログ出力先DIR
 
 // プラグイン
-$skConf['PLUGIN']['FLG']      = false;       // プラグイン機能の利用  [true]:する   false:しない
+$skConf['PLUGIN']['FLG']      = true;       // プラグイン機能の利用  [true]:する   false:しない
 $skConf['PLUGIN']['DIR']      = './plugin'; // プラグインのPHPファイル置き場
 
 // 出力時に余計な文字を削除するフィルタ設定

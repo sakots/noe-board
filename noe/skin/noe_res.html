@@ -98,7 +98,7 @@
 							<a href="<% echo(path) %><% echo(bbsline/picfile) %>" target="_blank"data-lightbox="b<% echo(bbsline/picfile) %>" data-title="<% echo(bbsline/picfile) %>"><img src="<% echo(path) %><% echo(bbsline/picfile) %>" alt="<% echo(bbsline/picfile) %>"></a>
 						</figure>
 						<% /def %>
-						<p class="comment"><% echo(bbsline/com) %></p>
+						<p class="comment"><% plugin('URLlink',bbsline/com) %></p>
 						<% each(ko) %><% def(ko/com) %>
 						<section class="res">
 							<section>
@@ -111,7 +111,7 @@
 									<a href="<% echo(path) %><% echo(ko/picfile) %>" target="_blank"data-lightbox="b<% echo(ko/picfile) %>" data-title="<% echo	(ko/picfile) %>"><img src="<% echo(path) %><% echo(ko/picfile) %>" alt="<% echo	(ko/picfile) %>"></a>
 								</figure>
 								<% /def %>
-								<p class="comment"><% echo(ko/com) %></p>
+								<p class="comment"><% plugin('URLlink',ko/com) %></p>
 							</section>
 						</section>
 						<% /def %><% /each %>

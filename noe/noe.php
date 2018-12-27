@@ -1,6 +1,6 @@
 <?php
 //--------------------------------------------------
-//　おえかきけいじばん「noe-board」v0.8.4
+//　おえかきけいじばん「noe-board」v0.8.5
 //　by sakots https://sakots.red/
 //--------------------------------------------------
 
@@ -15,7 +15,7 @@ require("template_ini.php");
 require("dbconnect.php");
 
 //スクリプトのバージョン
-$out["ver"] = "v0.8.4";
+$out["ver"] = "v0.8.5";
 
 //var_dump($_POST);
 
@@ -45,6 +45,12 @@ function newstring($string) {
 	return $string;
 }
 //無効化ここまで
+
+/* オートリンク */
+function auto_link($proto){
+	$proto = preg_replace("{(https?|ftp|news)(://[[:alnum:]\+\$\;\?\.%,!#~*/:@&=_-]+)}","<a href=\"\\1\\2\" target=\"_blank\" rel=\"nofollow noopener noreferrer\">\\1\\2</a>",$proto);
+	return $proto;
+}
 
 $message ="";
 $sub = ( isset( $_POST["sub"] ) === true ) ? newstring($_POST["sub"]): "";
@@ -156,6 +162,7 @@ $posts = $db->query($sql);
 while ($out['bbsline'][] = $posts->fetch() ) {
 	$out['bbsline'];
 } 
+
 //スレッドの記事を取得
 $sqli = "SELECT * FROM ".TABLETREE." WHERE invz=0 ORDER BY tree DESC";
 $postsi = $db->query($sqli);
