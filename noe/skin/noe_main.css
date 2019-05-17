@@ -103,7 +103,8 @@ em.thispage {
 
 figure {
   float: left;
-  margin-right: 8px;
+  padding-right: 8px;
+  background-color: #333;
   margin-bottom: 1ex;
 }
 
@@ -120,8 +121,15 @@ ul {
   font-size: smaller;
 }
 
+.res {
+  border-top: solid 2px #222;
+  margin-top: 1em;
+}
+
 .res section {
-  display: table;
+  margin-top: 1em;
+  display: inline-block;
+  max-width: 100%;
 }
 
 .res h3, .res h4 {

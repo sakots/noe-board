@@ -96,7 +96,8 @@ em.thispage {
 }
 figure {
 	float: left;
-	margin-right: 8px;
+	padding-right: 8px;
+	background-color: $haikei;
 	margin-bottom: 1ex;
 	img {
 		max-width: 100%;
@@ -110,8 +111,12 @@ ul {
 	font-size: smaller
 }
 .res {
+	border-top: solid 2px $ushiro;
+	margin-top: 1em;
 	section {
-		display: table;
+		margin-top: 1em;
+		display: inline-block;
+		max-width: 100%;
 	}
 	h3, h4 {
 		font-size: 100%;

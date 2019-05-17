@@ -91,7 +91,6 @@
 						<% each(ko) %><% def(ko/com) %><% ifs(bbsline/tid,==,ko/tid) %>
 						<section class="res">
 							<section>
-								<hr>
 								<h3><span class="oyano"><% echo(ko/iid) %></span><% echo(ko/sub) %></h3>
 								<h4>名前：<% echo(ko/name) %>：<% echo(ko/modified) %><% def(ko/url) %><span class="button"><a href="<% echo(ko/url) %>" target="_blank" rel="nofollow noopener noreferrer"><i class="fas fa-flag-checkered"></i> URL</a></span><% /def %></h4>
 								<% def(ko/picfile) %>
