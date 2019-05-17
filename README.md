@@ -23,6 +23,9 @@ POTI-board改で使用しているテンプレートエンジン「htmltemplate.
 ・setupdb.phpを実行（エラーが出なければOKです。ここでデータベースにテーブルが作られます。ディレクトリの作成も行われます。）  
 ・OK！
 
+## サンプルとサポート
+<a href="https://sakots.red/noe/noe.php">noeSQL</a>
+
 ## <a name="history">履歴</a>
 
 ### [2019/05/17] v0.8.5
