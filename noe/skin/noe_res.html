@@ -24,6 +24,7 @@
 			<div>
 				<section>
 					<p class="top menu">
+						<a href="<% echo (self) %>"><i class="fas fa-star fa-fw fa-lg" title="トップ"></i></a>
 						<a href="<% echo (home) %>"><i class="fas fa-home fa-fw fa-lg" title="ホーム"></i></a>
 						<a href="<% echo (self) %>"><i class="fas fa-sync fa-fw fa-lg" title="リロード"></i></a>
 						<a href="#footer"><i class="fas fa-arrow-down fa-fw fa-lg" title="一番下へ"></i></a>
@@ -107,7 +108,7 @@
 								<h4>名前：<% echo(ko/name) %>：<% echo(ko/modified) %><% def(ko/url) %><span class="button"><a href="<% echo(ko/url) %>" target="_blank" rel="nofollow noopener noreferrer"><i class="fas fa-flag-checkered"></i> URL</a></span><% /def %></h4>
 								<% def(ko/picfile) %>
 								<figure>
-									<figcaption><a href="<% echo(path) %><% echo(ko/picfile) %>" target="_blank" data-lightbox="a<% echo(ko/picfile) %>" data-title="<% echo(ko/picfile) %>"><% echo(ko/picfile) %></a>｜<% def(ko/pchfile) %>●<a href="anime.php?pch=<% echo(ko/pchfile) %>&amp;img_w=<% echo(ko/img_w) %>&amp;img_h=<% echo(ko/img_h) %>">動画再生</a><% /def %></figcaption>
+									<figcaption><a href="<% echo(path) %><% echo(ko/picfile) %>" target="_blank" data-lightbox="a<% echo(ko/picfile) %>" data-title="<% echo(ko/picfile) %>"><% echo(ko/picfile) %></a></figcaption>
 									<a href="<% echo(path) %><% echo(ko/picfile) %>" target="_blank"data-lightbox="b<% echo(ko/picfile) %>" data-title="<% echo	(ko/picfile) %>"><img src="<% echo(path) %><% echo(ko/picfile) %>" alt="<% echo	(ko/picfile) %>"></a>
 								</figure>
 								<% /def %>
