@@ -1,6 +1,6 @@
 <?php
 /*
-  * noe-board v0.8.0～ lot.181226
+  * noe-board v0.9.0～ lot.190523
   * by sakots >> https://sakots.red/
   *
   * noe-boardの設定ファイルです。
@@ -8,7 +8,7 @@
 */
 
 //設置URL /まで
-define('BASE', 'https://sakots.red/noe/');
+define('BASE', 'https://localhost/noe/');
 
 //データベース設定
 
@@ -274,6 +274,5 @@ $syslogmax = '100';
 $path = realpath("./").'/'.IMG_DIR;
 $temppath = realpath("./").'/'.TEMP_DIR;
 
-$out["path"] = IMG_DIR;
 
 ?>

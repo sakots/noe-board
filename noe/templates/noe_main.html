@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<meta charset="utf-8">
+		<title>{$btitle}</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+		<link rel="stylesheet" href="{$skindir}noe_main.css" type="text/css">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/css/lightbox.css">
+
+	</head>
+	<body>
+		<header id="header">
+			<h1>{$btitle}</h1>
+			<hr>
+			<div>
+				<section>
+					<p class="top menu">
+						<a href="{$home}"><i class="fas fa-home fa-fw fa-lg" title="ホーム"></i></a>
+						<a href="{$self}"><i class="fas fa-sync fa-fw fa-lg" title="リロード"></i></a>
+						<a href="#footer"><i class="fas fa-arrow-down fa-fw fa-lg" title="一番下へ"></i></a>
+					</p>
+				</section>
+				<section>
+					<p class="sysmsg">{$message}</p>
+				</section>
+			</div>
+			<hr>
+			<div>
+				<section class="epost">
+					<form action="paint.php" method="post">
+						<p>
+							<label>幅：<input class="form" type="text" name="picw" value="{$pdefw}"></label>
+							<label>高さ：<input class="form" type="text" name="pich" value="{$pdefh}"></label>
+							{if $useanime == 1}<input type="checkbox" value="true" name="anime" title="動画記録"{if $defanime == 1} checked{/if}>{/if}
+							<input type="hidden" name="mode" value="paint">
+							<input class="button" type="submit" value="お絵かき">
+						</p>
+					</form>
+				</section>
+				<hr>
+				<section class="delf">
+					<form action="noedel.php" method="post">
+						<p>
+							<select name="delt">
+								<option value="1">レス</option>
+								<option value="0">親</option>
+							</select>
+							No <input class="form" type="text" name="delno" value="" autocomplete="section-no">
+							Pass <input class="form" type="password" name="pwd" value="" autocomplete="new-password">
+							<input class="button" type="submit" value=" 削除 ">
+						</p>
+					</form>
+				</section>
+				<hr>
+				<section class="paging">
+					<p>
+						{if $back == 0}
+						<span class="se">START</span>
+						{else}
+						<span class="button"><a href="{$self}?page={$back}">BACK</a></span> 
+						{/if}
+						{foreach from=$paging item=pp}
+						{if $pp.p == $nowpage}<em class="thispage">{else}<a href="{$self}?page={$pp.p}">[{/if}{$pp.p}{if $pp.p == $nowpage}</em>{else}]</a>{/if}
+						{/foreach}
+						{if $next == ($max_page + 1)}
+						<span class="se">END</span>
+						{else}
+						<span class="button"><a href="{$self}?page={$next}">NEXT</a></span> 
+						{/if}
+					</p>
+				</section>
+			</div>
+			<hr>
+		</header>
+		<main>
+			<div>
+				<hr>
+				{if isset($oya)}{foreach from=$oya item=bbsline}
+				<section class="thread">
+					<h3><span class="oyano">{$bbsline.tid}</span>{$bbsline.sub}</h3>
+					<section>
+						<h4>名前：{$bbsline.name}：{$bbsline.modified}{if $bbsline.url == true} <span class="button"><a href="{$bbsline.url}" target="_blank" rel="nofollow noopener noreferrer"><i class="fas fa-flag-checkered"></i> URL</a></span>{/if}</h4>
+						{if isset($bbsline.picfile)}
+						<figure>
+							<figcaption><a href="{$path}{$bbsline.picfile}" target="_blank" data-lightbox="a{$bbsline.picfile}" data-title="{$bbsline.picfile}">{$bbsline.picfile}</a>{if isset($bbsline.pchfile)}｜●<a href="anime.php?pch={$bbsline.pchfile}&amp;img_w={$bbsline.img_w}&amp;img_h={$bbsline.img_h}">動画再生</a>{/if}</figcaption>
+							<a href="{$path}{$bbsline.picfile}" target="_blank"data-lightbox="b{$bbsline.picfile}" data-title="{$bbsline.picfile}"><img src="{$path}{$bbsline.picfile}" alt="{$bbsline.picfile}>"></a>
+						</figure>
+						{/if}
+						<p class="comment">{$bbsline.com}</p>
+						{if isset($ko)}{foreach from=$ko item=res}{if $bbsline.tid == $res.tid}
+						<section class="res">
+							<section>
+								<h3><span class="oyano">{$res.iid}</span>{$res.sub}</h3>
+								<h4>名前：{$res.name}：{$res.modified}{if $res.url == true}<span class="button"><a href="{$res.url}" target="_blank" rel="nofollow noopener noreferrer"><i class="fas fa-flag-checkered"></i> URL</a></span>{/if}</h4>
+								{if $res.picfile == true}
+								<figure>
+									<figcaption><a href="{$path}{$res.picfile}" target="_blank" data-lightbox="a{$res.picfile}" data-title="{$res.picfile}">{$res.picfile}</a>{if $res.pchfile == true}｜●<a href="anime.php?pch={$res.pchfile}&amp;img_w={$res.img_w}&amp;img_h={$res.img_h}">動画再生</a>{/if}</figcaption>
+									<a href="{$path}{$res.picfile}" target="_blank"data-lightbox="b{$res.picfile}" data-title="{$res.picfile}"><img src="{$path}{$res.picfile}" alt={$res.picfile}"></a>
+								</figure>
+								{/if}
+								<p class="comment">{$res.com}</p>
+							</section>
+						</section>
+						{/if}{/foreach}{/if}
+						<div class="thfoot"><span class="button"><a href="noeres.php?res={$bbsline.tid}"><i class="fas fa-reply-all"></i> 返信</a></span></div>
+					</section>
+				</section>
+				<hr><hr>
+				{/foreach}{/if}
+			</div>
+		</main>
+		<footer id="footer">
+			<div class="copy">
+				<p>
+					<a href="https://sakots.red/" target="_top">noe-board {$ver}</a>
+					Web Style by <a href="https://sakots.red/" target="_top" title="noedef {$tver} (by 赤原文庫)">noedef</a>
+				</p>
+				<p>
+					UseFunction -
+					<a href="https://github.com/funige/neo/">PaintBBS NEO</a>
+					<a href="https://www.smarty.net/">Smarty</a>
+				</p>
+			</div>
+		</footer>
+		<script src="https://code.jquery.com/jquery-1.12.4.min.js" type="text/javascript"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/js/lightbox.min.js" type="text/javascript"></script>
+	</body>
+</html>

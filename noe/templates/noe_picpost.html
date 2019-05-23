@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+		<link rel="stylesheet" href="{$skindir}noe_main.css" type="text/css">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/css/lightbox.css">
+		<title>{$btitle}</title>
+	</head>
+	<body>
+		<header>
+			<h1>{$btitle}</h1>
+			<hr>
+			<section>
+				<p class="menu">
+					<a href="{$self}"><i class="fas fa-star fa-fw fa-lg" title="トップ"></i></a>
+					<a href="{$home}" target="_top"><i class="fas fa-home fa-fw fa-lg" title="ホーム"></i></a>
+					</p>
+			</section>
+			<section>
+				<p class="sysmsg">{$message}</p>
+			</section>
+			<hr>
+		</header>
+		<main>
+			<!--(========== POST MODE(投稿モード) start ==========
+			// 【NEW(新規投稿)、OEKAKI(お絵かき投稿)、UPDATE(編集)】
+			)-->
+			<h1 class="oekaki">投稿フォーム</h1>
+			<section>
+				<div class="thread">
+					<div class="tmpimg">
+						{if isset($tmp)}
+						<div>
+							{foreach from=$temp item=tmp}{if isset($tmp.src)}{if isset($tmp.srcname)}
+							<figure>
+								<img src="{$tmp.src}">
+								<figcaption>{$tmp.srcname}[{$tmp.date}]</figcaption>
+							</figure>
+							{/if}{/if}{/foreach}
+						</div>
+						{else}
+						<p>Not OEKAKI image</p>
+						{/if}
+					</div>
+					<form class="ppost postform" action="{$self}" method="post">
+						<table>
+							<tr>
+								<td>name</td>
+								<td><input type="text" name="name" size="28" autocomplete="username"></td>
+							</tr>
+							<tr>
+								<td>mail</td>
+								<td><input type="text" name="mail" size="28" value=""></td>
+							</tr>
+							<tr>
+								<td>URL</td>
+								<td><input type="text" name="url" size="28" value=""></td>
+							</tr>
+							<tr>
+								<td>title</td>
+								<td>
+									<input type="text" name="sub" size="35" autocomplete="section-sub">
+									<input type="submit" name="send" value="書き込む">
+									<input type="hidden" name="lognum" value="{$lognum}">
+									<input type="hidden" name="parent" value="{$parent}">
+									<input type="hidden" name="invz" value="0">
+									<input type="hidden" name="img_w" value="0">
+									<input type="hidden" name="img_h" value="0">
+									<input type="hidden" name="time" value="0">
+									<input type="hidden" name="exid" value="0">
+								</td>
+							</tr>
+							<tr>
+								<td>comment</td>
+								<td><textarea name="com" cols="48" rows="4" wrap="soft"></textarea></td>
+							</tr>
+							{if isset($tmp)}
+							<tr>
+								<td>imgs</td>
+								<td><select name="picfile">
+								{foreach from=$temp item=tmp}{if isset($tmp.srcname)}<option value="{$tmp.srcname}">{$tmp.srcname}</option>{/if}{/foreach}
+								</select></td>
+							</tr>
+							{/if}
+							<tr>
+								<td>pass</td>
+								<td><input type="password" name="pwd" size="6" value=""></td>
+							</tr>
+						</table>
+					</form>
+				</div>
+			</section>
+		</main>
+		<footer id="footer">
+				<div class="copy">
+					<p>
+						<a href="https://sakots.red/" target="_top">noe-board {$ver}</a>
+						Web Style by <a href="https://sakots.red/" target="_top" title="noedef {$tver} (by 赤原文庫)">noedef</a>
+					</p>
+					<p>
+						UseFunction -
+						<a href="https://github.com/funige/neo/">PaintBBS NEO</a>
+						<a href="https://www.smarty.net/">Smarty</a>
+					</p>
+				</div>
+			</footer>
+	</body>
+</html>

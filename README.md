@@ -9,6 +9,8 @@ POTI-board改で使用しているテンプレートエンジン「htmltemplate.
 ということでなんか新しいテンプレートエンジンはないか探したところ、
 
 <a href="http://skinny.sx68.net/">Skinny</a>  
+↓  
+<a href="https://www.smarty.net/">smarty</a>  
 
 見つけました！これにPOTI-boardを移植…  
 できねえ〜〜〜〜〜〜〜〜！！！！！！！！しるか〜〜〜〜〜〜〜〜！！！  
@@ -27,6 +29,9 @@ POTI-board改で使用しているテンプレートエンジン「htmltemplate.
 <a href="https://sakots.red/noe/noe.php">noeSQL</a>
 
 ## <a name="history">履歴</a>
+
+### [2019/05/19] v0.9.0
+- smartyに変更。
 
 ### [2019/05/19] スキンv0.2.0
 - ダイナミックパレット搭載。

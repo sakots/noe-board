@@ -5,12 +5,12 @@
 //--------------------------------------------------
 
 //テンプレートのバージョン
-define('TEMPLATE_VER', "v0.1.0a1 lot.190519");
+define('TEMPLATE_VER', "v0.2.0 lot.190523");
 
 /* -------------------- */
 
 //スキンのフォルダ
-define('SKINDIR', "skin/");
+define('SKINDIR', "templates/");
 
 //メインのテンプレートファイル
 define('MAINFILE', "noe_main.html");

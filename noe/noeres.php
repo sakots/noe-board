@@ -1,12 +1,12 @@
 <?php
 //--------------------------------------------------
-//　おえかきけいじばん「noe-board」v0.8.5
+//　おえかきけいじばん「noe-board」v0.9.0
 //　by sakots https://sakots.red/
 //--------------------------------------------------
 
-//Skinny 0.4.1
-include_once( "Skinny.php" );
-$out = array();
+//smarty-3.1.33
+require_once('libs/Smarty.class.php');
+$smarty = new Smarty();
 
 //設定の読み込み
 require("config.php");
@@ -15,25 +15,27 @@ require("template_ini.php");
 require("dbconnect.php");
 
 //スクリプトのバージョン
-$out["ver"] = "v0.8.5";
+$smarty->assign('ver','v0.9.0');
 
 //var_dump($_POST);
 
 $message = "";
 
-$out["btitle"] = TITLE;
-$out["home"] = HOME;
-$out["self"] = PHP_SELF;
-$out["message"] = $message;
-$out["pdefw"] = PDEF_W;
-$out["pdefh"] = PDEF_H;
-$out["skindir"] = SKINDIR;
-$out["tver"] = TEMPLATE_VER;
+$smarty->assign('btitle',TITLE);
+$smarty->assign('home',HOME);
+$smarty->assign('self',PHP_SELF);
+$smarty->assign('message',$message);
+$smarty->assign('pdefw',PDEF_W);
+$smarty->assign('pdefh',PDEF_H);
+$smarty->assign('skindir',SKINDIR);
+$smarty->assign('tver',TEMPLATE_VER);
 
-$out["parent"] = $_GET['res'];
+$parent = $_GET['res'];
+$smarty->assign('parent',$parent);
 $resno = $_GET['res'];
+$smarty->assign('resno',$resno);
 
-$out["base"] = BASE;
+$smarty->assign('base',BASE);
 
 /* オートリンク */
 function auto_link($proto){
@@ -44,17 +46,23 @@ function auto_link($proto){
 //読み込み
 $sql = "SELECT tid,modified,name,sub,com,mail,url,picfile,pchfile FROM ".TABLE." WHERE tid=".$resno." ORDER BY tree DESC";
 $posts = $db->query($sql);
-while ($out['bbsline'][] = $posts->fetch() ) {
+
+$oya = array();
+while ($bbsline = $posts->fetch() ) {
 	//スレッドの記事を取得
 	$sqli = "SELECT * FROM ".TABLETREE." WHERE (invz=0 AND tid=".$resno.") ORDER BY tree DESC";
 	$postsi = $db->query($sqli);
-	while ($out['ko'][] = $postsi->fetch()){
-		$out['ko'];
+	$ko = array();
+	while ($res = $postsi->fetch()){
+		$ko[] = $res;
+		$smarty->assign('ko',$ko);
 	}
-	$out['bbsline'];
+	$oya[] = $bbsline;
+	$smarty->assign('oya',$oya);
 }
 
-$Skinny->SkinnyDisplay( SKINDIR.RESFILE, $out );
-//var_dump($out['bbsline']);
+$smarty->assign('path',IMG_DIR);
+
+$smarty->display( SKINDIR.RESFILE );
 
 ?>

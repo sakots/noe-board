@@ -1,32 +1,35 @@
 <?php
 //--------------------------------------------------
-//　おえかきけいじばん「noe-board」v0.8.5
+//　おえかきけいじばん「noe-board」v0.9.0
 //　by sakots https://sakots.red/
 //--------------------------------------------------
 
-//Skinny 0.4.1
-include_once( "Skinny.php" );
-$out = array();
+//smarty-3.1.33
+require_once('libs/Smarty.class.php');
+$smarty = new Smarty();
 
 //設定の読み込み
 require("config.php");
 require("template_ini.php");
 
 //スクリプトのバージョン
-$out["ver"] = "v0.8.5";
+$smarty->assign('ver',"v0.9.0");
 
-$out["btitle"] = TITLE;
-$out["home"] = HOME;
-$out["self"] = PHP_SELF;
-$out["message"] = $message;
-$out["pdefw"] = PDEF_W;
-$out["pdefh"] = PDEF_H;
-$out["skindir"] = SKINDIR;
-$out["tver"] = TEMPLATE_VER;
-$out["picw"] = $_POST["picw"];
-$out["pich"] = $_POST["pich"];
+$smarty->assign('btitle',TITLE);
+$smarty->assign('home',HOME);
+$smarty->assign('self',PHP_SELF);
+$message = "";
+$smarty->assign('message',$message);
+$smarty->assign('pdefw',PDEF_W);
+$smarty->assign('pdefh',PDEF_H);
+$smarty->assign('skindir',SKINDIR);
+$smarty->assign('tver',TEMPLATE_VER);
 
-$out["parent"] = $_SERVER['REQUEST_TIME'];
+//$smarty->assign('picw',$_POST["picw"]);
+//$smarty->assign('pich',$_POST["pich"]);
+
+
+$smarty->assign('parent',$_SERVER['REQUEST_TIME']);
 
 //----------
 
@@ -52,8 +55,9 @@ if(count($tmplist)!=0){
 	//user-codeでチェック
 	foreach($tmplist as $tmpimg){
 		list($ucode,$uip,$ufilename) = explode("\t", $tmpimg);
-		if($ucode == $usercode)
+		//if($ucode == $usercode)
 			$tmp[] = $ufilename;
+
 	}
 	//user-codeでhitしなければIPで再チェック
 	if(count($tmp)==0){
@@ -68,39 +72,46 @@ if(count($tmplist)!=0){
 	}
 }
 
-$out['post_mode'] = true;
-$out['regist'] = true;
-if(IP_CHECK) $out['ipcheck'] = true;
+$post_mode = true;
+$regist = true;
+if(IP_CHECK) $ipcheck = true;
 if(count($tmp)==0){
-	$out['notmp'] = true;
-	$out['pictmp'] = 1;
+	$notmp = true;
+	$pictmp = 1;
 }else{
-	$out['pictmp'] = 2;
+	$pictmp = 2;
 	sort($tmp);
 	reset($tmp);
+	$temp = array();
 	foreach($tmp as $tmpfile){
 		$src = TEMP_DIR.$tmpfile;
 		$srcname = $tmpfile;
 		$date = gmdate("Y/m/d H:i", filemtime($src)+9*60*60);
-		$out['tmp'][] = compact('src','srcname','date');
+		$temp[] = compact('src','srcname','date');
 	}
+	$smarty->assign('temp', $temp);
 }
 
 //画像投稿処理
-$upfile = $temppath.$picfile;
-$upfile_name = $picfile;
-$picfile = str_replace(strrchr($picfile,"."),"",$picfile); //拡張子除去
+//$upfile = $temppath.$picfile;
+//$upfile_name = $picfile;
+//$picfile = str_replace(strrchr($picfile,"."),"",$picfile); //拡張子除去
 
-$out["tmp"][] = $tmp;
+$tmp2 = array();
+$smarty->assign('tmp',$tmp2);
 
-if( file_exists( $logfile ) ) {
-	$lognum = count( file( $logfile ) ) + 1;
-} else {
-	$lognum = 1;
-}
-$out["lognum"] = $lognum;
+//if( file_exists( $logfile ) ) {
+//	$lognum = count( file( $logfile ) ) + 1;
+//} else {
+//	$lognum = 1;
+//}
+//$smarty->assign('lognum',$lognum);
 
-$Skinny->SkinnyDisplay( SKINDIR.PICFILE, $out );
+$smarty->assign('path',IMG_DIR);
+
+
+//$smarty->debugging = true;
+$smarty->display( SKINDIR.PICFILE );
 exit;
 
 ?>

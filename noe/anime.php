@@ -1,13 +1,13 @@
 <?php
 //--------------------------------------------------
-//　おえかきけいじばん「noe-board」v0.8.5
+//　おえかきけいじばん「noe-board」v0.9.0
 //　by sakots https://sakots.red/
 //--------------------------------------------------
 
-//Skinny 0.4.1
-include_once( "Skinny.php" );
-$out = array();
-$out["ver"] = "v0.8.5";
+//smarty-3.1.33
+require_once('libs/Smarty.class.php');
+$smarty = new Smarty();
+$smarty->assign('ver','v0.9.0');
 
 //設定の読み込み
 require("config.php");
@@ -15,29 +15,29 @@ require("template_ini.php");
 
 $message = "";
 
-$out["btitle"] = TITLE;
-$out["home"] = HOME;
-$out["self"] = PHP_SELF;
-$out["message"] = $message;
-$out["pdefw"] = PDEF_W;
-$out["pdefh"] = PDEF_H;
-$out["skindir"] = SKINDIR;
-$out["tver"] = TEMPLATE_VER;
+$smarty->assign('btitle',TITLE);
+$smarty->assign('home',HOME);
+$smarty->assign('self',PHP_SELF);
+$smarty->assign('message',$message);
+$smarty->assign('pdefw',PDEF_W);
+$smarty->assign('pdefh',PDEF_H);
+$smarty->assign('skindir',SKINDIR);
+$smarty->assign('tver',TEMPLATE_VER);
 
-$out["picw"] = $_GET["img_w"];
-$out["pich"] = $_GET["img_h"];
-$out["w"] = $_GET["img_w"];
-$out["h"] = $_GET["img_h"] + 26;
-$out["pchfile"] = $_GET["pch"];
+$smarty->assign('picw',$_GET["img_w"]);
+$smarty->assign('pich',$_GET["img_h"]);
+$smarty->assign('w',$_GET["img_w"]);
+$smarty->assign('h',$_GET["img_h"] + 26);
+$smarty->assign('pchfile',$_GET["pch"]);
 
-$out["speed"] = PCH_SPEED;
+$smarty->assign('speed',PCH_SPEED);
 
 $path = realpath("./").'/'.IMG_DIR;
 $temppath = realpath("./").'/'.TEMP_DIR;
 
-$out["path"] = IMG_DIR;
+$smarty->assign('path',IMG_DIR);
 
-$Skinny->SkinnyDisplay( SKINDIR.ANIMEFILE, $out );
+$smarty->display( SKINDIR.ANIMEFILE );
 exit;
 
 ?>
