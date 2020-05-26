@@ -1,5 +1,6 @@
 'use strict';
 
+
 document.addEventListener("DOMContentLoaded", function() {
     Neo.init();
 
@@ -10,11 +11,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
 var Neo = function() {};
 
-Neo.version = "1.5.1";
+Neo.version = "1.5.6";
 Neo.painter;
 Neo.fullScreen = false;
 Neo.uploaded = false;
 Neo.viewer = false;
+Neo.toolSide = false;
 
 Neo.config = {
     width: 300,
@@ -566,7 +568,9 @@ Neo.isIE = function() {
 };
 
 Neo.isMobile = function() {
-    return navigator.userAgent.match(/Android|iPhone|iPad|iPod/i);
+    if (navigator.userAgent.match(/Android|iPhone|iPad|iPod/i)) return true;
+    if (navigator.maxTouchPoints && navigator.maxTouchPoints > 1) return true;
+    return false;
 };
 
 Neo.showWarning = function() {
@@ -695,7 +699,7 @@ Neo.resizeCanvas = function() {
     Neo.painter.destCanvas.height = height;
     Neo.painter.destCanvasCtx = Neo.painter.destCanvas.getContext("2d");
     Neo.painter.destCanvasCtx.imageSmoothingEnabled = false;
-    Neo.painter.destCanvasCtx.mozImageSmoothingEnabled = false;
+    //Neo.painter.destCanvasCtx.mozImageSmoothingEnabled = false;
 
     Neo.canvas.style.width = width + "px";
     Neo.canvas.style.height = height + "px";
@@ -886,96 +890,85 @@ Neo.createContainer = function(applet) {
     var neo = document.createElement("div");
     neo.className = "NEO";
     neo.id = "NEO";
-    var html = (function() {/*
 
-<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-
-<div id="pageView" style="width:450px; height:470px; margin:auto;">
-<div id="container" style="visibility:hidden;" class="o">
-<div id="center" class="o">
-<div id="painterContainer" class="o">
-<div id="painterWrapper" class="o">
-<div id="upper" class="o">
-<div id="redo">[やり直し]</div>
-<div id="undo">[元に戻す]</div>
-<div id="fill">[塗り潰し]</div>
-<div id="right" style="display:none;">[右]</div>
-</div>
-<div id="painter">
-<div id="canvas"> <!-- class="o">-->
-<div id="scrollH"></div>
-<div id="scrollV"></div>
-<div id="zoomPlusWrapper">
-<div id="zoomPlus">+</div>
-</div>
-<div id="zoomMinusWrapper">
-<div id="zoomMinus">-</div>
-</div>
-<div id="neoWarning"></div>
-</div>
-</div>
-<div id="lower" class="o">
-</div>
-</div>
-<div id="toolsWrapper">
-<div id="tools">
-<div id="toolSet">
-<div id="pen"></div>
-<div id="pen2"></div>
-<div id="effect"></div>
-<div id="effect2"></div>
-<div id="eraser"></div>
-<div id="draw"></div>
-<div id="mask"></div>
-
-<div class="colorTips">
-<div id="color2"></div><div id="color1"></div><br>
-<div id="color4"></div><div id="color3"></div><br>
-<div id="color6"></div><div id="color5"></div><br>
-<div id="color8"></div><div id="color7"></div><br>
-<div id="color10"></div><div id="color9"></div><br>
-<div id="color12"></div><div id="color11"></div><br>
-<div id="color14"></div><div id="color13"></div>
-</div>
-
-<div id="sliderRed"></div>
-<div id="sliderGreen"></div>
-<div id="sliderBlue"></div>
-<div id="sliderAlpha"></div>
-<div id="sliderSize"></div>
-
-<div class="reserveControl" style="margin-top:4px;">
-<div id="reserve1"></div>
-<div id="reserve2"></div>
-<div id="reserve3"></div>
-</div>
-<div id="layerControl" style="margin-top:6px;"></div>
-
-<!--<div id="toolPad" style="height:20px;"></div>-->
-</div>
-</div>
-</div>
-</div>
-</div>
-<div id="headerButtons">
-<div id="window">[窓]</div>
-</div>
-<div id="footerButtons">
-<div id="submit">[投稿]</div>
-<div id="copyright">[(C)しぃちゃん PaintBBS NEO]</div>
-</div>
-</div>
-</div>
-
-<div id="windowView" style="display: none;">
-
-</div>
-
-
-                                 */}).toString().match(/\/\*([^]*)\*\//)[1];
+    var html =
+        '<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>' +
+        '<div id="pageView" style="width:450px; height:470px; margin:auto;">' +
+        '<div id="container" style="visibility:hidden;" class="o">' +
+        '<div id="center" class="o">' +
+        '<div id="painterContainer" class="o">' +
+        '<div id="painterWrapper" class="o">' +
+        '<div id="upper" class="o">' +
+        '<div id="redo">[やり直し]</div> ' +
+        '<div id="undo">[元に戻す]</div> ' +
+        '<div id="fill">[塗り潰し]</div> ' +
+        '<div id="right" style="display:none;">[右]</div> ' +
+        '</div>' +
+        '<div id="painter">' +
+        '<div id="canvas">' +
+        '<div id="scrollH"></div>' +
+        '<div id="scrollV"></div>' +
+        '<div id="zoomPlusWrapper">' +
+        '<div id="zoomPlus">+</div>' +
+        '</div>' +
+        '<div id="zoomMinusWrapper">' +
+        '<div id="zoomMinus">-</div>' +
+        '</div>' +
+        '<div id="neoWarning"></div>' +
+        '</div>' +
+        '</div>' +
+        '<div id="lower" class="o">' +
+        '</div>' +
+        '</div>' +
+        '<div id="toolsWrapper">' +
+        '<div id="tools">' +
+        '<div id="toolSet">' +
+        '<div id="pen"></div>' +
+        '<div id="pen2"></div>' +
+        '<div id="effect"></div>' +
+        '<div id="effect2"></div>' +
+        '<div id="eraser"></div>' +
+        '<div id="draw"></div>' +
+        '<div id="mask"></div>' +
+        '<div class="colorTips">' +
+        '<div id="color2"></div><div id="color1"></div><br>' +
+        '<div id="color4"></div><div id="color3"></div><br>' +
+        '<div id="color6"></div><div id="color5"></div><br>' +
+        '<div id="color8"></div><div id="color7"></div><br>' +
+        '<div id="color10"></div><div id="color9"></div><br>' +
+        '<div id="color12"></div><div id="color11"></div><br>' +
+        '<div id="color14"></div><div id="color13"></div>' +
+        '</div>' +
+        '<div id="sliderRed"></div>' +
+        '<div id="sliderGreen"></div>' +
+        '<div id="sliderBlue"></div>' +
+        '<div id="sliderAlpha"></div>' +
+        '<div id="sliderSize"></div>' +
+        '<div class="reserveControl" style="margin-top:4px;">' +
+        '<div id="reserve1"></div>' +
+        '<div id="reserve2"></div>' +
+        '<div id="reserve3"></div>' +
+        '</div>' +
+        '<div id="layerControl" style="margin-top:6px;"></div>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '<div id="headerButtons">' +
+        '<div id="window">[窓]</div>' +
+        '</div>' +
+        '<div id="footerButtons">' +
+        '<div id="submit">[投稿]</div> ' +
+        '<div id="copyright">[(C)しぃちゃん PaintBBS NEO]</div> ' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '<div id="windowView" style="display: none;">' +
+        '</div>'
 
     neo.innerHTML = html.replace(/\[(.*?)\]/g, function(match, str) {
-	return Neo.translate(str)
+        return Neo.translate(str)
     })
     
     var parent = applet.parentNode;
@@ -1013,6 +1006,23 @@ Neo.tintImage = function(ctx, c) {
 };
 
 
+Neo.setToolSide = function(side) {
+    if (side === 'left') side = true;
+    if (side === 'right') side = false;
+    Neo.toolSide = !!side;
+
+    if (!Neo.toolSide) {
+        Neo.addRule(".NEO #toolsWrapper", "right", "0");
+        Neo.addRule(".NEO #toolsWrapper", "left", "auto");
+        Neo.addRule(".NEO #painterWrapper", "padding", "0 55px 0 0 !important");
+        Neo.addRule(".NEO #upper", "padding-right", "75px !important");
+    } else {
+        Neo.addRule(".NEO #toolsWrapper", "right", "auto");
+        Neo.addRule(".NEO #toolsWrapper", "left", "0");
+        Neo.addRule(".NEO #painterWrapper", "padding", "0 0 0 55px !important");
+        Neo.addRule(".NEO #upper", "padding-right", "20px !important");
+    }
+};
 
 'use strict';
 
@@ -1248,9 +1258,9 @@ Neo.Painter.prototype.prevMouseY;
 Neo.Painter.prototype.mouseX;
 Neo.Painter.prototype.mouseY;
 
-Neo.Painter.prototype.slowX = 0;
-Neo.Painter.prototype.slowY = 0;
-Neo.Painter.prototype.stab = null;
+//Neo.Painter.prototype.slowX = 0;
+//Neo.Painter.prototype.slowY = 0;
+//Neo.Painter.prototype.stab = null;
 
 Neo.Painter.prototype.isShiftDown = false;
 Neo.Painter.prototype.isCtrlDown = false;
@@ -1819,6 +1829,7 @@ Neo.Painter.prototype._updateMousePosition = function(e) {
         this.prevMosueY = this.mouseY;
     }
 
+    /*
     this.slowX = this.slowX * 0.8 + this.mouseX * 0.2;
     this.slowY = this.slowY * 0.8 + this.mouseY * 0.2;
     var now = new Date().getTime();
@@ -1843,6 +1854,7 @@ Neo.Painter.prototype._updateMousePosition = function(e) {
     } else {
         this.stab = [this.slowX, this.slowY, now];
     }
+    */
     
     this.rawMouseX = x;
     this.rawMouseY = y;
@@ -1854,9 +1866,11 @@ Neo.Painter.prototype._beforeUnloadHandler = function(e) {
     // quick save
 };
 
+/*
 Neo.Painter.prototype.getStabilized = function() {
     return this.stab;
 };
+*/
 
 /*
 -------------------------------------------------------------------------
@@ -2805,73 +2819,115 @@ Neo.Painter.prototype.getBezierPoint = function(t, x0, y0, x1, y1, x2, y2, x3, y
     return [x, y];
 };
 
-var nmax = 1;
+Neo.Painter.prototype.drawBezier = function(ctx, x0, y0, x1, y1, x2, y2, x3, y3, type, isReplay, isPreview) {
+    var points = [[x0, y0], [x1, y1], [x2, y2], [x3, y3]];
+    var that = this;
+    
+    this.draw(ctx, points, function(left, top, width, height, buf8, imageData) {
+        var n = Math.ceil((width + height) * 2.5);
+        var oType = that._currentMaskType;
+        var oAlpha = that._currentColor[3];
 
-Neo.Painter.prototype.drawBezier = function(ctx, x0, y0, x1, y1, x2, y2, x3, y3, type, isReplay) {
-    var xmax = Math.max(x0, x1, x2, x3);
-    var xmin = Math.min(x0, x1, x2, x3);
-    var ymax = Math.max(y0, y1, y2, y3);
-    var ymin = Math.min(y0, y1, y2, y3);
-    var n = Math.ceil(((xmax - xmin) + (ymax - ymin)) * 2.5);
-
-    // 最初にベジェを使う時ここで処理落ちするため
-    if (!isReplay) {
-        if (n > nmax) {
-            n = (n < nmax * 2) ? n : nmax * 2;
-            nmax = n;
+        if (isPreview) {
+            that._currentMaskType = Neo.Painter.MASKTYPE_NONE;
+            that._currentColor[3] = 255;
         }
-    }
 
-    for (var i = 0; i < n; i++) {
-        var t = i * 1.0 / n;
-        var p = this.getBezierPoint(t, x0, y0, x1, y1, x2, y2, x3, y3);
-        this.drawPoint(ctx, p[0], p[1], type);
-    }
-};
+        for (var i = 0; i < n; i++) {
+            var t= i * 1.0 / n;
+            var p = that.getBezierPoint(t, x0, y0, x1, y1, x2, y2, x3, y3);
+
+            p[0] = Math.round(p[0]);
+            p[1] = Math.round(p[1]);
+
+            that.plot(p, function(x, y) {
+                that.setPoint(buf8, imageData.width, x, y, left, top, type);
+            })
+        }
+        that._currentMaskType = oType;
+        that._currentColor[3] = oAlpha;
+        that.prevLine = null;
+    });
+}
+
 
 Neo.Painter.prototype.prevLine = null; // 始点または終点が2度プロットされることがあるので
 Neo.Painter.prototype.drawLine = function(ctx, x0, y0, x1, y1, type) {
-    x0 = Math.round(x0);
-    x1 = Math.round(x1);
-    y0 = Math.round(y0);
-    y1 = Math.round(y1);
-    var prev = [x0, y0, x1, y1];
+    var points = [[x0, y0], [x1, y1]];
+    var that = this;
+    this.aerr = 0;
 
-    var width = Math.abs(x1 - x0);
-    var height = Math.abs(y1 - y0);
+    this.draw(ctx, points, function(left, top, width, height, buf8, imageData) {
+        that.bresenham(points, function(x, y) {
+            that.setPoint(buf8, imageData.width, x, y, left, top, type);
+        });
+    });
+    this.prevLine = points;
+}
+
+Neo.Painter.prototype.draw = function(ctx, points, callback) {
+    var xs = [], ys = [];
+    for (var i = 0; i < points.length; i++) {
+        var point = points[i];
+        xs.push(Math.round(point[0]));
+        ys.push(Math.round(point[1]));
+    }
+    var xmin = Math.min.apply(null, xs);
+    var xmax = Math.max.apply(null, xs);
+    var ymin = Math.min.apply(null, ys);
+    var ymax = Math.max.apply(null, ys);
+    
     var r = Math.ceil(this._currentWidth / 2);
-//  var r = Math.ceil(this.lineWidth / 2);
+    var left = xmin - r;
+    var top = ymin - r;
+    var width = xmax - xmin;
+    var height = ymax - ymin;
 
-    var left = ((x0 < x1) ? x0 : x1) - r;
-    var top = ((y0 < y1) ? y0 : y1) - r;
-
-    var imageData = ctx.getImageData(left, top, width + r*2, height + r*2);
+    var imageData = ctx.getImageData(left, top, width + r * 2, height + r * 2);
     var buf32 = new Uint32Array(imageData.data.buffer);
     var buf8 = new Uint8ClampedArray(imageData.data.buffer);
 
-    var dx = width, sx = x0 < x1 ? 1 : -1;
-    var dy = height, sy = y0 < y1 ? 1 : -1; 
-    var err = (dx > dy ? dx : -dy) / 2;        
-    this.aerr = 0;
+    callback(left, top, width, height, buf8, imageData);
+
+    imageData.data.set(buf8);
+    ctx.putImageData(imageData, left, top);
+}
+
+Neo.Painter.prototype.bresenham = function(points, callback) {
+    var x0 = points[0][0];
+    var y0 = points[0][1];
+    var x1 = points[1][0];
+    var y1 = points[1][1];
+
+    var dx = Math.abs(x1 - x0), sx = (x0 < x1) ? 1 : -1;
+    var dy = Math.abs(y1 - y0), sy = (y0 < y1) ? 1 : -1;
+    var err = (dx > dy ? dx : -dy) / 2;
 
     while (true) {
         if (this.prevLine == null ||
-            !((this.prevLine[0] == x0 && this.prevLine[1] == y0) ||
-              (this.prevLine[2] == x0 && this.prevLine[3] == y0))) {
-            this.setPoint(buf8, imageData.width, x0, y0, left, top, type);
+            !((this.prevLine[0][0] == x0 && this.prevLine[0][1] == y0) ||
+              (this.prevLine[1][0] == x0 && this.prevLine[1][1] == y0))) {
+            callback(x0, y0);
         }
-
+        
         if (x0 === x1 && y0 === y1) break;
         var e2 = err;
         if (e2 > -dx) { err -= dy; x0 += sx; }
         if (e2 < dy) { err += dx; y0 += sy; }
     }
+    this.prevLine = points;
+}
 
-    imageData.data.set(buf8);
-    ctx.putImageData(imageData, left, top);
+Neo.Painter.prototype.plot = function(point, callback) {
+    var x0 = point[0];
+    var y0 = point[1];
 
-    this.prevLine = prev;
-};
+    if (this.prevLine == null ||
+        !(this.prevLine[0][0] == x0 && this.prevLine[0][1] == y0)) {
+        callback(x0, y0);
+    }
+    this.prevLine = [point, point];
+}
 
 Neo.Painter.prototype.drawPoint = function(ctx, x, y, type) {
     this.drawLine(ctx, x, y, x, y, type);
@@ -3371,11 +3427,14 @@ Neo.Painter.prototype.paste = function(layer, x, y, width, height, dx, dy) {
     var imageData = ctx.getImageData(x + dx, y + dy, width, height);
     var buf32 = new Uint32Array(imageData.data.buffer);
     var buf8 = new Uint8ClampedArray(imageData.data.buffer);
-    for (var i = 0; i < buf32.length; i++) {
-        buf32[i] = this.temp[i];
+
+    if (this.temp) {
+        for (var i = 0; i < buf32.length; i++) {
+            buf32[i] = this.temp[i];
+        }
+        imageData.data.set(buf8);
+        ctx.putImageData(imageData, x + dx, y + dy);
     }
-    imageData.data.set(buf8);
-    ctx.putImageData(imageData, x + dx, y + dy);
 
     this.temp = null;
     this.tempX = 0;
@@ -4269,11 +4328,14 @@ Neo.DrawToolBase.prototype.bezierKeyDownHandler = function(e) {
 
 Neo.DrawToolBase.prototype.drawBezierCursor1 = function(oe) {
     var ctx = oe.destCanvasCtx;
-    //  var x = oe.mouseX; //Math.floor(oe.mouseX);
-    //  var y = oe.mouseY; //Math.floor(oe.mouseY);
+
+    var x = oe.mouseX; //Math.floor(oe.mouseX);
+    var y = oe.mouseY; //Math.floor(oe.mouseY);
+    /*
     var stab = oe.getStabilized();
     var x = Math.floor(stab[0]);
     var y = Math.floor(stab[1]);
+    */
     var p = oe.getDestCanvasPosition(x, y, false, true);
     var p0 = oe.getDestCanvasPosition(this.x0, this.y0, false, true);
     var p3 = oe.getDestCanvasPosition(this.x3, this.y3, false, true);
@@ -4289,8 +4351,8 @@ Neo.DrawToolBase.prototype.drawBezierCursor1 = function(oe) {
                   this.x0, this.y0,
                   x, y,
                   x, y,
-                  this.x3, this.y3, this.lineType);
-
+                  this.x3, this.y3, Neo.Painter.LINETYPE_PEN, //this.lineType,
+                  false, true);
     ctx.save();
     ctx.translate(oe.destCanvas.width*.5, oe.destCanvas.height*.5);
     ctx.scale(oe.zoom, oe.zoom);
@@ -4304,11 +4366,14 @@ Neo.DrawToolBase.prototype.drawBezierCursor1 = function(oe) {
 
 Neo.DrawToolBase.prototype.drawBezierCursor2 = function(oe) {
     var ctx = oe.destCanvasCtx;
-    //  var x = oe.mouseX; //Math.floor(oe.mouseX);
-    //  var y = oe.mouseY; //Math.floor(oe.mouseY);
+
+    var x = oe.mouseX; //Math.floor(oe.mouseX);
+    var y = oe.mouseY; //Math.floor(oe.mouseY);
+    /*
     var stab = oe.getStabilized();
     var x = Math.floor(stab[0]);
     var y = Math.floor(stab[1]);
+    */
     var p = oe.getDestCanvasPosition(oe.mouseX, oe.mouseY, false, true);
     var p0 = oe.getDestCanvasPosition(this.x0, this.y0, false, true);
     var p1 = oe.getDestCanvasPosition(this.x1, this.y1, false, true);
@@ -4327,8 +4392,8 @@ Neo.DrawToolBase.prototype.drawBezierCursor2 = function(oe) {
                   this.x0, this.y0,
                   this.x1, this.y1,
                   x, y,
-                  this.x3, this.y3, this.lineType);
-
+                  this.x3, this.y3, Neo.Painter.LINETYPE_PEN, //this.lineType,
+                  false, true);
     ctx.save();
     ctx.translate(oe.destCanvas.width*.5, oe.destCanvas.height*.5);
     ctx.scale(oe.zoom, oe.zoom);
@@ -5607,6 +5672,9 @@ Neo.ActionManager.prototype.line = function(
         x1 = item[14];
         y1 = item[15];
     }
+    if (x1 === null) x1 = x0
+    if (y1 === null) y1 = y0
+  
     oe.drawLine(oe.canvasCtx[layer], x0, y0, x1, y1, lineType);
     oe.updateDestCanvas(0, 0, oe.canvasWidth, oe.canvasHeight);
 
