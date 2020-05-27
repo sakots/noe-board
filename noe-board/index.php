@@ -9,7 +9,7 @@ require_once(__DIR__.'/libs/Smarty.class.php');
 $smarty = new Smarty();
 
 //スクリプトのバージョン
-$smarty->assign('ver','v0.11.1');
+$smarty->assign('ver','v0.11.2');
 
 //設定の読み込み
 require(__DIR__."/config.php");
@@ -429,9 +429,6 @@ function paintcom(){
 	$smarty->assign('skindir',THEMEDIR);
 	$smarty->assign('tver',TEMPLATE_VER);
 
-	//$smarty->assign('picw',$_POST["picw"]);
-	//$smarty->assign('pich',$_POST["pich"]);
-
 	$smarty->assign('parent',$_SERVER['REQUEST_TIME']);
 
 	$smarty->assign('usercode',$usercode);
@@ -497,23 +494,10 @@ function paintcom(){
 		$smarty->assign('temp', $temp);
 	}
 
-	//画像投稿処理
-	//$upfile = $temppath.$picfile;
-	//$upfile_name = $picfile;
-	//$picfile = str_replace(strrchr($picfile,"."),"",$picfile); //拡張子除去
-
 	$tmp2 = array();
 	$smarty->assign('tmp',$tmp2);
 
-	//if( file_exists( $logfile ) ) {
-	//	$lognum = count( file( $logfile ) ) + 1;
-	//} else {
-	//	$lognum = 1;
-	//}
-	//$smarty->assign('lognum',$lognum);
-
 	$smarty->assign('path',IMG_DIR);
-
 
 	//$smarty->debugging = true;
 	$smarty->display( THEMEDIR.PICFILE );
@@ -628,7 +612,8 @@ function admin() {
 		$smarty->assign('next',$page + 1);
 
 		//読み込み
-		if ($_POST["adminpass"] == $admin_pass) {
+		$adminpass = ( isset( $_POST["adminpass"] ) === true ) ? newstring($_POST["adminpass"]): "";
+		if ($adminpass == $admin_pass) {
 			$sql = "SELECT * FROM tablelog ORDER BY tree DESC LIMIT ".$start.",".$page10;
 			$oya = array();
 			$posts = $db->query($sql);
@@ -647,7 +632,6 @@ function admin() {
 			$smarty->assign('ko',$ko);
 			$smarty->display( THEMEDIR.ADMINFILE );
 		} else {
-			$admin_pass = "";
 			echo "管理パスを入力してください";
 		}
 		$db = null; //db切断
