@@ -1,19 +1,19 @@
 <?php
 //--------------------------------------------------
-//　おえかきけいじばん「noe-board」v0.9.0
+//　おえかきけいじばん「noe-board」
 //　by sakots https://sakots.red/
 //--------------------------------------------------
 
 //smarty-3.1.33
-require_once('libs/Smarty.class.php');
+require_once(__DIR__.'/libs/Smarty.class.php');
 $smarty = new Smarty();
 
 //設定の読み込み
-require("config.php");
-require("template_ini.php");
+require(__DIR__."/config.php");
+require(__DIR__."/templates/".THEMEDIR."template_ini.php");
 
 //スクリプトのバージョン
-$smarty->assign('ver',"v0.9.0");
+$smarty->assign('ver',"v0.10.0");
 
 $smarty->assign('btitle',TITLE);
 $smarty->assign('home',HOME);
@@ -22,7 +22,7 @@ $message = "";
 $smarty->assign('message',$message);
 $smarty->assign('pdefw',PDEF_W);
 $smarty->assign('pdefh',PDEF_H);
-$smarty->assign('skindir',SKINDIR);
+$smarty->assign('skindir',THEMEDIR);
 $smarty->assign('tver',TEMPLATE_VER);
 
 //$smarty->assign('picw',$_POST["picw"]);
@@ -30,6 +30,8 @@ $smarty->assign('tver',TEMPLATE_VER);
 
 
 $smarty->assign('parent',$_SERVER['REQUEST_TIME']);
+
+$smarty->assign('usercode',$usercode);
 
 //----------
 
@@ -55,7 +57,7 @@ if(count($tmplist)!=0){
 	//user-codeでチェック
 	foreach($tmplist as $tmpimg){
 		list($ucode,$uip,$ufilename) = explode("\t", $tmpimg);
-		//if($ucode == $usercode)
+		if($ucode == $usercode)
 			$tmp[] = $ufilename;
 
 	}
@@ -111,7 +113,7 @@ $smarty->assign('path',IMG_DIR);
 
 
 //$smarty->debugging = true;
-$smarty->display( SKINDIR.PICFILE );
+$smarty->display( THEMEDIR.PICFILE );
 exit;
 
 ?>

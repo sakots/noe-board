@@ -1,17 +1,17 @@
 <?php
 //--------------------------------------------------
-//　おえかきけいじばん「noe-board」v0.9.0
+//　おえかきけいじばん「noe-board」
 //　by sakots https://sakots.red/
 //--------------------------------------------------
 
 //smarty-3.1.33
-require_once('libs/Smarty.class.php');
+require_once(__DIR__.'/libs/Smarty.class.php');
 $smarty = new Smarty();
-$smarty->assign('ver','v0.9.0');
+$smarty->assign('ver','v0.10.0');
 
 //設定の読み込み
-require("config.php");
-require("template_ini.php");
+require(__DIR__."/config.php");
+require(__DIR__."/templates/".THEMEDIR."template_ini.php");
 
 $message = "";
 
@@ -21,7 +21,7 @@ $smarty->assign('self',PHP_SELF);
 $smarty->assign('message',$message);
 $smarty->assign('pdefw',PDEF_W);
 $smarty->assign('pdefh',PDEF_H);
-$smarty->assign('skindir',SKINDIR);
+$smarty->assign('skindir',THEMEDIR);
 $smarty->assign('tver',TEMPLATE_VER);
 
 $smarty->assign('picw',$_GET["img_w"]);
@@ -37,7 +37,7 @@ $temppath = realpath("./").'/'.TEMP_DIR;
 
 $smarty->assign('path',IMG_DIR);
 
-$smarty->display( SKINDIR.ANIMEFILE );
+$smarty->display( THEMEDIR.ANIMEFILE );
 exit;
 
 ?>

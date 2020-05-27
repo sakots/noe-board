@@ -1,35 +1,17 @@
 <?php
 /*
-  * noe-board v0.9.0～ lot.190523
+  * noe-board v0.10.0～ lot.200527
   * by sakots >> https://sakots.red/
   *
   * noe-boardの設定ファイルです。
   *
 */
 
-//設置URL /まで
-define('BASE', 'https://localhost/noe/');
+//設置URL phpのあるフォルダの'/'まで
+define('BASE', 'https://localhost/dev/noe/');
 
-//データベース設定
-
-//ログDB名
-define('LOGDB', 'noe.db');
-
-//DBテーブル名1
-define('TABLE', 'noelogs');
-
-//DBテーブル名2
-define('TABLETREE', 'noetree');
-
-//DBのアドレス
-define('DBHOST', 'localhost');
-
-//DBのユーザー名
-define('DBUSER', 'root');
-
-//DBのパスワード
-define('DBPASS', '');
-
+//テーマのフォルダ
+define('THEMEDIR', "theme/");
 
 //urlパラメータを追加する する:1 しない:0
 //ブラウザのキャッシュが表示されて投稿しても反映されない時は1。
@@ -99,9 +81,9 @@ define('SECURITY_URL', 'http://www.npa.go.jp/');
 
 //続きを描くときのセキュリティ。利用しないなら両方''で
 //続きを描くときのセキュリティクリック数。設定しないなら''で
-define('C_SECURITY_CLICK', '2');
+define('C_SECURITY_CLICK', '1');
 //続きを描くときのセキュリティタイマー(単位:秒)。設定しないなら''で
-define('C_SECURITY_TIMER', '6');
+define('C_SECURITY_TIMER', '1');
 
 //そろそろ消える表示のボーダー。最大ログ数からみたパーセンテージ
 define('LOG_LIMIT', '92');
@@ -122,13 +104,13 @@ define('HOME', '../');
 define('ADMIN_PASS', 'pass');
 
 //スクリプト名
-define('PHP_SELF', 'noe.php');
+define('PHP_SELF', 'index.php');
 
 //入り口ファイル名
-define('PHP_SELF2', 'index.html');
+//define('PHP_SELF2', 'index.html');
 
 //1ページ以降の拡張子
-define('PHP_EXT', '.html');
+//define('PHP_EXT', '.html');
 
 //投稿容量制限 KB（phpの設定により2Mまで
 define('MAX_KB', '2000');

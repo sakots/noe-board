@@ -1,17 +1,17 @@
 <?php
 //--------------------------------------------------
-//　おえかきけいじばん「noe-board」v0.9.0
+//　おえかきけいじばん「noe-board」
 //　by sakots https://sakots.red/
 //--------------------------------------------------
 
 //smarty-3.1.33
-require_once('libs/Smarty.class.php');
+require_once(__DIR__.'/libs/Smarty.class.php');
 $smarty = new Smarty();
-$smarty->assign('ver','v0.9.0');
+$smarty->assign('ver','v0.10.0');
 
 //設定の読み込み
-require("config.php");
-require("template_ini.php");
+require(__DIR__."/config.php");
+require(__DIR__."/templates/".THEMEDIR."template_ini.php");
 
 $message = "";
 
@@ -21,7 +21,7 @@ $smarty->assign('self',PHP_SELF);
 $smarty->assign('message',$message);
 $smarty->assign('pdefw',PDEF_W);
 $smarty->assign('pdefh',PDEF_H);
-$smarty->assign('skindir',SKINDIR);
+$smarty->assign('skindir',THEMEDIR);
 $smarty->assign('tver',TEMPLATE_VER);
 
 $smarty->assign('picw',$_POST["picw"]);
@@ -40,8 +40,39 @@ $temppath = realpath("./").'/'.TEMP_DIR;
 
 $smarty->assign('path',IMG_DIR);
 
+//var_dump($_COOKIE);
+
+$pwdc = filter_input(INPUT_COOKIE, 'pwdc');
+$usercode = filter_input(INPUT_COOKIE, 'usercode');//nullならuser-codeを発行
+
+//ユーザーip
+function get_uip(){
+	$userip = getenv("HTTP_CLIENT_IP");
+	if(!$userip){
+		$userip = getenv("HTTP_X_FORWARDED_FOR");
+	} 
+	if(!$userip){
+		$userip = getenv("REMOTE_ADDR");
+	} 
+	return $userip;
+}
+
+
+//-------------------------
+
+//user-codeの発行
+if(!$usercode){//falseなら発行
+	$userip = get_uip();
+	$usercode = substr(crypt(md5($userip.ID_SEED.date("Ymd", time())),'id'),-12);
+	//念の為にエスケープ文字があればアルファベットに変換
+	$usercode = strtr($usercode,"!\"#$%&'()+,/:;<=>?@[\\]^`/{|}~","ABCDEFGHIJKLMNOabcdefghijklmn");
+}
+setcookie("usercode", $usercode, time()+86400*365);//1年間
+
+$smarty->assign('usercode',$usercode);
+
 //$smarty->debugging = true;
-$smarty->display( SKINDIR.PAINTFILE );
+$smarty->display( THEMEDIR.PAINTFILE );
 exit;
 
 ?>

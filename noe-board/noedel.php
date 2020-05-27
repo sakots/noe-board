@@ -5,10 +5,10 @@
 //--------------------------------------------------
 
 //設定の読み込み
-require("config.php");
-require("template_ini.php");
+require(__DIR__."/config.php");
+require(__DIR__."/templates/".THEMEDIR."template_ini.php");
 //DB接続
-require("dbconnect.php");
+require(__DIR__."/dbconnect.php");
 
 //var_dump($_POST);
 
@@ -16,10 +16,10 @@ $delno = $_POST["delno"];
 $delt = $_POST["delt"]; //0親1レス削除
 
 if ($delt == 0) {
-	$deltable = TABLE;
+	$deltable = 'table';
 	$id = "tid";
 } else {
-	$deltable = TABLETREE;
+	$deltable = 'tabletree';
 	$id = "iid";
 }
 
