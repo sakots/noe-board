@@ -6,7 +6,6 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 		<link rel="stylesheet" href="./templates/{$skindir}mono_main.css" type="text/css">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/css/lightbox.css">
 		<link rel="stylesheet" href="neo.css" type="text/css">
 		<script src="neo.js" charset="utf-8"></script>
 	</head>
@@ -31,7 +30,7 @@
 					<applet-dummy name="pch" code="pch.PCHViewer.class" archive="PCHViewer.jar,PaintBBS.jar" width="{$w}" height="{$h}" mayscript>
 						<param name="image_width" value="{$picw}">
 						<param name="image_height" value="{$pich}">
-						<param name="pch_file" value="{$path}{$pchfile}">
+						<param name="pch_file" value="{$pchfile}">
 						<param name="speed" value="{$speed}">
 						<param name="buffer_progress" value="false">
 						<param name="buffer_canvas" value="false">
@@ -41,6 +40,7 @@
 			<section>
 				<p>
 					<a href="{$path}{$pchfile}" target="_blank">Download</a>
+					{if isset($datasize)}- Datasize {$datasize} B{/if}
 				</p>
 			</section>
 			<script>
@@ -51,7 +51,7 @@
 			<div class="copy">
 				<p>
 					<a href="https://sakots.red/" target="_top">noe-board {$ver}</a>
-					Web Style by <a href="https://sakots.red/" target="_top" title="noedef {$tver} (by 赤原文庫)">noedef</a>
+					Web Style by <a href="https://sakots.red/" target="_top" title="MONO {$tver} (by 赤原文庫)">MONO</a>
 				</p>
 				<p>
 					UseFunction -

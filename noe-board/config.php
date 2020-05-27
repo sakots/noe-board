@@ -20,12 +20,15 @@ define('THEMEDIR', "theme/");
 define('URL_PARAMETER', '1');
 
 //本文に日本語がなければ拒絶
+//未実装
 define('USE_JAPANESEFILTER', '1');
 
 //指定文字列+本文へのURLの書き込みで拒絶（正規表現）
+//未実装
 $badstring_and_url = array("ブランド","偽物","財布","\[\/URL\]");
 
 //本文へのURLの書き込みを禁止する する:1 しない:0
+//未実装
 define('DENY_COMMENTS_URL', '1');
 
 // 連続・二重投稿対象セキュリティレベル
@@ -35,10 +38,12 @@ define('DENY_COMMENTS_URL', '1');
 // 2:中　　…　低レベルの条件に加え、名前・メールアドレス・URL・題名のいずれかが同じ場合
 // 3:高　　…　低レベルの条件に加え、名前・メールアドレス・URL・題名のいずれかが類似率を上回る場合
 // 4:最高　…　無条件でチェック。最新ログ20件と連続・二重投稿チェックする事になる
-//※中・高レベルのとき、見入力項目は無視
+//※中・高レベルのとき、未入力項目は無視
+//未実装
 define('POST_CHECKLEVEL', '0');
 
 // 連続・二重投稿対象セキュリティレベルが 高 のときの類似率(単位％)
+//未実装
 define('VALUE_LIMIT', '80');
 
 // 二重投稿セキュリティレベル
@@ -47,19 +52,24 @@ define('VALUE_LIMIT', '80');
 // 1:低　　…　本文が一致する場合
 // 2:中　　…　本文が類似率(中)を上回る場合
 // 3:高　　…　本文が類似率(高)を上回る場合
+//未実装
 define('D_POST_CHECKLEVEL', '0');
 
 // 二重投稿セキュリティレベルが 中 のときの類似率(単位％)
+//未実装
 define('COMMENT_LIMIT_MIDDLE', '90');
 
 // 二重投稿セキュリティレベルが 高 のときの類似率(単位％)
+//未実装
 define('COMMENT_LIMIT_HIGH', '80');
 
 // 言語設定
+//未実装
 define('LANG', 'Japanese');
 
 //ユーザー削除権限 (0:不可 1:許可)
 //※treeのみを消して後に残ったlogは管理者のみ削除可能
+//未実装
 define('USER_DEL', '1');
 
 /* ---------- お絵かきアプレット設定 ---------- */
@@ -91,7 +101,7 @@ define('LOG_LIMIT', '92');
 
 /* ---------- メイン設定 ---------- */
 
-//画像保存ディレクトリ。noe.phpから見て
+//画像保存ディレクトリ。index.phpから見て
 define('IMG_DIR', 'src/');
 
 //タイトル（<title>とTOP）
@@ -101,7 +111,7 @@ define('TITLE', 'お絵かき掲示板');
 define('HOME', '../');
 
 //管理者パス
-define('ADMIN_PASS', 'pass');
+$admin_pass = 'kanripass';
 
 //スクリプト名
 define('PHP_SELF', 'index.php');
@@ -155,54 +165,64 @@ define('RENZOKU', '10');
 define('RENZOKU2', '20');
 
 //強制sageレス数( 0 ですべてsage)
+//未実装
 define('MAX_RES', '20');
 
 //proxyの書込みを制限する y:1 n:0
+//未実装
 define('PROXY_CHECK', '0');
 
 //IDを表示する 強制:2 する:1 しない:0
+//未実装
 define('DISP_ID', '0');
 
 //ID生成の種
 define('ID_SEED', 'IDの種');
 
-//改行を抑制する行数 しない:0
-define('BR_CHECK', '0');
-
 //URLを自動リンクする する:1 しない:0
+//未実装
 define('AUTOLINK', '1');
 
 //名前を必須にする する:1 しない:0
+//未実装
 define('USE_NAME', '0');
 define('DEF_NAME', '名無しさん');	//未入力時の名前
 
 //本文を必須にする する:1 しない:0
+//未実装
 define('USE_COM', '0');
 define('DEF_COM', '本文無し');	//未入力時の本文
 
 //題名を必須にする する:1 しない:0
+//未実装
 define('USE_SUB', '0');
 define('DEF_SUB', '無題');	//未入力時の題名
 
 //レス時にスレ題名を引用する する:1 しない:0
+//未実装
 define('USE_RESUB', '0');
 
 //拒絶する文字列
+//未実装
 $badstring = array("irc.s16.xrea.com","著作権の侵害","未承諾広告","URL]");
 
 //拒絶するファイルのmd5
+//未実装
 $badfile = array("dummy","dummy2");
 
 //拒絶するホスト
+//未実装
 $badip = array("addr.dummy.com","185.36.102.114");
 
 /* ---------- お絵かき設定 ---------- */
 
 //お絵かき機能を使用する お絵かきのみ:2 する:1 しない:0
+//2以外未実装
 define('USE_PAINT', '2');
 
 //お絵かき画像ファイル名の頭文字
 //お絵かき投稿した画像のファイル名には、必ずこれが先頭に付きます
+//未実装
 define('KASIRA', 'oe');
 
 //テンポラリディレクトリ
@@ -239,12 +259,15 @@ define('PCH_DIR', 'src/');
 define('PCH_SPEED', '10');
 
 //お絵かき投稿時のIPチェックをする する:1 しない:0
+//未実装
 define('IP_CHECK', '1');
 
 //コンティニューを使用する する:1 しない:0
+//未実装
 define('USE_CONTINUE', '1');
 
 //コンティニュー時、削除キーを必要とする 必要:1 不要:0
+//未実装
 define('CONTINUE_PASS', '1');
 
 /* ---------- picpost.php用設定 ---------- */

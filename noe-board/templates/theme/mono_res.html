@@ -11,8 +11,8 @@
 		<meta name="twitter:card" content="summary">
 		<meta property="og:title" content="[{$bbsline.tid}] {$bbsline.sub} by {$bbsline.name} - {$btitle}
 		<meta property="og:type" content="article">
-		<meta property="og:url" content="{$base}noeres.php?res={$parent}">
-		<meta property="og:image" content="{$base}{$path}{$bbsline.picfile}">
+		<meta property="og:url" content="{$base}{$self}">
+		<meta property="og:image" content="{$base}{$bbsline.picfile}">
 		<meta property="og:site_name"  content="">
 		<meta property="og:description" content="{$bbsline.com}">
 		{/if}{/foreach}
@@ -39,7 +39,7 @@
 			<hr>
 			<div>
 				<section>
-					<form action="{$self}" method="post" class="postform">
+					<form action="{$self}?mode=regist" method="post" class="postform">
 						<table>
 							<tr>
 								<td>name</td>
@@ -59,13 +59,13 @@
 									<input type="text" name="sub" size="12" value="">
 									<input type="submit" name="send" value="書き込む">
 									<input type="hidden" name="picfile" value="">
-									<input type="hidden" name="parent" value="{$parent}">
+									<input type="hidden" name="parent" value="{$resno}">
 									<input type="hidden" name="invz" value="0">
 									<input type="hidden" name="img_w" value="0">
 									<input type="hidden" name="img_h" value="0">
 									<input type="hidden" name="time" value="0">
 									<input type="hidden" name="exid" value="0">
-									<input type="hidden" name="modid" value="{$parent}">
+									<input type="hidden" name="modid" value="{$resno}">
 								</td>
 							</tr>
 							<tr>
@@ -94,7 +94,7 @@
 						<h4>名前：{$bbsline.name}：{$bbsline.modified}{if $bbsline.url == true} <span class="button"><a href="{$bbsline.url}" target="_blank" rel="nofollow noopener noreferrer"><i class="fas fa-flag-checkered"></i> URL</a></span>{/if}</h4>
 						{if $bbsline.picfile == true}
 						<figure>
-							<figcaption><a href="{$path}{$bbsline.picfile}" target="_blank" data-lightbox="a{$bbsline.picfile}" data-title="{$bbsline.picfile}">{$bbsline.picfile}</a></figcaption>
+							<figcaption><a href="{$path}{$bbsline.picfile}" target="_blank">{$bbsline.picfile}</a></figcaption>
 							<a href="{$path}{$bbsline.picfile}" target="_blank"data-lightbox="b{$bbsline.picfile}" data-title="{$bbsline.picfile}"><img src="{$path}{$bbsline.picfile}" alt="{$bbsline.picfile}"></a>
 						</figure>
 						{/if}
@@ -119,7 +119,7 @@
 				{if isset($bbsline.picfile)}<div class="thfoot">
 						<script>
 							(function(){ //さとぴあさんのPOTI-boardスキンより
-								var url = encodeURIComponent('{$base}noeres.php?res={$parent}'); //ページURL
+								var url = encodeURIComponent('{$base}{$self}'); //ページURL
 								var title = encodeURIComponent('[{$bbsline.tid}] {$bbsline.sub} by {$bbsline.name} - {$btitle}'); //ページタイトル
 							document.write( '<span class="button"><a target="_blank" href="https://twitter.com/intent/tweet?&amp;text=' + title + '&amp;url=' + url + '"><i class="fab fa-twitter fa-fw fa-lg"></i>tweet</a></span> <span class="button"><a target="_blank" class="fb btn" href="http://www.facebook.com/share.php?u=' + url + '"><i class="fab fa-facebook fa-fw fa-lg"></i>share</a></span>' );})();
 						</script>
@@ -132,19 +132,17 @@
 			</script>
 		</main>
 		<footer id="footer">
-				<div class="copy">
-					<p>
-						<a href="https://sakots.red/" target="_top">noe-board {$ver}</a>
-						Web Style by <a href="https://sakots.red/" target="_top" title="noedef {$tver} (by 赤原文庫)">noedef</a>
-					</p>
-					<p>
-						UseFunction -
-						<a href="https://github.com/funige/neo/">PaintBBS NEO</a>
-						<a href="https://www.smarty.net/">Smarty</a>
-					</p>
-				</div>
-			</footer>
-		<script src="https://code.jquery.com/jquery-1.12.4.min.js" type="text/javascript"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/js/lightbox.min.js" type="text/javascript"></script>
+			<div class="copy">
+				<p>
+					<a href="https://sakots.red/" target="_top">noe-board {$ver}</a>
+					Web Style by <a href="https://sakots.red/" target="_top" title="MONO {$tver} (by 赤原文庫)">MONO</a>
+				</p>
+				<p>
+					UseFunction -
+					<a href="https://github.com/funige/neo/">PaintBBS NEO</a>
+					<a href="https://www.smarty.net/">Smarty</a>
+				</p>
+			</div>
+		</footer>
 	</body>
 </html>

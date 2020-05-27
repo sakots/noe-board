@@ -26,9 +26,14 @@ POTI-board改で使用しているテンプレートエンジン「htmltemplate.
 ・OK！
 
 ## サンプルとサポート
-<a href="https://sakots.red/noe/">noeSQL</a>
+<a href="https://sakots.red/noe/">noe</a>
 
 ## 履歴
+
+### [2020/05/28] v0.11.0
+
+- 1ファイルにまとめた！
+- sage機能のためにまたデータファイル形式変わりました…すみません
 
 ### [2020/05/27]
 

@@ -5,7 +5,6 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 		<link rel="stylesheet" href="./templates/{$skindir}mono_main.css" type="text/css">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/css/lightbox.css">
 		<title>{$btitle}</title>
 	</head>
 	<body>
@@ -44,7 +43,7 @@
 						<p>Not OEKAKI image</p>
 						{/if}
 					</div>
-					<form class="ppost postform" action="{$self}" method="post">
+					<form class="ppost postform" action="{$self}?mode=regist" method="post">
 						<table>
 							<tr>
 								<td>name</td>
@@ -86,7 +85,7 @@
 							{/if}
 							<tr>
 								<td>pass</td>
-								<td><input type="password" name="pwd" size="6" value=""></td>
+								<td><input type="password" name="pwd" size="8" value=""></td>
 							</tr>
 						</table>
 					</form>
@@ -97,17 +96,17 @@
 			</script>
 		</main>
 		<footer id="footer">
-				<div class="copy">
-					<p>
-						<a href="https://sakots.red/" target="_top">noe-board {$ver}</a>
-						Web Style by <a href="https://sakots.red/" target="_top" title="noedef {$tver} (by 赤原文庫)">noedef</a>
-					</p>
-					<p>
-						UseFunction -
-						<a href="https://github.com/funige/neo/">PaintBBS NEO</a>
-						<a href="https://www.smarty.net/">Smarty</a>
-					</p>
-				</div>
-			</footer>
+			<div class="copy">
+				<p>
+					<a href="https://sakots.red/" target="_top">noe-board {$ver}</a>
+					Web Style by <a href="https://sakots.red/" target="_top" title="MONO {$tver} (by 赤原文庫)">MONO</a>
+				</p>
+				<p>
+					UseFunction -
+					<a href="https://github.com/funige/neo/">PaintBBS NEO</a>
+					<a href="https://www.smarty.net/">Smarty</a>
+				</p>
+			</div>
+		</footer>
 	</body>
 </html>
