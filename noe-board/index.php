@@ -9,7 +9,7 @@ require_once(__DIR__.'/libs/Smarty.class.php');
 $smarty = new Smarty();
 
 //スクリプトのバージョン
-$smarty->assign('ver','v0.13.6');
+$smarty->assign('ver','v0.13.7');
 
 //設定の読み込み
 require(__DIR__."/config.php");
@@ -31,6 +31,8 @@ $smarty->assign('pdefw',PDEF_W);
 $smarty->assign('pdefh',PDEF_H);
 $smarty->assign('skindir',THEMEDIR);
 $smarty->assign('tver',TEMPLATE_VER);
+
+$smarty->assign('dispid',DISP_ID);
 
 $smarty->assign('useanime',USE_ANIME);
 $smarty->assign('defanime',DEF_ANIME);
@@ -88,6 +90,14 @@ if(filter_input(INPUT_GET, 'mode')==="regist"){
 }
 if(filter_input(INPUT_GET, 'mode')==="res"){
 	$mode = "res";
+}
+if(filter_input(INPUT_GET, 'mode')==="sodane"){
+	$mode = "sodane";
+	$resto = filter_input(INPUT_GET, 'resto',FILTER_VALIDATE_INT);
+}
+if(filter_input(INPUT_GET, 'mode')==="rsodane"){
+	$mode = "rsodane";
+	$resto = filter_input(INPUT_GET, 'resto',FILTER_VALIDATE_INT);
 }
 
 $message ="";
@@ -350,6 +360,40 @@ function def() {
 	}
 }
 
+//そうだね
+function sodane(){
+	global $resto;
+	global $smarty;
+	$resto = $_GET["resto"];
+	try {
+		$db = new PDO("sqlite:noe.db");
+		$sql = "UPDATE tablelog set exid = exid+1 where tid = '$resto'";
+		$db = $db->exec($sql);
+		$db = null;
+		$smarty->assign('message','そうだね。');
+	} catch (PDOException $e) {
+		echo "DB接続エラー:" .$e->getMessage();
+	}
+	def();
+}
+
+//レスそうだね
+function rsodane(){
+	global $resto;
+	global $smarty;
+	$resto = $_GET["resto"];
+	try {
+		$db = new PDO("sqlite:noe.db");
+		$sql = "UPDATE tabletree set exid = exid+1 where iid = '$resto'";
+		$db = $db->exec($sql);
+		$db = null;
+		$smarty->assign('message','そうだね。');
+	} catch (PDOException $e) {
+		echo "DB接続エラー:" .$e->getMessage();
+	}
+	def();
+}
+
 //レス画面
 
 function res(){
@@ -359,7 +403,7 @@ function res(){
 	$smarty->assign('resno',$resno);
 	try {
 		$db = new PDO("sqlite:noe.db");
-		$sql = "SELECT tid,modified,name,id,sub,com,mail,url,picfile,pchfile FROM tablelog WHERE tid=".$resno." ORDER BY tree DESC";
+		$sql = "SELECT * FROM tablelog WHERE tid=".$resno." ORDER BY tree DESC";
 		$posts = $db->query($sql);
 	
 		$oya = array();
@@ -788,6 +832,12 @@ switch($mode){
 		break;
 	case 'res':
 		res();
+		break;
+	case 'sodane':
+		sodane();
+		break;
+	case 'rsodane':
+		rsodane();
 		break;
 	case 'paint':
 		$palette = "";

@@ -121,6 +121,11 @@ ul {
   font-size: smaller;
 }
 
+.sodane a {
+  font-weight: normal;
+  text-decoration: none;
+}
+
 .res {
   border-top: solid 2px #222;
   margin-top: 1em;

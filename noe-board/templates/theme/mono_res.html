@@ -91,11 +91,17 @@
 				<section class="thread">
 					<h3><span class="oyano">{$bbsline.tid}</span>{$bbsline.sub}</h3>
 					<section>
-						<h4>名前：{$bbsline.name}：{$bbsline.modified}{if $bbsline.url == true} <span class="button"><a href="{$bbsline.url}" target="_blank" rel="nofollow noopener noreferrer"><i class="fas fa-flag-checkered"></i> URL</a></span>{/if}</h4>
+						<h4>
+							名前：{if $bbsline.mail == true }<a href="mailto:{$bbsline.mail}">{/if}{$bbsline.name}{if $bbsline.mail == true }</a>{/if}：{$bbsline.modified}{if $bbsline.url == true} <span class="button"><a href="{$bbsline.url}" target="_blank" rel="nofollow noopener noreferrer"><i class="fas fa-flag-checkered"></i> URL</a></span>{/if}
+							{if $dispid == 1}<span class="id">ID：{$bbsline.id}</span>{/if}
+							<span class="sodane"><a href="{$self}?mode=sodane&amp;resto={$bbsline.tid}">そうだねx{$bbsline.exid}</a></span>
+						</h4>
 						{if $bbsline.picfile == true}
 						<figure>
-							<figcaption><a href="{$path}{$bbsline.picfile}" target="_blank">{$bbsline.picfile}</a></figcaption>
-							<a href="{$path}{$bbsline.picfile}" target="_blank"data-lightbox="b{$bbsline.picfile}" data-title="{$bbsline.picfile}"><img src="{$path}{$bbsline.picfile}" alt="{$bbsline.picfile}"></a>
+							<figcaption><a href="{$path}{$bbsline.picfile}" target="_blank" data-title="{$bbsline.picfile}">{$bbsline.picfile}</a><br>
+							{if $dptime == 1}描画時間：{$bbsline.time}｜{/if}
+							{if isset($bbsline.pchfile)}<a href="{$self}?mode=anime&amp;pch={$bbsline.pchfile}">●動画</a>{/if}</figcaption>
+							<a href="{$path}{$bbsline.picfile}" target="_blank"data-lightbox="b{$bbsline.picfile}" data-title="{$bbsline.picfile}"><img src="{$path}{$bbsline.picfile}" alt="{$bbsline.picfile}>"></a>
 						</figure>
 						{/if}
 						<p class="comment">{$bbsline.com}</p>
@@ -103,7 +109,11 @@
 						<section class="res">
 							<section>
 								<h3><span class="oyano">{$res.iid}</span>{$res.sub}</h3>
-								<h4>名前：{$res.name}：{$res.modified}{if $res.url == true}<span class="button"><a href="{$res.url}" target="_blank" rel="nofollow noopener noreferrer"><i class="fas fa-flag-checkered"></i> URL</a></span>{/if}</h4>
+								<h4>
+									名前：{if $res.mail == true }<a href="mailto:{$res.mail}">{/if}{$res.name}{if $res.mail == true }</a>{/if}：{$res.modified}{if $res.url == true}<span class="button"><a href="{$res.url}" target="_blank" rel="nofollow noopener noreferrer"><i class="fas fa-flag-checkered"></i> URL</a></span>{/if}
+									{if $dispid == 1}<span class="id">ID：{$res.id}</span>{/if}
+									<span class="sodane"><a href="{$self}?mode=rsodane&amp;resto={$res.iid}">そうだねx{$res.exid}</a></span>
+								</h4>
 								{if isset($res.picfile)}
 								<figure>
 									<figcaption><a href="{$path}{$res.picfile}" target="_blank" data-lightbox="a{$res.picfile}" data-title="{$res.picfile}">{$res.picfile}</a></figcaption>
