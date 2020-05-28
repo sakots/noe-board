@@ -9,7 +9,7 @@ require_once(__DIR__.'/libs/Smarty.class.php');
 $smarty = new Smarty();
 
 //スクリプトのバージョン
-$smarty->assign('ver','v0.12.0');
+$smarty->assign('ver','v0.13.0');
 
 //設定の読み込み
 require(__DIR__."/config.php");
@@ -182,34 +182,55 @@ function regist() {
 				$pchfile = "";
 			}
 
-			//スレッド数
+			//age_sageカウント 兼 レス数カウント
 			$sql = "SELECT COUNT(*) as cnt FROM tabletree WHERE invz=0";
 			$counts = $db->query("$sql");
 			$count = $counts->fetch();
 			$age = $count["cnt"];
 
+			//スレッド数カウント
+			$sql = "SELECT COUNT(*) as cnti FROM tablelog WHERE invz=0";
+			$countsi = $db->query("$sql");
+			$counti = $countsi->fetch();
+			$logt = $counti["cnti"];
+
 			// 値を追加する
 			// スレ建ての場合
-			if (empty($_POST["modid"])==true) {
+			if (empty($_POST["modid"])==true && $logt <= LOG_MAX_T) {
 				//id生成
 				$id = substr(crypt(md5($host.ID_SEED.date("Ymd", $utime)),'id'),-8);
 				$sql = "INSERT INTO tablelog (created, modified, name, sub, com, mail, url, picfile, pchfile, img_w, img_h, utime, parent, time, pwd, id, exid, tree, age, invz, host) VALUES (datetime('now', 'localtime'), datetime('now', 'localtime'), '$name', '$sub', '$com', '$mail', '$url', '$picfile', '$pchfile', '$img_w', '$img_h', '$utime', '$parent', '$time', '$pwd', '$id', '$exid', '$tree', '$age', '$invz', '$host')";
+				$db = $db->exec($sql);
+			} elseif(empty($_POST["modid"])==true && $logt > LOG_MAX_T) {
+				//id生成
+				$id = substr(crypt(md5($host.ID_SEED.date("Ymd", $utime)),'id'),-8);
+				$sql = "INSERT INTO tablelog (created, modified, name, sub, com, mail, url, picfile, pchfile, img_w, img_h, utime, parent, time, pwd, id, exid, tree, age, invz, host) VALUES (datetime('now', 'localtime'), datetime('now', 'localtime'), '$name', '$sub', '$com', '$mail', '$url', '$picfile', '$pchfile', '$img_w', '$img_h', '$utime', '$parent', '$time', '$pwd', '$id', '$exid', '$tree', '$age', '$invz', '$host'); DELETE FROM tablelog WHERE not exists( select * from tablelog as tb where tablelog.ID > tb.ID) LIMIT 1";
 				$db = $db->exec($sql);
 			} elseif(empty($_POST["modid"])!=true && strpos($mail,'sage')!==false ) {
 				//レスの場合でメール欄にsageが含まれる
 				$tid = $_POST["modid"];
 				//id生成
 				$id = substr(crypt(md5($host.ID_SEED.date("Ymd", $utime)),'id'),-8);
-				$sql = "INSERT INTO tabletree (created, modified, tid, name, sub, com, mail, url, picfile, pchfile, img_w, img_h, utime, parent, time, pwd, id, exid, tree, invz, host) VALUES (datetime('now', 'localtime') , datetime('now', 'localtime') , '$tid', '$name', '$sub', '$com', '$mail', '$url', '$picfile', '$pchfile', '$img_w', '$img_h', '$utime', '$parent', '$time', '$pwd', '$id', '$exid', '$tree', '$invz', '$host')";
-				$db = $db->exec($sql);
+				if ($age <= LOG_MAX_R) {
+					$sql = "INSERT INTO tabletree (created, modified, tid, name, sub, com, mail, url, picfile, pchfile, img_w, img_h, utime, parent, time, pwd, id, exid, tree, invz, host) VALUES (datetime('now', 'localtime') , datetime('now', 'localtime') , '$tid', '$name', '$sub', '$com', '$mail', '$url', '$picfile', '$pchfile', '$img_w', '$img_h', '$utime', '$parent', '$time', '$pwd', '$id', '$exid', '$tree', '$invz', '$host')";
+					$db = $db->exec($sql);
+				} else {
+					$sql = "INSERT INTO tabletree (created, modified, tid, name, sub, com, mail, url, picfile, pchfile, img_w, img_h, utime, parent, time, pwd, id, exid, tree, invz, host) VALUES (datetime('now', 'localtime') , datetime('now', 'localtime') , '$tid', '$name', '$sub', '$com', '$mail', '$url', '$picfile', '$pchfile', '$img_w', '$img_h', '$utime', '$parent', '$time', '$pwd', '$id', '$exid', '$tree', '$invz', '$host'); DELETE FROM tabletree WHERE not exists( select * from tabletree as tb where tabletree.ID > tb.ID) LIMIT 1";
+					$db = $db->exec($sql);
+				}
 			} else {
 				//レスの場合でメール欄にsageが含まれない
 				$tid = $_POST["modid"];
 				//id生成
 				$id = substr(crypt(md5($host.ID_SEED.date("Ymd", $utime)),'id'),-8);
-				$age = $age +1;
-				$sql = "INSERT INTO tabletree (created, modified, tid, name, sub, com, mail, url, picfile, pchfile, img_w, img_h, utime, parent, time, pwd, id, exid, tree, invz, host) VALUES (datetime('now', 'localtime') , datetime('now', 'localtime') , '$tid', '$name', '$sub', '$com', '$mail', '$url', '$picfile', '$pchfile', '$img_w', '$img_h', '$utime', '$parent', '$time', '$pwd', '$id', '$exid', '$tree', '$invz', '$host'); UPDATE tablelog set age = '$age' where tid = '$tid'";
-				$db = $db->exec($sql);
+				$nage = $age +1;
+				if ($age <= LOG_MAX_R) {
+					$sql = "INSERT INTO tabletree (created, modified, tid, name, sub, com, mail, url, picfile, pchfile, img_w, img_h, utime, parent, time, pwd, id, exid, tree, invz, host) VALUES (datetime('now', 'localtime') , datetime('now', 'localtime') , '$tid', '$name', '$sub', '$com', '$mail', '$url', '$picfile', '$pchfile', '$img_w', '$img_h', '$utime', '$parent', '$time', '$pwd', '$id', '$exid', '$tree', '$invz', '$host'); UPDATE tablelog set age = '$nage' where tid = '$tid'";
+					$db = $db->exec($sql);
+				} else {
+					$sql = "INSERT INTO tabletree (created, modified, tid, name, sub, com, mail, url, picfile, pchfile, img_w, img_h, utime, parent, time, pwd, id, exid, tree, invz, host) VALUES (datetime('now', 'localtime') , datetime('now', 'localtime') , '$tid', '$name', '$sub', '$com', '$mail', '$url', '$picfile', '$pchfile', '$img_w', '$img_h', '$utime', '$parent', '$time', '$pwd', '$id', '$exid', '$tree', '$invz', '$host'); UPDATE tablelog set age = '$nage' where tid = '$tid'; DELETE FROM tabletree WHERE not exists( select * from tabletree as tb where tabletree.ID > tb.ID) LIMIT 1";
+					$db = $db->exec($sql);
+				}
 			}
 			$smarty->assign('message','書き込みに成功しました。');
 			$db = null;
