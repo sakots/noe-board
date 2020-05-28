@@ -9,7 +9,7 @@ require_once(__DIR__.'/libs/Smarty.class.php');
 $smarty = new Smarty();
 
 //スクリプトのバージョン
-$smarty->assign('ver','v0.13.5');
+$smarty->assign('ver','v0.13.6');
 
 //設定の読み込み
 require(__DIR__."/config.php");
@@ -34,6 +34,8 @@ $smarty->assign('tver',TEMPLATE_VER);
 
 $smarty->assign('useanime',USE_ANIME);
 $smarty->assign('defanime',DEF_ANIME);
+
+$smarty->assign('dptime',DSP_PAINTTIME);
 
 $smarty->assign('share_button',SHARE_BUTTON);
 
@@ -141,7 +143,7 @@ function regist() {
 	$invz = ( isset( $_POST["invz"] )  === true ) ? newstring(trim($_POST["invz"]))  : "";
 	$img_w = ( isset( $_POST["img_w"] )  === true ) ? newstring(trim($_POST["img_w"]))  : "";
 	$img_h = ( isset( $_POST["img_h"] )  === true ) ? newstring(trim($_POST["img_h"]))  : "";
-	$time = ( isset( $_POST["time"] )  === true ) ? newstring(trim($_POST["time"]))  : "";
+	$stime = ( isset( $_POST["stime"] )  === true ) ? newstring(trim($_POST["stime"]))  : "";
 	$pwd = ( isset( $_POST["pwd"] )  === true ) ? newstring(trim($_POST["pwd"]))  : "";
 	$pwd = password_hash($pwd,PASSWORD_DEFAULT);
 	$exid = ( isset( $_POST["exid"] )  === true ) ? newstring(trim($_POST["exid"]))  : "";
@@ -160,6 +162,33 @@ function regist() {
 				$parent = $utime;
 			}
 			$tree = ($parent * 1000000000) - $utime;
+
+			if($stime){
+				$ptime = '';
+				if($stime){
+					$psec = time()-$stime;
+					if($psec >= 86400){
+						$D=($psec - ($psec % 86400)) / 86400;
+						$ptime .= $D.PTIME_D;
+						$psec -= $D*86400;
+					}
+					if($psec >= 3600){
+						$H=($psec - ($psec % 3600)) / 3600;
+						$ptime .= $H.PTIME_H;
+						$psec -= $H*3600;
+					}
+					if($psec >= 60){
+						$M=($psec - ($psec % 60)) / 60;
+						$ptime .= $M.PTIME_M;
+						$psec -= $M*60;
+					}
+					if($psec){
+						$ptime .= $psec.PTIME_S;
+					}
+				}
+				$smarty->assign('ptime',$ptime);
+				$time = $ptime;
+			}
 
 			//画像ファイルとか処理
 			if ( $picfile == true ) {
@@ -449,7 +478,7 @@ function openpch($pch,$sp="") {
 
 //お絵かき投稿
 function paintcom(){
-	global $usercode;
+	global $usercode,$stime;
 	global $smarty;
 
 	$smarty->assign('btitle',TITLE);
@@ -463,6 +492,7 @@ function paintcom(){
 	$smarty->assign('tver',TEMPLATE_VER);
 
 	$smarty->assign('parent',$_SERVER['REQUEST_TIME']);
+	$smarty->assign('stime',$stime);
 
 	$smarty->assign('usercode',$usercode);
 

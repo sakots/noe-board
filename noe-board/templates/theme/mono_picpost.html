@@ -62,12 +62,11 @@
 								<td>
 									<input type="text" name="sub" size="35" autocomplete="section-sub">
 									<input type="submit" name="send" value="書き込む">
-									<input type="hidden" name="lognum" value="{$lognum}">
 									<input type="hidden" name="parent" value="{$parent}">
 									<input type="hidden" name="invz" value="0">
 									<input type="hidden" name="img_w" value="0">
 									<input type="hidden" name="img_h" value="0">
-									<input type="hidden" name="time" value="0">
+									{if isset($stime)}<input type="hidden" name="stime" value="{$stime}">{/if}
 									<input type="hidden" name="exid" value="0">
 								</td>
 							</tr>
