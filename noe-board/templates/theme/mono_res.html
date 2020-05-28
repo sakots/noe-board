@@ -9,9 +9,9 @@
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/css/lightbox.css">
 		{foreach from=$oya item=bbsline}{if isset($bbsline.picfile)}
 		<meta name="twitter:card" content="summary">
-		<meta property="og:title" content="[{$bbsline.tid}] {$bbsline.sub} by {$bbsline.name} - {$btitle}
+		<meta property="og:title" content="[{$bbsline.tid}] {$bbsline.sub} by {$bbsline.name} - {$btitle}">
 		<meta property="og:type" content="article">
-		<meta property="og:url" content="{$base}{$self}">
+		<meta property="og:url" content="{$base}{$self}?mode=res&amp;{$resno}">
 		<meta property="og:image" content="{$base}{$bbsline.picfile}">
 		<meta property="og:site_name"  content="">
 		<meta property="og:description" content="{$bbsline.com}">
@@ -116,14 +116,17 @@
 						{/if}{/foreach}{else}{/if}
 					</section>	
 				</section>
-				{if isset($bbsline.picfile)}<div class="thfoot">
-						<script>
-							(function(){ //さとぴあさんのPOTI-boardスキンより
-								var url = encodeURIComponent('{$base}{$self}'); //ページURL
-								var title = encodeURIComponent('[{$bbsline.tid}] {$bbsline.sub} by {$bbsline.name} - {$btitle}'); //ページタイトル
-							document.write( '<span class="button"><a target="_blank" href="https://twitter.com/intent/tweet?&amp;text=' + title + '&amp;url=' + url + '"><i class="fab fa-twitter fa-fw fa-lg"></i>tweet</a></span> <span class="button"><a target="_blank" class="fb btn" href="http://www.facebook.com/share.php?u=' + url + '"><i class="fab fa-facebook fa-fw fa-lg"></i>share</a></span>' );})();
-						</script>
-					</div>{/if}
+				{if $share_button == 1}{if isset($bbsline.picfile)}
+				<div class="thfoot">
+					<script>
+						(function(){ //さとぴあさんのPOTI-boardスキンより
+							var url = encodeURIComponent('{$base}{$self}?mode=res&amp;{$resno}'); //ページURL
+							var title = encodeURIComponent('[{$bbsline.tid}] {$bbsline.sub} by {$bbsline.name} - {$btitle}'); //ページタイトル
+							document.write( '<span class="button"><a target="_blank" href="https://twitter.com/intent/tweet?&amp;text=' + title + '&amp;url=' + url + '"><i class="fab fa-twitter fa-fw fa-lg"></i>tweet</a></span> <span class="button"><a target="_blank" class="fb btn" href="http://www.facebook.com/share.php?u=' + url + '"><i class="fab fa-facebook fa-fw fa-lg"></i>share</a></span>' );}
+						)();
+					</script>
+				</div>
+				{/if}{/if}
 				<hr>
 				{/if}{/foreach}
 			</div>

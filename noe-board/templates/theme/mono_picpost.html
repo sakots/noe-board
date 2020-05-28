@@ -30,7 +30,7 @@
 			<section>
 				<div class="thread">
 					<div class="tmpimg">
-						{if isset($tmp)}
+						{if isset($temp)}
 						<div>
 							{foreach from=$temp item=tmp}{if isset($tmp.src)}{if isset($tmp.srcname)}
 							<figure>
@@ -75,7 +75,7 @@
 								<td>comment</td>
 								<td><textarea name="com" cols="48" rows="4" wrap="soft"></textarea></td>
 							</tr>
-							{if isset($tmp)}
+							{if isset($temp)}
 							<tr>
 								<td>imgs</td>
 								<td><select name="picfile">

@@ -9,7 +9,7 @@ require_once(__DIR__.'/libs/Smarty.class.php');
 $smarty = new Smarty();
 
 //スクリプトのバージョン
-$smarty->assign('ver','v0.13.3');
+$smarty->assign('ver','v0.13.5');
 
 //設定の読み込み
 require(__DIR__."/config.php");
@@ -34,6 +34,8 @@ $smarty->assign('tver',TEMPLATE_VER);
 
 $smarty->assign('useanime',USE_ANIME);
 $smarty->assign('defanime',DEF_ANIME);
+
+$smarty->assign('share_button',SHARE_BUTTON);
 
 //スパム無効化関数
 function newstring($string) {

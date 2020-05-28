@@ -4,10 +4,8 @@
 		<meta charset="utf-8">
 		<title>{$btitle}</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-		<link rel="stylesheet" href="{$skindir}noe_main.css" type="text/css">
+		<link rel="stylesheet" href="./templates/{$skindir}noee_main.css" type="text/css">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/css/lightbox.css">
-
 	</head>
 	<body>
 		<header id="header">
@@ -109,12 +107,15 @@
 				</section>
 				<hr>
 			</div>
+			<script>
+				l(); //LoadCookie
+			</script>
 		</main>
 		<footer id="footer">
 			<div class="copy">
 				<p>
 					<a href="https://sakots.red/" target="_top">noe-board {$ver}</a>
-					Web Style by <a href="https://sakots.red/" target="_top" title="noedef {$tver} (by 赤原文庫)">noedef</a>
+					Web Style by <a href="https://sakots.red/" target="_top" title="noee {$tver} (by 赤原文庫)">noee</a>
 				</p>
 				<p>
 					UseFunction -
@@ -123,7 +124,5 @@
 				</p>
 			</div>
 		</footer>
-		<script src="https://code.jquery.com/jquery-1.12.4.min.js" type="text/javascript"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/js/lightbox.min.js" type="text/javascript"></script>
 	</body>
 </html>
