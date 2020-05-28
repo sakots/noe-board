@@ -192,7 +192,7 @@ define('SECURITY_CLICK', '1');
 //セキュリティタイマー(単位:秒)。設定しないなら''で
 define('SECURITY_TIMER', '1');
 //セキュリティにヒットした場合の飛び先
-define('SECURITY_URL', 'http://www.npa.go.jp/');
+define('SECURITY_URL', './security_c.html');
 
 //続きを描くときのセキュリティ。利用しないなら両方''で
 //続きを描くときのセキュリティクリック数。設定しないなら''で
@@ -241,7 +241,7 @@ define('MAX_URL', '100');
 define('MAX_COM', '1000');
 
 //一ページに表示する記事
-define('PAGE_DEF', '20');
+define('PAGE_DEF', '10');
 
 //1スレ内のレス表示件数(0で全件表示)
 //レスがこの値より多いと古いレスから省略されます
