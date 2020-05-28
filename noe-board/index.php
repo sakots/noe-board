@@ -9,7 +9,7 @@ require_once(__DIR__.'/libs/Smarty.class.php');
 $smarty = new Smarty();
 
 //スクリプトのバージョン
-$smarty->assign('ver','v0.11.2');
+$smarty->assign('ver','v0.12.0');
 
 //設定の読み込み
 require(__DIR__."/config.php");
@@ -159,11 +159,6 @@ function regist() {
 			}
 			$tree = ($parent * 1000000000) - $utime;
 
-			//スレッド数
-			$sql = "SELECT COUNT(*) as cnt FROM tablelog WHERE invz=0";
-			$countss = $db->query("$sql");
-			$age = count($countss->fetch());
-
 			//画像ファイルとか処理
 			if ( $picfile == true ) {
 				$imagesize = getimagesize(TEMP_DIR.$picfile);
@@ -187,6 +182,12 @@ function regist() {
 				$pchfile = "";
 			}
 
+			//スレッド数
+			$sql = "SELECT COUNT(*) as cnt FROM tabletree WHERE invz=0";
+			$counts = $db->query("$sql");
+			$count = $counts->fetch();
+			$age = $count["cnt"];
+
 			// 値を追加する
 			// スレ建ての場合
 			if (empty($_POST["modid"])==true) {
@@ -194,17 +195,25 @@ function regist() {
 				$id = substr(crypt(md5($host.ID_SEED.date("Ymd", $utime)),'id'),-8);
 				$sql = "INSERT INTO tablelog (created, modified, name, sub, com, mail, url, picfile, pchfile, img_w, img_h, utime, parent, time, pwd, id, exid, tree, age, invz, host) VALUES (datetime('now', 'localtime'), datetime('now', 'localtime'), '$name', '$sub', '$com', '$mail', '$url', '$picfile', '$pchfile', '$img_w', '$img_h', '$utime', '$parent', '$time', '$pwd', '$id', '$exid', '$tree', '$age', '$invz', '$host')";
 				$db = $db->exec($sql);
-			} else {
-				//レスの場合
+			} elseif(empty($_POST["modid"])!=true && strpos($mail,'sage')!==false ) {
+				//レスの場合でメール欄にsageが含まれる
 				$tid = $_POST["modid"];
 				//id生成
 				$id = substr(crypt(md5($host.ID_SEED.date("Ymd", $utime)),'id'),-8);
 				$sql = "INSERT INTO tabletree (created, modified, tid, name, sub, com, mail, url, picfile, pchfile, img_w, img_h, utime, parent, time, pwd, id, exid, tree, invz, host) VALUES (datetime('now', 'localtime') , datetime('now', 'localtime') , '$tid', '$name', '$sub', '$com', '$mail', '$url', '$picfile', '$pchfile', '$img_w', '$img_h', '$utime', '$parent', '$time', '$pwd', '$id', '$exid', '$tree', '$invz', '$host')";
 				$db = $db->exec($sql);
+			} else {
+				//レスの場合でメール欄にsageが含まれない
+				$tid = $_POST["modid"];
+				//id生成
+				$id = substr(crypt(md5($host.ID_SEED.date("Ymd", $utime)),'id'),-8);
+				$age = $age +1;
+				$sql = "INSERT INTO tabletree (created, modified, tid, name, sub, com, mail, url, picfile, pchfile, img_w, img_h, utime, parent, time, pwd, id, exid, tree, invz, host) VALUES (datetime('now', 'localtime') , datetime('now', 'localtime') , '$tid', '$name', '$sub', '$com', '$mail', '$url', '$picfile', '$pchfile', '$img_w', '$img_h', '$utime', '$parent', '$time', '$pwd', '$id', '$exid', '$tree', '$invz', '$host'); UPDATE tablelog set age = '$age' where tid = '$tid'";
+				$db = $db->exec($sql);
 			}
 			$smarty->assign('message','書き込みに成功しました。');
+			$db = null;
 		}
-		$db = null;
 	} catch (PDOException $e) {
 		echo "DB接続エラー:" .$e->getMessage();
 	}
@@ -212,7 +221,6 @@ function regist() {
 }
 
 //通常時
-
 function def() {
 	global $smarty;
 
@@ -259,7 +267,7 @@ function def() {
 	//1ページの全スレッド取得
 	try {
 		$db = new PDO("sqlite:noe.db");
-		$sql = "SELECT * FROM tablelog WHERE invz=0 ORDER BY age ASC, tree DESC LIMIT ".$start.",".PAGE_DEF;
+		$sql = "SELECT * FROM tablelog WHERE invz=0 ORDER BY age DESC, tree DESC LIMIT ".$start.",".PAGE_DEF;
 		$posts = $db->query($sql);
 		$oya = array();
 		while ($bbsline = $posts->fetch() ) {
@@ -288,7 +296,7 @@ function def() {
 	}
 }
 
-//レス時
+//レス画面
 
 function res(){
 	global $resno;
@@ -650,13 +658,16 @@ function init(){
 			$db = new PDO("sqlite:noe.db");
 			$db->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);  
 			$sql = "CREATE TABLE tablelog (tid integer primary key autoincrement, created timestamp, modified TIMESTAMP, name VARCHAR(".MAX_NAME."), mail VARCHAR(".MAX_EMAIL."), sub VARCHAR(".MAX_SUB."), com VARCHAR(".MAX_COM."), url VARCHAR(".MAX_URL."), host TEXT, exid TEXT, id TEXT, pwd TEXT, utime INT, picfile TEXT, pchfile TEXT, img_w INT, img_h INT, time TEXT, tree BIGINT, parent INT, age INT, invz VARCHAR(1))";
-			$dh = $db->query($sql);
+			$db = $db->query($sql);
+			$db = null; //db切断
+			$db = new PDO("sqlite:noe.db");
 			$sql = "CREATE TABLE tabletree (iid integer primary key autoincrement, tid INT, created timestamp, modified TIMESTAMP, name VARCHAR(".MAX_NAME."), mail VARCHAR(".MAX_EMAIL."), sub VARCHAR(".MAX_SUB."), com VARCHAR(".MAX_COM."), url VARCHAR(".MAX_URL."), host TEXT, exid TEXT, id TEXT, pwd TEXT, utime INT, picfile TEXT, pchfile TEXT, img_w INT, img_h INT, time TEXT, tree BIGINT, parent INT, invz VARCHAR(1))";
-			$dh = $db->query($sql);
+			$db = $db->query($sql);
+			$db = null; //db切断
 		} else {
 			$db = new PDO("sqlite:noe.db");
+			$db = null; //db切断
 		}
-		$db = null; //db切断
 	} catch (PDOException $e) {
 		echo "DB接続エラー:" .$e->getMessage();
 	}
