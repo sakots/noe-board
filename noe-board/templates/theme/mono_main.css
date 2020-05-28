@@ -121,6 +121,10 @@ ul {
   font-size: smaller;
 }
 
+p.oya {
+  margin-top: 1.5em;
+}
+
 .sodane a {
   font-weight: normal;
   text-decoration: none;

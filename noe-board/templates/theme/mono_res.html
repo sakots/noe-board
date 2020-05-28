@@ -104,7 +104,7 @@
 							<a href="{$path}{$bbsline.picfile}" target="_blank"data-lightbox="b{$bbsline.picfile}" data-title="{$bbsline.picfile}"><img src="{$path}{$bbsline.picfile}" alt="{$bbsline.picfile}>"></a>
 						</figure>
 						{/if}
-						<p class="comment">{$bbsline.com}</p>
+						<p class="comment oya">{$bbsline.com}</p>
 						{if isset($ko)}{foreach from=$ko item=res}{if $res.com == true}
 						<section class="res">
 							<section>
@@ -114,7 +114,7 @@
 									{if $dispid == 1}<span class="id">ID：{$res.id}</span>{/if}
 									<span class="sodane"><a href="{$self}?mode=rsodane&amp;resto={$res.iid}">そうだねx{$res.exid}</a></span>
 								</h4>
-								{if $res.picfile == true}
+								{if isset($res.picfile)}
 								<figure>
 									<figcaption><a href="{$path}{$res.picfile}" target="_blank" data-lightbox="a{$res.picfile}" data-title="{$res.picfile}">{$res.picfile}</a></figcaption>
 									<a href="{$path}{$res.picfile}" target="_blank"data-lightbox="b{$res.picfile}" data-title="{$res.picfile}"><img src="{$path}{$res.picfile}" alt="{$res.picfile}"></a>
