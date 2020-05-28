@@ -92,7 +92,7 @@
 						</figure>
 						{/if}
 						<p class="comment">{$bbsline.com}</p>
-						{if isset($ko)}{foreach from=$ko item=res}{if $bbsline.tid == $res.tid}
+						{if isset($ko)}{foreach from=$ko item=res}{if $bbsline.tid == $res.tid}{if $res@index >= $dspres}
 						<section class="res">
 							<section>
 								<h3><span class="oyano">{$res.iid}</span>{$res.sub}</h3>
@@ -106,7 +106,7 @@
 								<p class="comment">{$res.com}</p>
 							</section>
 						</section>
-						{/if}{/foreach}{/if}
+						{else}...{/if}{/if}{/foreach}{/if}
 						<div class="thfoot"><span class="button"><a href="{$self}?mode=res&amp;res={$bbsline.tid}"><i class="fas fa-reply-all"></i> 返信</a></span></div>
 					</section>
 				</section>

@@ -9,7 +9,7 @@ require_once(__DIR__.'/libs/Smarty.class.php');
 $smarty = new Smarty();
 
 //スクリプトのバージョン
-$smarty->assign('ver','v0.13.1');
+$smarty->assign('ver','v0.13.2');
 
 //設定の読み込み
 require(__DIR__."/config.php");
@@ -244,6 +244,8 @@ function regist() {
 //通常時
 function def() {
 	global $smarty;
+	$dspres = DSP_RES;
+	$smarty->assign('dspres',$dspres);
 
 	//ページング
 	try {
