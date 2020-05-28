@@ -84,9 +84,9 @@
 							<td>{$bbsline.tid}</td>
 							<td>{$bbsline.name}</td>
 							<td>{$bbsline.modified}</td>
-							<td>{$bbsline.sub}</td>
-							<td>{$bbsline.picfile}</td>
-							<td>{$bbsline.com}</td>
+							<td>{$bbsline.sub|truncate:6}</td>
+							<td>{if $bbsline.picfile == true}<a href="{$path}{$bbsline.picfile}">{$bbsline.picfile}</a>{/if}</td>
+							<td>{$bbsline.com|truncate:10}</td>
 							<td>{$bbsline.host}</td>
 							<td>{if $bbsline.invz == 1}invz{/if}</td>
 						</tr>
@@ -95,9 +95,9 @@
 							<td>└{$res.iid}</td>
 							<td>{$res.name}</td>
 							<td>{$res.modified}</td>
-							<td>{$res.sub}</td>
+							<td>{$res.sub|truncate:6}</td>
 							<td>{$res.picfile}</td>
-							<td>{$res.com}</td>
+							<td>{$res.com|truncate:10}</td>
 							<td>{$res.host}</td>
 							<td>{if $res.invz == 1}invz{/if}</td>
 						</tr>

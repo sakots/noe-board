@@ -43,6 +43,12 @@ define('HOME', '../');
 //設置場所のURL BASE で設定したurlをもとにリンクを作成
 define('SHARE_BUTTON', '0');
 
+/* ---------- 個人識別 ---------- */
+
+//IDを表示する する:1 しない:0
+//違う名前でも同一人物だとわかります。
+define('DISP_ID', '1');
+
 /* ---------- スパム対策 ---------- */
 
 //拒絶する文字列
@@ -222,8 +228,8 @@ define('LOG_MAX_R', LOG_MAX_T * 30);
 define('MAX_KB', '2000');
 
 //投稿サイズ（これ以上はサイズを縮小
-define('MAX_W', '600');	//幅
-define('MAX_H', '600');	//高さ
+define('MAX_W', '700');	//幅
+define('MAX_H', '700');	//高さ
 
 //名前の制限文字数。半角で
 define('MAX_NAME', '100');
@@ -267,10 +273,6 @@ define('MAX_RES', '20');
 //未実装
 define('PROXY_CHECK', '0');
 
-//IDを表示する 強制:2 する:1 しない:0
-//未実装
-define('DISP_ID', '0');
-
 //ID生成の種
 define('ID_SEED', 'IDの種');
 
@@ -300,8 +302,8 @@ define('USE_RESUB', '0');
 /* ---------- お絵かき設定 ---------- */
 
 //お絵かき機能を使用する お絵かきのみ:2 する:1 しない:0
-//2以外未実装
-define('USE_PAINT', '2');
+//2以外実装予定なし
+//define('USE_PAINT', '2');
 
 //お絵かき画像ファイル名の頭文字
 //お絵かき投稿した画像のファイル名には、必ずこれが先頭に付きます
@@ -327,7 +329,8 @@ define('PDEF_H', '300');	//高さ
 define('DSP_PAINTTIME', '1');
 
 //パレットデータファイル名
-define('PALETTEFILE', 'palette.txt');
+//直接組み込みだので使用しない
+//define('PALETTEFILE', 'palette.txt');
 
 //動画機能を使用する する:1 しない:0
 define('USE_ANIME', '1');
@@ -335,8 +338,8 @@ define('USE_ANIME', '1');
 //動画記録デフォルトスイッチ ON:1 OFF:0
 define('DEF_ANIME', '1');
 
-//動画(PCH)保存ディレクトリ
-define('PCH_DIR', 'src/');
+//動画(PCH)保存ディレクトリは画像保存ディレクトリと同じ
+//define('PCH_DIR', 'src/');
 
 //動画再生スピード 超高速:-1 高速:0 中速:10 低速:100 超低速:1000
 define('PCH_SPEED', '10');

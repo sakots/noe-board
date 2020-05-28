@@ -9,7 +9,7 @@ require_once(__DIR__.'/libs/Smarty.class.php');
 $smarty = new Smarty();
 
 //スクリプトのバージョン
-$smarty->assign('ver','v0.13.7');
+$smarty->assign('ver','v0.13.8');
 
 //設定の読み込み
 require(__DIR__."/config.php");
@@ -19,7 +19,7 @@ require(__DIR__."/templates/".THEMEDIR."template_ini.php");
 
 //var_dump($_POST);
 
-$message = "";
+$message = "(system message...)";
 $self = PHP_SELF;
 
 $smarty->assign('base',BASE);
@@ -29,6 +29,8 @@ $smarty->assign('self',PHP_SELF);
 $smarty->assign('message',$message);
 $smarty->assign('pdefw',PDEF_W);
 $smarty->assign('pdefh',PDEF_H);
+$smarty->assign('pmaxw',PMAX_W);
+$smarty->assign('pmaxh',PMAX_H);
 $smarty->assign('skindir',THEMEDIR);
 $smarty->assign('tver',TEMPLATE_VER);
 
@@ -286,6 +288,7 @@ function regist() {
 function def() {
 	global $smarty;
 	$dspres = DSP_RES;
+	$page_def = PAGE_DEF;
 	$smarty->assign('dspres',$dspres);
 
 	//ページング
@@ -297,13 +300,13 @@ function def() {
 		} else {
 			$page = 1;
 		}
-		$start = PAGE_DEF * ($page - 1);
+		$start = $page_def * ($page - 1);
 
 		//最大何ページあるのか
 		$sql = "SELECT COUNT(*) as cnt FROM tablelog WHERE invz=0";
 		$counts = $db->query("$sql");
 		$count = $counts->fetch();
-		$max_page = floor($count["cnt"] / PAGE_DEF) + 1;
+		$max_page = floor($count["cnt"] / $page_def) + 1;
 		$smarty->assign('max_page',$max_page);
 
 		//リンク作成用
@@ -331,7 +334,7 @@ function def() {
 	//1ページの全スレッド取得
 	try {
 		$db = new PDO("sqlite:noe.db");
-		$sql = "SELECT * FROM tablelog WHERE invz=0 ORDER BY age DESC, tree DESC LIMIT ".$start.",".PAGE_DEF;
+		$sql = "SELECT * FROM tablelog WHERE invz=0 ORDER BY age DESC, tree DESC LIMIT $start,$page_def"; 
 		$posts = $db->query($sql);
 		$oya = array();
 		while ($bbsline = $posts->fetch() ) {
@@ -479,9 +482,9 @@ function openpch($pch,$sp="") {
 	$pch = str_replace( strrchr($pch,"."), "", $pch); //拡張子除去
 	$picfile = IMG_DIR.$pch.".png";
 	if($shi==1){
-		$pchfile = PCH_DIR.$pch.'.spch';
+		$pchfile = IMG_DIR.$pch.'.spch';
 	}else{
-		$pchfile = PCH_DIR.$pch.'.pch';
+		$pchfile = IMG_DIR.$pch.'.pch';
 	}
 	if(is_file($pchfile)){//動画が無い時は処理しない
 		$datasize = filesize($pchfile);
@@ -681,6 +684,8 @@ function admin() {
 	$smarty->assign('useanime',USE_ANIME);
 	$smarty->assign('defanime',DEF_ANIME);
 
+	$smarty->assign('path',IMG_DIR);
+
 	//ページング
 	if (isset($_GET['page']) && is_numeric($_GET['page'])) {
 		$page = $_GET['page'];
@@ -779,14 +784,12 @@ function init(){
 	if(!is_writable(realpath(IMG_DIR)))$err.=IMG_DIR."を書けません<br>";
 	if(!is_readable(realpath(IMG_DIR)))$err.=IMG_DIR."を読めません<br>";
 
-	if(USE_PAINT){
 	if(!is_dir(realpath(TEMP_DIR))){
 		mkdir(TEMP_DIR,0707);chmod(TEMP_DIR,0707);
 	}
-		if(!is_dir(realpath(TEMP_DIR)))$err.=TEMP_DIR."がありません<br>";
-		if(!is_writable(realpath(TEMP_DIR)))$err.=TEMP_DIR."を書けません<br>";
-		if(!is_readable(realpath(TEMP_DIR)))$err.=TEMP_DIR."を読めません<br>";
-	}
+	if(!is_dir(realpath(TEMP_DIR)))$err.=TEMP_DIR."がありません<br>";
+	if(!is_writable(realpath(TEMP_DIR)))$err.=TEMP_DIR."を書けません<br>";
+	if(!is_readable(realpath(TEMP_DIR)))$err.=TEMP_DIR."を読めません<br>";
 	if($err)error($err);
 }
 
