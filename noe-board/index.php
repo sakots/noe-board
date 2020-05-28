@@ -9,7 +9,7 @@ require_once(__DIR__.'/libs/Smarty.class.php');
 $smarty = new Smarty();
 
 //スクリプトのバージョン
-$smarty->assign('ver','v0.13.2');
+$smarty->assign('ver','v0.13.3');
 
 //設定の読み込み
 require(__DIR__."/config.php");
