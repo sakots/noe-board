@@ -9,7 +9,7 @@ require_once(__DIR__.'/libs/Smarty.class.php');
 $smarty = new Smarty();
 
 //スクリプトのバージョン
-$smarty->assign('ver','v0.13.11');
+$smarty->assign('ver','v0.14.0');
 
 //設定の読み込み
 require(__DIR__."/config.php");
@@ -215,10 +215,17 @@ function regist() {
 				$picdat = strtr($picfile , 'png', 'dat');
 				rename( TEMP_DIR.$picdat, IMG_DIR.$picdat );
 				chmod( IMG_DIR.$picdat , 0606);
+
+				$spchfile = str_replace('png','spch', $picfile);
 				$pchfile = strtr($picfile , 'png', 'pch');
+				
 				if ( file_exists(TEMP_DIR.$pchfile) == TRUE ) {
 					rename( TEMP_DIR.$pchfile, IMG_DIR.$pchfile );
 					chmod( IMG_DIR.$pchfile , 0606);
+				} elseif( file_exists(TEMP_DIR.$spchfile) == TRUE ) {
+					rename( TEMP_DIR.$spchfile, IMG_DIR.$spchfile );
+					chmod( IMG_DIR.$spchfile , 0606);
+					$pchfile = $spchfile;
 				} else {
 					$pchfile = "";
 				}
@@ -436,10 +443,10 @@ function res(){
 	$smarty->display( THEMEDIR.RESFILE );
 }
 
-//ペイント画面
+//お絵描き画面
 
 function paintform(){
-	global $message,$usercode;
+	global $message,$usercode,$quality,$qualitys;
 	global $smarty;
 
 	//NEOを使う or しぃペインター
@@ -495,37 +502,52 @@ function paintform(){
 
 	$userip = get_uip();
 
+	if((SECURITY_CLICK || SECURITY_TIMER) && SECURITY_URL){
+		$smarty->assign('security',true);
+		$smarty->assign('security_click',SECURITY_CLICK);
+		$smarty->assign('security_timer',SECURITY_TIMER);
+	}
+
+	//しぃペインター
+	$smarty->assign('layer_count',LAYER_COUNT);
+	$qq = $quality ? $quality : $qualitys[0];
+	$smarty->assign('quality',$qq);
+
+	//出力
 	$smarty->display( THEMEDIR.PAINTFILE );
 }
 
 //アニメ再生
 
 function openpch($pch,$sp="") {
-	global $shi;
 	global $smarty;
 	$message = "";
 
 	$pch = $_GET["pch"];
-	$pch = str_replace( strrchr($pch,"."), "", $pch); //拡張子除去
-	$picfile = IMG_DIR.$pch.".png";
-	if($shi==1){
-		$pchfile = IMG_DIR.$pch.'.spch';
-	}else{
-		$pchfile = IMG_DIR.$pch.'.pch';
-	}
-	if(is_file($pchfile)){//動画が無い時は処理しない
-		$datasize = filesize($pchfile);
-		$size = getimagesize($picfile);
-		if(!$sp) $sp = PCH_SPEED;
-		$picw = $size[0];
-		$pich = $size[1];
-		$w = $picw;
-		$h = $pich + 26;
-		if($w < 300){$w = 300;}
-		if($h < 326){$h = 326;}
-	}else{
+	$pchh = str_replace( strrchr($pch,"."), "", $pch); //拡張子除去
+	$extn = substr($pch, strrpos($pch, '.') + 1); //拡張子取得
+
+	$picfile = IMG_DIR.$pchh.".png";
+
+	if($extn=='spch'){
+		$pchfile = IMG_DIR.$pch;
+		$smarty->assign('useneo',false); //拡張子がspchのときはしぃぺ
+	}elseif($extn=='pch'){
+		$pchfile = IMG_DIR.$pch;
+		$smarty->assign('useneo',true); //拡張子がpchのときはNEO
+	}else { //動画が無い時は処理しない
 		$w=$h=$picw=$pich=$datasize="";
+		$smarty->assign('useneo',true);
 	}
+	$datasize = filesize($pchfile);
+	$size = getimagesize($picfile);
+	if(!$sp) $sp = PCH_SPEED;
+	$picw = $size[0];
+	$pich = $size[1];
+	$w = $picw;
+	$h = $pich + 26;
+	if($w < 300){$w = 300;}
+	if($h < 326){$h = 326;}
 
 	$smarty->assign('btitle',TITLE);
 	$smarty->assign('home',HOME);
@@ -540,7 +562,7 @@ function openpch($pch,$sp="") {
 	$smarty->assign('pich',$pich);
 	$smarty->assign('w',$w);
 	$smarty->assign('h',$h);
-	$smarty->assign('pchfile','./'.$pchfile);
+	$smarty->assign('pchfile','./'.$pch);
 	$smarty->assign('datasize',$datasize);
 
 	$smarty->assign('speed',PCH_SPEED);
