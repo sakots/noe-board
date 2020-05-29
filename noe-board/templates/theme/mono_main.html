@@ -94,7 +94,7 @@
 						<figure>
 							<figcaption><a href="{$path}{$bbsline.picfile}" target="_blank" data-title="{$bbsline.picfile}">{$bbsline.picfile}</a><br>
 							{if $dptime == 1}描画時間：{$bbsline.time}｜{/if}
-							{if isset($bbsline.pchfile)}<a href="{$self}?mode=anime&amp;pch={$bbsline.pchfile}" target="_blank">●動画</a>{/if}</figcaption>
+							{if $bbsline.pchfile != null}<a href="{$self}?mode=anime&amp;pch={$bbsline.pchfile}" target="_blank">●動画</a>{/if}</figcaption>
 							<a href="{$path}{$bbsline.picfile}" target="_blank"><img src="{$path}{$bbsline.picfile}" alt="{$bbsline.picfile}>"></a>
 						</figure>
 						{/if}

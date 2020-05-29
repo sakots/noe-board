@@ -9,7 +9,7 @@ require_once(__DIR__.'/libs/Smarty.class.php');
 $smarty = new Smarty();
 
 //スクリプトのバージョン
-$smarty->assign('ver','v0.14.0');
+$smarty->assign('ver','v0.14.1');
 
 //設定の読み込み
 require(__DIR__."/config.php");
@@ -473,6 +473,8 @@ function paintform(){
 	$smarty->assign('picw',$picw);
 	$pich = filter_input(INPUT_POST, 'pich',FILTER_VALIDATE_INT);
 	$smarty->assign('pich',$pich);
+	$anime = isset($_POST["anime"]) ? true : false;
+	$smarty->assign('anime',$anime);
 	
 	if($picw < 300) $picw = 300;
 	if($pich < 300) $pich = 300;
