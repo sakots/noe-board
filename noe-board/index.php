@@ -9,7 +9,7 @@ require_once(__DIR__.'/libs/Smarty.class.php');
 $smarty = new Smarty();
 
 //スクリプトのバージョン
-$smarty->assign('ver','v0.13.9');
+$smarty->assign('ver','v0.13.10');
 
 //設定の読み込み
 require(__DIR__."/config.php");
@@ -100,6 +100,9 @@ if(filter_input(INPUT_GET, 'mode')==="sodane"){
 if(filter_input(INPUT_GET, 'mode')==="rsodane"){
 	$mode = "rsodane";
 	$resto = filter_input(INPUT_GET, 'resto',FILTER_VALIDATE_INT);
+}
+if(filter_input(INPUT_GET, 'mode')==="del"){
+	$mode = "del";
 }
 
 $message ="";
@@ -470,12 +473,15 @@ function paintform(){
 	if($pich > PMAX_H) $pich = PMAX_H;
 
 	if(!$useneo) { //しぃペインターの時の幅と高さ
-		$smarty->assign('w',$picw + 510);
-		$smarty->assign('h',$pich + 172);
+		$ww = $picw + 510;
+		$hh = $pich + 172;
 	} else { //NEOのときの幅と高さ
-		$smarty->assign('w',$picw + 150);
-		$smarty->assign('h',$pich + 232);
+		$ww = $picw + 150;
+		$hh = $pich + 172;
 	}
+	if($hh < 560){$hh = 560;}//共通の最低高
+	$smarty->assign('w',$ww);
+	$smarty->assign('h',$hh);
 	
 	$smarty->assign('undo',UNDO);
 	$smarty->assign('undo_in_mg',UNDO_IN_MG);
@@ -515,8 +521,8 @@ function openpch($pch,$sp="") {
 		$pich = $size[1];
 		$w = $picw;
 		$h = $pich + 26;
-		if($w < 200){$w = 200;}
-		if($h < 226){$h = 226;}
+		if($w < 300){$w = 300;}
+		if($h < 326){$h = 326;}
 	}else{
 		$w=$h=$picw=$pich=$datasize="";
 	}
@@ -644,29 +650,29 @@ function delmode(){
 
 	if ($delt == 0) {
 		$deltable = 'tablelog';
-		$id = "tid";
+		$idk = "tid";
 	} else {
 		$deltable = 'tabletree';
-		$id = "iid";
+		$idk = "iid";
 	}
 	//記事呼び出し
 	try {
 		$db = new PDO("sqlite:noe.db");
-		$sql ="SELECT * FROM ".$deltable." WHERE ".$id."=".$delno;
+		$sql ="SELECT * FROM $deltable WHERE $idk = $delno";
 		$msgs = $db->prepare($sql);
 		$msgs->execute(array($delno));
 		$msg = $msgs->fetch();
 
-		if (password_verify($_POST["pwd"],$msg['pwd']) == true) {
-			$sql = "DELETE FROM ".$deltable." WHERE ".$id."=".$delno;
+		if (password_verify($_POST["pwd"],$msg['pwd']) === true) {
+			$sql = "DELETE FROM $deltable WHERE $idk=$delno";
 			$del = $db->prepare($sql);
 			$del->execute(array($delno));
 		} elseif ($admin_pass == $_POST["pwd"] && $_POST["admindel"] == 1) {
-			$sql = "DELETE FROM ".$deltable." WHERE ".$id."=".$delno;
+			$sql = "DELETE FROM $deltable WHERE $idk=$delno";
 			$del = $db->prepare($sql);
 			$del->execute(array($delno));
 		} elseif ($admin_pass == $_POST["pwd"] && $_POST["admindel"] != 1) {
-			$sql = "UPDATE ".$deltable." SET invz=1 WHERE ".$id."=".$delno;
+			$sql = "UPDATE $deltable SET invz=1 WHERE $idk=$delno";
 			$del = $db->exec($sql);
 		} else {
 			$smarty->assign('message','パスワードまたは記事番号が違います。');
