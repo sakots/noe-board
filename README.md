@@ -1,6 +1,7 @@
 # noe-board
 noe-boardは全く新しいお絵かき掲示板スクリプトです。  
 new oekaki engine で「noe」です。
+nap of the earth(匍匐飛行)ではございません。どうでもいいけど。
 
 <a href="https://github.com/funige/neo/">PaintBBS NEO</a>
 
