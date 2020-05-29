@@ -8,6 +8,7 @@
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 		<link rel="stylesheet" href="neo.css" type="text/css">
 		<script src="neo.js" charset="utf-8"></script>
+		<script src="loadcookie.js"></script>
 	</head>
 	<body id="paintmode">
 		<header>
@@ -361,7 +362,7 @@
 				</div>
 				<div class="palette">
 					<form name="Palette">
-						{if isset($useneo)}
+						{if $useneo == true}
 						<fieldset>
 							<legend>TOOL</legend>
 							<input class="button" type="button" value="左" onclick="Neo.setToolSide(true)">
@@ -617,18 +618,23 @@
 				</div>
 			</section>
 			<script>
-				l(); //LoadCookie
+				function l(); //LoadCookie
 			</script>
 		</main>
 		<footer id="footer">
 			<div class="copy">
+				<!-- 著作権表示 -->
 				<p>
 					<a href="https://sakots.red/" target="_top">noe-board {$ver}</a>
 					Web Style by <a href="https://sakots.red/" target="_top" title="MONO {$tver} (by 赤原文庫)">MONO</a>
 				</p>
 				<p>
+					OekakiApplet - <a href="http://hp.vector.co.jp/authors/VA016309/" target="_blank" rel="noopener noreferrer" title="by しぃちゃん">Shi-Painter</a>
+				</p>
+				<p>
 					UseFunction -
 					<a href="https://github.com/funige/neo/">PaintBBS NEO</a>
+					DynamicPalette <!-- http://wondercatstudio.com/ -->
 					<a href="https://www.smarty.net/">Smarty</a>
 				</p>
 			</div>

@@ -329,7 +329,7 @@ define('PDEF_H', '300');	//高さ
 define('DSP_PAINTTIME', '1');
 
 //パレットデータファイル名
-//直接組み込みだので使用しない
+//直接組み込んだので使用しない
 //define('PALETTEFILE', 'palette.txt');
 
 //動画機能を使用する する:1 しない:0

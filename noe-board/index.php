@@ -9,7 +9,7 @@ require_once(__DIR__.'/libs/Smarty.class.php');
 $smarty = new Smarty();
 
 //スクリプトのバージョン
-$smarty->assign('ver','v0.13.8');
+$smarty->assign('ver','v0.13.9');
 
 //設定の読み込み
 require(__DIR__."/config.php");
@@ -245,6 +245,7 @@ function regist() {
 				$sql = "INSERT INTO tablelog (created, modified, name, sub, com, mail, url, picfile, pchfile, img_w, img_h, utime, parent, time, pwd, id, exid, tree, age, invz, host) VALUES (datetime('now', 'localtime'), datetime('now', 'localtime'), '$name', '$sub', '$com', '$mail', '$url', '$picfile', '$pchfile', '$img_w', '$img_h', '$utime', '$parent', '$time', '$pwd', '$id', '$exid', '$tree', '$age', '$invz', '$host')";
 				$db = $db->exec($sql);
 			} elseif(empty($_POST["modid"])==true && $logt > LOG_MAX_T) {
+				//ログ行数オーバーの場合
 				//id生成
 				$id = substr(crypt(md5($host.ID_SEED.date("Ymd", $utime)),'id'),-8);
 				$sql = "INSERT INTO tablelog (created, modified, name, sub, com, mail, url, picfile, pchfile, img_w, img_h, utime, parent, time, pwd, id, exid, tree, age, invz, host) VALUES (datetime('now', 'localtime'), datetime('now', 'localtime'), '$name', '$sub', '$com', '$mail', '$url', '$picfile', '$pchfile', '$img_w', '$img_h', '$utime', '$parent', '$time', '$pwd', '$id', '$exid', '$tree', '$age', '$invz', '$host'); DELETE FROM tablelog WHERE not exists( select * from tablelog as tb where tablelog.ID > tb.ID) LIMIT 1";
@@ -438,7 +439,14 @@ function paintform(){
 	global $message,$usercode;
 	global $smarty;
 
-	if ($_POST["useneo"]){$smarty->assign('useneo',true);} //NEOを使う
+	//NEOを使う or しぃペインター
+	if (filter_input(INPUT_POST, 'useneo')){
+		$useneo = true;
+		$smarty->assign('useneo',true);
+	} else {
+		$useneo = false;
+		$smarty->assign('useneo',false);
+	}
 
 	$smarty->assign('mode','piccom');
 
@@ -451,11 +459,24 @@ function paintform(){
 	$smarty->assign('skindir',THEMEDIR);
 	$smarty->assign('tver',TEMPLATE_VER);
 
-	$smarty->assign('picw',$_POST["picw"]);
-	$smarty->assign('pich',$_POST["pich"]);
-	$smarty->assign('w',$_POST["picw"] + 150);
-	$smarty->assign('h',$_POST["pich"] + 170);
+	$picw = filter_input(INPUT_POST, 'picw',FILTER_VALIDATE_INT);
+	$smarty->assign('picw',$picw);
+	$pich = filter_input(INPUT_POST, 'pich',FILTER_VALIDATE_INT);
+	$smarty->assign('pich',$pich);
+	
+	if($picw < 300) $picw = 300;
+	if($pich < 300) $pich = 300;
+	if($picw > PMAX_W) $picw = PMAX_W;
+	if($pich > PMAX_H) $pich = PMAX_H;
 
+	if(!$useneo) { //しぃペインターの時の幅と高さ
+		$smarty->assign('w',$picw + 510);
+		$smarty->assign('h',$pich + 172);
+	} else { //NEOのときの幅と高さ
+		$smarty->assign('w',$picw + 150);
+		$smarty->assign('h',$pich + 232);
+	}
+	
 	$smarty->assign('undo',UNDO);
 	$smarty->assign('undo_in_mg',UNDO_IN_MG);
 

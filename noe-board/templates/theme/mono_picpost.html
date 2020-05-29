@@ -6,6 +6,7 @@
 		<link rel="stylesheet" href="./templates/{$skindir}mono_main.css" type="text/css">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 		<title>{$btitle}</title>
+		<script src="loadcookie.js"></script>
 	</head>
 	<body>
 		<header>
@@ -51,14 +52,14 @@
 							</tr>
 							<tr>
 								<td>mail</td>
-								<td><input type="text" name="mail" size="28" value=""></td>
+								<td><input type="text" name="mail" size="28" value="" autocomplete="email"></td>
 							</tr>
 							<tr>
 								<td>URL</td>
-								<td><input type="text" name="url" size="28" value=""></td>
+								<td><input type="text" name="url" size="28" value="" autocomplete="url"></td>
 							</tr>
 							<tr>
-								<td>title</td>
+								<td>subject</td>
 								<td>
 									<input type="text" name="sub" size="35" autocomplete="section-sub">
 									<input type="submit" name="send" value="書き込む">
@@ -84,25 +85,30 @@
 							{/if}
 							<tr>
 								<td>pass</td>
-								<td><input type="password" name="pwd" size="8" value=""></td>
+								<td><input type="password" name="pwd" size="8" value="" autocomplete="current-password"></td>
 							</tr>
 						</table>
 					</form>
 				</div>
 			</section>
 			<script>
-				l(); //LoadCookie
+				function l(); //LoadCookie
 			</script>
 		</main>
 		<footer id="footer">
 			<div class="copy">
+				<!-- 著作権表示 -->
 				<p>
 					<a href="https://sakots.red/" target="_top">noe-board {$ver}</a>
 					Web Style by <a href="https://sakots.red/" target="_top" title="MONO {$tver} (by 赤原文庫)">MONO</a>
 				</p>
 				<p>
+					OekakiApplet - <a href="http://hp.vector.co.jp/authors/VA016309/" target="_blank" rel="noopener noreferrer" title="by しぃちゃん">Shi-Painter</a>
+				</p>
+				<p>
 					UseFunction -
 					<a href="https://github.com/funige/neo/">PaintBBS NEO</a>
+					DynamicPalette <!-- http://wondercatstudio.com/ -->
 					<a href="https://www.smarty.net/">Smarty</a>
 				</p>
 			</div>

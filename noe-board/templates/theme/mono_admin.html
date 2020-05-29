@@ -6,6 +6,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 		<link rel="stylesheet" href="./templates/{$skindir}mono_main.css" type="text/css">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+		<script src="loadcookie.js"></script>
 	</head>
 	<body>
 		<header id="header">
@@ -108,18 +109,23 @@
 				<hr>
 			</div>
 			<script>
-				l(); //LoadCookie
+				function l(); //LoadCookie
 			</script>
 		</main>
 		<footer id="footer">
 			<div class="copy">
+				<!-- 著作権表示 -->
 				<p>
 					<a href="https://sakots.red/" target="_top">noe-board {$ver}</a>
 					Web Style by <a href="https://sakots.red/" target="_top" title="MONO {$tver} (by 赤原文庫)">MONO</a>
 				</p>
 				<p>
+					OekakiApplet - <a href="http://hp.vector.co.jp/authors/VA016309/" target="_blank" rel="noopener noreferrer" title="by しぃちゃん">Shi-Painter</a>
+				</p>
+				<p>
 					UseFunction -
 					<a href="https://github.com/funige/neo/">PaintBBS NEO</a>
+					DynamicPalette <!-- http://wondercatstudio.com/ -->
 					<a href="https://www.smarty.net/">Smarty</a>
 				</p>
 			</div>
