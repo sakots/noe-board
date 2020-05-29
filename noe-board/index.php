@@ -9,7 +9,7 @@ require_once(__DIR__.'/libs/Smarty.class.php');
 $smarty = new Smarty();
 
 //スクリプトのバージョン
-$smarty->assign('ver','v0.13.10');
+$smarty->assign('ver','v0.13.11');
 
 //設定の読み込み
 require(__DIR__."/config.php");
@@ -658,30 +658,37 @@ function delmode(){
 	//記事呼び出し
 	try {
 		$db = new PDO("sqlite:noe.db");
-		$sql ="SELECT * FROM $deltable WHERE $idk = $delno";
+		$sql ="SELECT pwd FROM $deltable WHERE $idk = $delno";
 		$msgs = $db->prepare($sql);
-		$msgs->execute(array($delno));
+		$msgs->execute();
 		$msg = $msgs->fetch();
+
+		if (isset($_POST["admindel"]) == true) {
+			$admindelmode = 1;
+		} else {
+			$admindelmode = 0;
+		}
 
 		if (password_verify($_POST["pwd"],$msg['pwd']) === true) {
 			$sql = "DELETE FROM $deltable WHERE $idk=$delno";
-			$del = $db->prepare($sql);
-			$del->execute(array($delno));
-		} elseif ($admin_pass == $_POST["pwd"] && $_POST["admindel"] == 1) {
+			$db = $db->exec($sql);
+			$smarty->assign('message','削除しました。');
+		} elseif ($admin_pass == $_POST["pwd"] && $admindelmode == 1) {
 			$sql = "DELETE FROM $deltable WHERE $idk=$delno";
-			$del = $db->prepare($sql);
-			$del->execute(array($delno));
-		} elseif ($admin_pass == $_POST["pwd"] && $_POST["admindel"] != 1) {
+			$db = $db->exec($sql);
+			$smarty->assign('message','削除しました。');
+		} elseif ($admin_pass == $_POST["pwd"] && $admindelmode != 1) {
 			$sql = "UPDATE $deltable SET invz=1 WHERE $idk=$delno";
-			$del = $db->exec($sql);
+			$db = $db->exec($sql);
+			$smarty->assign('message','削除しました。');
 		} else {
 			$smarty->assign('message','パスワードまたは記事番号が違います。');
-			exit();
 		}
 		$db = null; //db切断 
 	} catch (PDOException $e) {
 		echo "DB接続エラー:" .$e->getMessage();
 	}
+	def();
 	//header('Location:'.PHP_SELF);
 }
 
