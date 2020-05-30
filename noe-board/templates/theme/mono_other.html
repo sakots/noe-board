@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+		<link rel="stylesheet" href="./templates/{$skindir}mono_main.css" type="text/css">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+		<title>{$btitle}</title>
+		<script src="loadcookie.js"></script>
+	</head>
+	<body>
+		<header>
+			<h1>{$btitle}</h1>
+			<hr>
+			<section>
+				<p class="menu">
+					<a href="{$self}"><i class="fas fa-star fa-fw fa-lg" title="トップ"></i></a>
+					<a href="{$home}" target="_top"><i class="fas fa-home fa-fw fa-lg" title="ホーム"></i></a>
+					</p>
+			</section>
+			<section>
+				<p class="sysmsg">{$message}</p>
+			</section>
+			<hr>
+		</header>
+		<main>
+            {* 記事編集モードスタート *}{if $othermode == edit}
+			<h1 class="oekaki">投稿フォーム</h1>
+			<section>
+				<div class="thread">
+                    {foreach from=$oya item=bbsline}
+					<form class="ppost postform" action="{$self}?mode=editexec" method="post">
+						<table>
+							<tr>
+								<td>name</td>
+								<td><input type="text" name="name" size="28" autocomplete="username" value="{$bbsline.name}"></td>
+							</tr>
+							<tr>
+								<td>mail</td>
+								<td><input type="text" name="mail" size="28" value="" autocomplete="email" value="{$bbsline.mail}"></td>
+							</tr>
+							<tr>
+								<td>URL</td>
+								<td><input type="text" name="url" size="28" value="" autocomplete="url" value="{$bbsline.url}"></td>
+							</tr>
+							<tr>
+								<td>subject</td>
+								<td>
+									<input type="text" name="sub" size="35" autocomplete="section-sub">
+									<input type="submit" name="send" value="書き込む">
+									<input type="hidden" name="invz" value="0">
+                                    <input type="hidden" name="exid" value="0">
+									{if isset($resedit)}<input type="hidden" name="resedit" value="1">
+									<input type="hidden" name="e_no" value="{$bbsline.iid}">
+									{else}
+									<input type="hidden" name="e_no" value="{$bbsline.tid}">
+									{/if}
+								</td>
+							</tr>
+							<tr>
+								<td>comment</td>
+								<td><textarea name="com" cols="48" rows="4" wrap="soft">{$bbsline.com|strip_tags:false}</textarea></td>
+							</tr>
+							<tr>
+								<td>pass</td>
+								<td><input type="password" name="pwd" size="8" value="" autocomplete="current-password"></td>
+							</tr>
+						</table>
+                    </form>
+                    {/foreach}
+				</div>
+            </section>
+            {/if}{* 記事編集モードおわり *}
+		</main>
+		<footer id="footer">
+			<div class="copy">
+				<!-- 著作権表示 -->
+				<p>
+					<a href="https://sakots.red/" target="_top">noe-board {$ver}</a>
+					Web Style by <a href="https://sakots.red/" target="_top" title="MONO {$tver} (by 赤原文庫)">MONO</a>
+				</p>
+				<p>
+					OekakiApplet - <a href="http://hp.vector.co.jp/authors/VA016309/" target="_blank" rel="noopener noreferrer" title="by しぃちゃん">Shi-Painter</a>
+				</p>
+				<p>
+					UseFunction -
+					<a href="https://github.com/funige/neo/">PaintBBS NEO</a>
+					DynamicPalette <!-- http://wondercatstudio.com/ -->
+					<a href="https://www.smarty.net/">Smarty</a>
+				</p>
+			</div>
+		</footer>
+	</body>
+</html>

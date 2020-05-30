@@ -9,7 +9,7 @@ require_once(__DIR__.'/libs/Smarty.class.php');
 $smarty = new Smarty();
 
 //スクリプトのバージョン
-$smarty->assign('ver','v0.16.0');
+$smarty->assign('ver','v0.17.0');
 
 //設定の読み込み
 require(__DIR__."/config.php");
@@ -33,6 +33,7 @@ $smarty->assign('skindir',THEMEDIR);
 $smarty->assign('tver',TEMPLATE_VER);
 
 $smarty->assign('dispid',DISP_ID);
+$smarty->assign('updatemark',UPDATE_MARK);
 
 $smarty->assign('useanime',USE_ANIME);
 $smarty->assign('defanime',DEF_ANIME);
@@ -40,6 +41,8 @@ $smarty->assign('defanime',DEF_ANIME);
 $smarty->assign('dptime',DSP_PAINTTIME);
 
 $smarty->assign('share_button',SHARE_BUTTON);
+
+
 
 //スパム無効化関数
 function newstring($string) {
@@ -64,7 +67,7 @@ $mode = newstring(filter_input(INPUT_POST, 'mode'));
 //var_dump($_GET);
 if(filter_input(INPUT_GET, 'mode')==="anime"){
 	$pch = newstring(filter_input(INPUT_GET, 'pch'));
-	$shi = filter_input(INPUT_GET, 'shi',FILTER_VALIDATE_INT);
+	//$shi = filter_input(INPUT_GET, 'shi',FILTER_VALIDATE_INT);
 	$mode = "anime";
 }
 if(filter_input(INPUT_GET, 'mode')==="continue"){
@@ -105,6 +108,12 @@ if(filter_input(INPUT_GET, 'mode')==="rsodane"){
 }
 if(filter_input(INPUT_GET, 'mode')==="del"){
 	$mode = "del";
+}
+if(filter_input(INPUT_GET, 'mode')==="edit"){
+	$mode = "edit";
+}
+if(filter_input(INPUT_GET, 'mode')==="editexec"){
+	$mode = "editexec";
 }
 
 $message ="";
@@ -169,95 +178,96 @@ function regist() {
 	$pwd = ( isset( $_POST["pwd"] )  === true ) ? newstring(trim($_POST["pwd"]))  : "";
 	$pwd = password_hash($pwd,PASSWORD_DEFAULT);
 	$exid = ( isset( $_POST["exid"] )  === true ) ? newstring(trim($_POST["exid"]))  : "";
+
+	//チェックする項目から改行・スペース・タブを消す
+	$chk_com  = preg_replace("/\s/u", "", $com );
+	$chk_name = preg_replace("/\s/u", "", $name );
+	$chk_sub = preg_replace("/\s/u", "", $sub );
+	$chk_mail = preg_replace("/\s/u", "", $mail );
+
+	//本文に日本語がなければ拒絶
+	if (USE_JAPANESEFILTER) {
+		mb_regex_encoding("UTF-8");
+		if (strlen($com) > 0 && !preg_match("/[ぁ-んァ-ヶー一-龠]+/u",$chk_com)) {
+			error(MSG035);
+			exit;
+		}
+	}
+
+	//本文へのURLの書き込みを禁止
+	if(DENY_COMMENTS_URL && preg_match('/:\/\/|\.co|\.ly|\.gl|\.net|\.org|\.cc|\.ru|\.su|\.ua|\.gd/i', $com)) {error(MSG036); exit;}
+
+	foreach($badstring as $value){//拒絶する文字列
+		if($value===''){
+		break;
+		}
+		if(preg_match("/$value/ui",$chk_com)||preg_match("/$value/ui",$chk_sub)||preg_match("/$value/ui",$chk_name)||preg_match("/$value/ui",$chk_mail)){
+			error(MSG032);
+			exit;
+		}
+	}
+	unset($value);	
+	if(isset($badname)){//使えない名前
+		foreach($badname as $value){
+			if($value===''){
+			break;
+			}
+			if(preg_match("/$value/ui",$chk_name)){
+				error(MSG037);
+				exit;
+			}
+		}
+		unset($value);	
+	}
+
+	$bstr_A_find=false;
+	$bstr_B_find=false;
+
+	foreach($badstr_A as $value){//指定文字列が2つあると拒絶
+		if($value===''){
+		break;
+		}
+		if(preg_match("/$value/ui",$chk_com)||preg_match("/$value/ui",$chk_sub)||preg_match("/$value/ui",$chk_name)||preg_match("/$value/ui",$chk_mail)){
+			$bstr_A_find=true;
+		break;
+		}
+	}
+	unset($value);
+	foreach($badstr_B as $value){
+		if($value===''){
+			break;
+		}
+		if(preg_match("/$value/ui",$chk_com)||preg_match("/$value/ui",$chk_sub)||preg_match("/$value/ui",$chk_name)||preg_match("/$value/ui",$chk_mail)){
+			$bstr_B_find=true;
+		break;
+		}
+	}
+	unset($value);
+	if($bstr_A_find && $bstr_B_find){
+		error(MSG032);
+		exit;
+	}
+
+	if(USE_NAME&&!$name) {error(MSG009);exit;}
+	if(USE_COM&&!$com) {error(MSG008);exit;}
+	if(USE_SUB&&!$sub) {error(MSG010);exit;}
+
+	if(strlen($com) > MAX_COM) {error(MSG011);exit;}
+	if(strlen($name) > MAX_NAME) {error(MSG012);exit;}
+	if(strlen($mail) > MAX_EMAIL) {error(MSG013);exit;}
+	if(strlen($sub) > MAX_SUB) {error(MSG014);exit;}
+
+	//ホスト取得
+	$host = gethostbyaddr($userip);
+
+	foreach($badip as $value){ //拒絶host
+		if(preg_match("/$value$/i",$host)) {error(MSG016);exit;}
+	}
+	//↑セキュリティ関連ここまで
 	
 	try {
 		$db = new PDO("sqlite:noe.db");
 		if (isset($_POST["send"] ) ===  true) {
-
-			//チェックする項目から改行・スペース・タブを消す
-			$chk_com  = preg_replace("/\s/u", "", $com );
-			$chk_name = preg_replace("/\s/u", "", $name );
-			$chk_sub = preg_replace("/\s/u", "", $sub );
-			$chk_mail = preg_replace("/\s/u", "", $mail );
-
-			//本文に日本語がなければ拒絶
-			if (USE_JAPANESEFILTER) {
-				mb_regex_encoding("UTF-8");
-				if (strlen($com) > 0 && !preg_match("/[ぁ-んァ-ヶー一-龠]+/u",$chk_com)) error(MSG035);
-				exit;
-			}
-
-			//本文へのURLの書き込みを禁止
-			if(DENY_COMMENTS_URL && preg_match('/:\/\/|\.co|\.ly|\.gl|\.net|\.org|\.cc|\.ru|\.su|\.ua|\.gd/i', $com)) error(MSG036); exit;
-
-			foreach($badstring as $value){//拒絶する文字列
-				if($value===''){
-				break;
-				}
-				if(preg_match("/$value/ui",$chk_com)||preg_match("/$value/ui",$chk_sub)||preg_match("/$value/ui",$chk_name)||preg_match("/$value/ui",$chk_mail)){
-					error(MSG032);
-					exit;
-				}
-			}
-			unset($value);	
-			if(isset($badname)){//使えない名前
-				foreach($badname as $value){
-					if($value===''){
-					break;
-					}
-					if(preg_match("/$value/ui",$chk_name)){
-						error(MSG037);
-						exit;
-					}
-				}
-				unset($value);	
-			}
-
-			$bstr_A_find=false;
-			$bstr_B_find=false;
-
-			foreach($badstr_A as $value){//指定文字列が2つあると拒絶
-				if($value===''){
-				break;
-				}
-				if(preg_match("/$value/ui",$chk_com)||preg_match("/$value/ui",$chk_sub)||preg_match("/$value/ui",$chk_name)||preg_match("/$value/ui",$chk_mail)){
-					$bstr_A_find=true;
-				break;
-				}
-			}
-			unset($value);
-			unset($value);
-			foreach($badstr_B as $value){
-				if($value===''){
-					break;
-				}
-				if(preg_match("/$value/ui",$chk_com)||preg_match("/$value/ui",$chk_sub)||preg_match("/$value/ui",$chk_name)||preg_match("/$value/ui",$chk_mail)){
-					$bstr_B_find=true;
-				break;
-				}
-			}
-			unset($value);
-			if($bstr_A_find && $bstr_B_find){
-				error(MSG032);
-				exit;
-			}
-
-			if(USE_NAME&&!$name) {error(MSG009);exit;}
-			if(USE_COM&&!$com) {error(MSG008);exit;}
-			if(USE_SUB&&!$sub) {error(MSG010);exit;}
-
-			if(strlen($com) > MAX_COM) {error(MSG011);exit;}
-			if(strlen($name) > MAX_NAME) {error(MSG012);exit;}
-			if(strlen($mail) > MAX_EMAIL) {error(MSG013);exit;}
-			if(strlen($sub) > MAX_SUB) {error(MSG014);exit;}
-
-			//ホスト取得
-			$host = gethostbyaddr($userip);
-
-			foreach($badip as $value){ //拒絶host
-				if(preg_match("/$value$/i",$host)) {error(MSG016);exit;}
-			}
-			//↑セキュリティ関連ここまで
 
 			if ( $name   === "" ) $name = DEF_NAME;
 			if ( $com  === "" ) $com  = DEF_COM;
@@ -986,6 +996,211 @@ function delmode(){
 	//header('Location:'.PHP_SELF);
 }
 
+//編集モードくん入口
+function editform() {
+	global $admin_pass;
+	global $smarty;
+
+	$editno = $_POST["delno"];
+	$editt = $_POST["delt"]; //0親1レス
+	if ($editt == 0) {
+		$edittable = 'tablelog';
+		$idk = "tid";
+	} else {
+		$edittable = 'tabletree';
+		$idk = "iid";
+		$smarty->assign('resedit','resedit');
+	}
+	//記事呼び出し
+	try {
+		$db = new PDO("sqlite:noe.db");
+
+		//パスワードを取り出す
+		$sql ="SELECT pwd FROM $edittable WHERE $idk = $editno";
+		$msgs = $db->prepare($sql);
+		$msgs->execute();
+		$msg = $msgs->fetch();
+
+		if (password_verify($_POST["pwd"],$msg['pwd']) === true) {
+			//パスワードがあってたら
+			$sqli ="SELECT * FROM $edittable WHERE $idk = $editno";
+			$posts = $db->query($sqli);
+			$oya = array();
+			while ($bbsline = $posts->fetch() ) {
+				$oya[] = $bbsline;
+				$smarty->assign('oya',$oya);
+			}
+			$smarty->assign('message','編集モード...');
+		} elseif ($admin_pass == $_POST["pwd"] ) {
+			//管理者編集モード
+			$sqli ="SELECT * FROM $edittable WHERE $idk = $editno";
+			$posts = $db->query($sqli);
+			$oya = array();
+			while ($bbsline = $posts->fetch() ) {
+				$oya[] = $bbsline;
+				$smarty->assign('oya',$oya);
+			}
+			$smarty->assign('message','管理者編集モード...');
+		} else {
+			$smarty->assign('message','パスワードまたは記事番号が違います。');
+			$db = null; 
+			$msgs = null;
+			$msg = null;//db切断 
+			def();
+			exit;
+		}
+		$db = null; 
+		$msgs = null;
+		$posts = null;
+		$msg = null;//db切断 
+
+		$smarty->assign('othermode','edit'); //編集モード
+		$smarty->display( THEMEDIR.OTHERFILE );
+	} catch (PDOException $e) {
+		echo "DB接続エラー:" .$e->getMessage();
+	}
+}
+
+//編集モードくん本体
+function editexec(){
+	global $smarty;
+	global $path,$badstring,$badip;
+	global $badstr_A,$badstr_B,$badname;
+	$userip = get_uip();
+
+	$sub = ( isset( $_POST["sub"] ) === true ) ? newstring($_POST["sub"]): "";
+	$name = ( isset( $_POST["name"] ) === true ) ? newstring($_POST["name"]): "";
+	$url = ( isset( $_POST["url"] )  === true ) ? newstring(trim($_POST["url"]))  : "";
+	$mail = ( isset( $_POST["mail"] )  === true ) ? newstring(trim($_POST["mail"]))  : "";
+	$com = ( isset( $_POST["com"] )  === true ) ? newstring(trim($_POST["com"]))  : "";
+	$pwd = ( isset( $_POST["pwd"] )  === true ) ? newstring(trim($_POST["pwd"]))  : "";
+	$pwd = password_hash($pwd,PASSWORD_DEFAULT);
+	$exid = ( isset( $_POST["exid"] )  === true ) ? newstring(trim($_POST["exid"]))  : "";
+	$resedit = ( isset( $_POST["resedit"] )  === true ) ? newstring(trim($_POST["resedit"]))  : "";
+	$e_no = ( isset( $_POST["e_no"] )  === true ) ? newstring(trim($_POST["e_no"]))  : "";
+
+	//チェックする項目から改行・スペース・タブを消す
+	$chk_com  = preg_replace("/\s/u", "", $com );
+	$chk_name = preg_replace("/\s/u", "", $name );
+	$chk_sub = preg_replace("/\s/u", "", $sub );
+	$chk_mail = preg_replace("/\s/u", "", $mail );
+
+	//本文に日本語がなければ拒絶
+	if (USE_JAPANESEFILTER) {
+		mb_regex_encoding("UTF-8");
+		if (strlen($com) > 0 && !preg_match("/[ぁ-んァ-ヶー一-龠]+/u",$chk_com)) {
+			error(MSG035);
+			exit;
+		}
+	}
+
+	//本文へのURLの書き込みを禁止
+	if(DENY_COMMENTS_URL && preg_match('/:\/\/|\.co|\.ly|\.gl|\.net|\.org|\.cc|\.ru|\.su|\.ua|\.gd/i', $com)) {error(MSG036); exit;}
+
+	foreach($badstring as $value){//拒絶する文字列
+		if($value===''){
+		break;
+		}
+		if(preg_match("/$value/ui",$chk_com)||preg_match("/$value/ui",$chk_sub)||preg_match("/$value/ui",$chk_name)||preg_match("/$value/ui",$chk_mail)){
+			error(MSG032);
+			exit;
+		}
+	}
+	unset($value);	
+	if(isset($badname)){//使えない名前
+		foreach($badname as $value){
+			if($value===''){
+			break;
+			}
+			if(preg_match("/$value/ui",$chk_name)){
+				error(MSG037);
+				exit;
+			}
+		}
+		unset($value);	
+	}
+
+	$bstr_A_find=false;
+	$bstr_B_find=false;
+
+	foreach($badstr_A as $value){//指定文字列が2つあると拒絶
+		if($value===''){
+		break;
+		}
+		if(preg_match("/$value/ui",$chk_com)||preg_match("/$value/ui",$chk_sub)||preg_match("/$value/ui",$chk_name)||preg_match("/$value/ui",$chk_mail)){
+			$bstr_A_find=true;
+		break;
+		}
+	}
+	unset($value);
+	foreach($badstr_B as $value){
+		if($value===''){
+			break;
+		}
+		if(preg_match("/$value/ui",$chk_com)||preg_match("/$value/ui",$chk_sub)||preg_match("/$value/ui",$chk_name)||preg_match("/$value/ui",$chk_mail)){
+			$bstr_B_find=true;
+		break;
+		}
+	}
+	unset($value);
+	if($bstr_A_find && $bstr_B_find){
+		error(MSG032);
+		exit;
+	}
+
+	if(USE_NAME&&!$name) {error(MSG009);exit;}
+	if(USE_COM&&!$com) {error(MSG008);exit;}
+	if(USE_SUB&&!$sub) {error(MSG010);exit;}
+
+	if(strlen($com) > MAX_COM) {error(MSG011);exit;}
+	if(strlen($name) > MAX_NAME) {error(MSG012);exit;}
+	if(strlen($mail) > MAX_EMAIL) {error(MSG013);exit;}
+	if(strlen($sub) > MAX_SUB) {error(MSG014);exit;}
+
+	//ホスト取得
+	$host = gethostbyaddr($userip);
+
+	foreach($badip as $value){ //拒絶host
+		if(preg_match("/$value$/i",$host)) {error(MSG016);exit;}
+	}
+	//↑セキュリティ関連ここまで
+
+	// URLとメールにリンク
+	if(AUTOLINK) $com = auto_link($com);
+	// '>'色設定
+	$com = preg_replace("/(^|>)((&gt;|＞)[^<]*)/i", "\\1".RE_START."\\2".RE_END, $com);
+
+	// 連続する空行を一行
+	$com = preg_replace("/\n((　| )*\n){3,}/","\n",$com);
+	//改行をタグに
+	if(TH_XHTML == 1){
+		//<br />に
+		$com = nl2br($com);
+	} else {
+		//<br>に
+		$com = nl2br($com, false);
+	}	
+
+	if($resedit == 1) {
+		$edittable = 'tabletree';
+		$eid = 'iid';
+	} else {
+		$edittable = 'tablelog';
+		$eid = 'tid';
+	}
+
+	try {
+		$db = new PDO("sqlite:noe.db");
+		$sql = "UPDATE $edittable set modified = datetime('now', 'localtime'), name = '$name', mail = '$mail', sub = '$sub', com = '$com', url = '$url', host = '$host', exid = '$exid', pwd = '$pwd' where $eid = $e_no";
+		$db = $db->exec($sql);
+		$db = null;
+		$smarty->assign('message','編集完了しました。');
+	} catch (PDOException $e) {
+		echo "DB接続エラー:" .$e->getMessage();
+	}
+	def();
+}
+
 //管理モードin
 function admin_in() {
 	global $self;
@@ -1189,6 +1404,12 @@ switch($mode){
 	case 'anime':
 		if(!isset($sp)){$sp="";}
 		openpch($pch,$sp);
+		break;
+	case 'edit':
+		editform();
+		break;
+	case 'editexec':
+		editexec();
 		break;
 	case 'del':
 		delmode();

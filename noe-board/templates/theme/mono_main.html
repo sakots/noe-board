@@ -42,7 +42,7 @@
 				</section>
 				<hr>
 				<section class="delf">
-					<form action="{$self}?mode=del" method="post">
+					<form action="{$self}" method="post">
 						<p>
 							<select name="delt">
 								<option value="1">レス</option>
@@ -50,7 +50,8 @@
 							</select>
 							No <input class="form" type="number" min="1" name="delno" value="" autocomplete="off">
 							Pass <input class="form" type="password" name="pwd" value="" autocomplete="current-password">
-							<select name="mode">
+							<select class="form" name="mode">
+								<option value="edit">編集</option>
 								<option value="del">削除</option>
 							</select>
 							<input class="button" type="submit" value=" OK ">
@@ -86,7 +87,9 @@
 					<h3><span class="oyano">{$bbsline.tid}</span>{$bbsline.sub}</h3>
 					<section>
 						<h4>
-							名前：{if $bbsline.mail == true }<a href="mailto:{$bbsline.mail}">{/if}{$bbsline.name}{if $bbsline.mail == true }</a>{/if}：{$bbsline.modified}{if $bbsline.url == true} <span class="button"><a href="{$bbsline.url}" target="_blank" rel="nofollow noopener noreferrer"><i class="fas fa-flag-checkered"></i> URL</a></span>{/if}
+							名前：{if $bbsline.mail == true }<a href="mailto:{$bbsline.mail}">{/if}{$bbsline.name}{if $bbsline.mail == true }</a>{/if}：
+							{if $bbsline.modified == $bbsline.created }{$bbsline.modified}{else}{$bbsline.created} {$updatemark} {$bbsline.modified}{/if}
+							{if $bbsline.url == true} <span class="button"><a href="{$bbsline.url}" target="_blank" rel="nofollow noopener noreferrer"><i class="fas fa-flag-checkered"></i> URL</a></span>{/if}
 							{if $dispid == 1}<span class="id">ID：{$bbsline.id}</span>{/if}
 							<span class="sodane"><a href="{$self}?mode=sodane&amp;resto={$bbsline.tid}">そうだねx{$bbsline.exid}</a></span>
 						</h4>
@@ -104,7 +107,9 @@
 							<section>
 								<h3><span class="oyano">{$res.iid}</span>{$res.sub}</h3>
 								<h4>
-									名前：{if $res.mail == true }<a href="mailto:{$res.mail}">{/if}{$res.name}{if $res.mail == true }</a>{/if}：{$res.modified}{if $res.url == true}<span class="button"><a href="{$res.url}" target="_blank" rel="nofollow noopener noreferrer"><i class="fas fa-flag-checkered"></i> URL</a></span>{/if}
+									名前：{if $res.mail == true }<a href="mailto:{$res.mail}">{/if}{$res.name}{if $res.mail == true }</a>{/if}：
+									{if $res.modified == $res.created }{$res.modified}{else}{$res.created} {$updatemark} {$res.modified}{/if}
+									{if $res.url == true}<span class="button"><a href="{$res.url}" target="_blank" rel="nofollow noopener noreferrer"><i class="fas fa-flag-checkered"></i> URL</a></span>{/if}
 									{if $dispid == 1}<span class="id">ID：{$res.id}</span>{/if}
 									<span class="sodane"><a href="{$self}?mode=rsodane&amp;resto={$res.iid}">そうだねx{$res.exid}</a></span>
 								</h4>
