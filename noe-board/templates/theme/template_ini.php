@@ -1,13 +1,16 @@
 <?php
 //--------------------------------------------------
-//　「noe-board」v0.13.2～用スキン「mono」設定ファイル
+//　「noe-board」v0.16.0～用テーマ「mono」設定ファイル
 //　by sakots https://sakots.red/
 //--------------------------------------------------
 
-//テンプレートのバージョン
-define('TEMPLATE_VER', "v0.0.0 lot.200528");
+//テーマのバージョン
+define('TEMPLATE_VER', "v0.0.0 lot.200530");
 
 /* -------------------- */
+
+//テーマがXHTMLか　0=HTML 1=XHTML
+define('TH_XHTML', 0);
 
 //メインのテンプレートファイル
 define('MAINFILE', "mono_main.html");
@@ -30,8 +33,6 @@ define('ADMINFILE', "mono_admin.html");
 //その他のテンプレートファイル
 define('OTHERFILE', "mono_other.html");
 
-
-
 //描画時間の書式
 //※日本語だと、"1日1時間1分1秒"
 //※英語だと、"1day 1hr 1min 1sec"
@@ -42,7 +43,7 @@ define('PTIME_S', '秒');
 
 //＞が付いた時の書式
 //※RE_STARTとRE_ENDで囲むのでそれを考慮して
-//cssで設定するの推奨
+//ここは変更せずにcssで設定するの推奨
 define('RE_START', '<span class="resma">');
 define('RE_END', '</span>');
 
