@@ -9,7 +9,7 @@ require_once(__DIR__.'/libs/Smarty.class.php');
 $smarty = new Smarty();
 
 //スクリプトのバージョン
-$smarty->assign('ver','v0.15.0');
+$smarty->assign('ver','v0.16.0');
 
 //設定の読み込み
 require(__DIR__."/config.php");
@@ -51,8 +51,12 @@ function newstring($string) {
 
 /* オートリンク */
 function auto_link($proto){
-	$proto = preg_replace("{(https?|ftp|news)(://[[:alnum:]\+\$\;\?\.%,!#~*/:@&=_-]+)}","<a href=\"\\1\\2\" target=\"_blank\" rel=\"nofollow noopener noreferrer\">\\1\\2</a>",$proto);
+	if(!(stripos($proto,"script")!==false)){//scriptがなければ続行
+	$proto = preg_replace("{(https?|ftp)(://[[:alnum:]\+\$\;\?\.%,!#~*/:@&=_-]+)}","<a href=\"\\1\\2\" target=\"_blank\" rel=\"nofollow noopener noreferrer\">\\1\\2</a>",$proto);
 	return $proto;
+	}else{
+	return $proto;
+	}
 }
 
 $mode = newstring(filter_input(INPUT_POST, 'mode'));
@@ -144,7 +148,12 @@ $smarty->assign('usercode',$usercode);
 /* 記事書き込み */
 function regist() {
 	global $name,$com,$sub,$parent,$picfile,$mail,$url,$time,$pwd,$exid,$invz;
+	global $path,$badstring,$badip,$pwdc;
+	global $ptime;
+	global $usercode;
+	global $badstr_A,$badstr_B,$badname;
 	global $smarty;
+	$userip = get_uip();
 
 	$sub = ( isset( $_POST["sub"] ) === true ) ? newstring($_POST["sub"]): "";
 	$name = ( isset( $_POST["name"] ) === true ) ? newstring($_POST["name"]): "";
@@ -165,11 +174,95 @@ function regist() {
 		$db = new PDO("sqlite:noe.db");
 		if (isset($_POST["send"] ) ===  true) {
 
+			//チェックする項目から改行・スペース・タブを消す
+			$chk_com  = preg_replace("/\s/u", "", $com );
+			$chk_name = preg_replace("/\s/u", "", $name );
+			$chk_sub = preg_replace("/\s/u", "", $sub );
+			$chk_mail = preg_replace("/\s/u", "", $mail );
+
+			//本文に日本語がなければ拒絶
+			if (USE_JAPANESEFILTER) {
+				mb_regex_encoding("UTF-8");
+				if (strlen($com) > 0 && !preg_match("/[ぁ-んァ-ヶー一-龠]+/u",$chk_com)) error(MSG035);
+				exit;
+			}
+
+			//本文へのURLの書き込みを禁止
+			if(DENY_COMMENTS_URL && preg_match('/:\/\/|\.co|\.ly|\.gl|\.net|\.org|\.cc|\.ru|\.su|\.ua|\.gd/i', $com)) error(MSG036); exit;
+
+			foreach($badstring as $value){//拒絶する文字列
+				if($value===''){
+				break;
+				}
+				if(preg_match("/$value/ui",$chk_com)||preg_match("/$value/ui",$chk_sub)||preg_match("/$value/ui",$chk_name)||preg_match("/$value/ui",$chk_mail)){
+					error(MSG032);
+					exit;
+				}
+			}
+			unset($value);	
+			if(isset($badname)){//使えない名前
+				foreach($badname as $value){
+					if($value===''){
+					break;
+					}
+					if(preg_match("/$value/ui",$chk_name)){
+						error(MSG037);
+						exit;
+					}
+				}
+				unset($value);	
+			}
+
+			$bstr_A_find=false;
+			$bstr_B_find=false;
+
+			foreach($badstr_A as $value){//指定文字列が2つあると拒絶
+				if($value===''){
+				break;
+				}
+				if(preg_match("/$value/ui",$chk_com)||preg_match("/$value/ui",$chk_sub)||preg_match("/$value/ui",$chk_name)||preg_match("/$value/ui",$chk_mail)){
+					$bstr_A_find=true;
+				break;
+				}
+			}
+			unset($value);
+			unset($value);
+			foreach($badstr_B as $value){
+				if($value===''){
+					break;
+				}
+				if(preg_match("/$value/ui",$chk_com)||preg_match("/$value/ui",$chk_sub)||preg_match("/$value/ui",$chk_name)||preg_match("/$value/ui",$chk_mail)){
+					$bstr_B_find=true;
+				break;
+				}
+			}
+			unset($value);
+			if($bstr_A_find && $bstr_B_find){
+				error(MSG032);
+				exit;
+			}
+
+			if(USE_NAME&&!$name) {error(MSG009);exit;}
+			if(USE_COM&&!$com) {error(MSG008);exit;}
+			if(USE_SUB&&!$sub) {error(MSG010);exit;}
+
+			if(strlen($com) > MAX_COM) {error(MSG011);exit;}
+			if(strlen($name) > MAX_NAME) {error(MSG012);exit;}
+			if(strlen($mail) > MAX_EMAIL) {error(MSG013);exit;}
+			if(strlen($sub) > MAX_SUB) {error(MSG014);exit;}
+
+			//ホスト取得
+			$host = gethostbyaddr($userip);
+
+			foreach($badip as $value){ //拒絶host
+				if(preg_match("/$value$/i",$host)) {error(MSG016);exit;}
+			}
+			//↑セキュリティ関連ここまで
+
 			if ( $name   === "" ) $name = DEF_NAME;
 			if ( $com  === "" ) $com  = DEF_COM;
 			if ( $sub  === "" ) $sub  = DEF_SUB;
 
-			$host = get_uip();
 			$utime = time();
 			if ($parent == 0 ) {
 				$parent = $utime;
@@ -232,6 +325,22 @@ function regist() {
 				$img_h = 0;
 				$pchfile = "";
 			}
+
+			// URLとメールにリンク
+			if(AUTOLINK) $com = auto_link($com);
+			// '>'色設定
+			$com = preg_replace("/(^|>)((&gt;|＞)[^<]*)/i", "\\1".RE_START."\\2".RE_END, $com);
+
+			// 連続する空行を一行
+			$com = preg_replace("/\n((　| )*\n){3,}/","\n",$com);
+			//改行をタグに
+			if(TH_XHTML == 1){
+				//<br />に
+				$com = nl2br($com);
+			} else {
+				//<br>に
+				$com = nl2br($com, false);
+			}		
 
 			//age_sageカウント 兼 レス数カウント
 			$sql = "SELECT COUNT(*) as cnt FROM tabletree WHERE invz=0";
@@ -375,6 +484,23 @@ function regist() {
 					$db = $db->exec($sqlresdel);
 				}
 			}
+
+			$c_pass = $pwd;
+			$names = $name;
+
+			//-- クッキー保存 --
+			//漢字を含まない項目はこちらの形式で追加
+			setcookie ("pwdc", $c_pass,time()+(SAVE_COOKIE*24*3600));
+
+			//クッキー項目："クッキー名<>クッキー値"　※漢字を含む項目はこちらに追加
+			$cooks = array("namec<>".$names,"emailc<>".$mail,"urlc<>".$url);
+
+			foreach ( $cooks as $cook ) {
+				list($c_name,$c_cookie) = explode('<>',$cook);
+				// $c_cookie = str_replace("&amp;", "&", $c_cookie);
+				setcookie ($c_name, $c_cookie,time()+(SAVE_COOKIE*24*3600));
+			}
+
 			$smarty->assign('message','書き込みに成功しました。');
 			$db = null; //db切断
 		}
@@ -952,6 +1078,15 @@ function admin() {
 	} catch (PDOException $e) {
 		echo "DB接続エラー:" .$e->getMessage();
 	}
+}
+
+//エラー画面（画面？？）
+function error($mes) {
+	global $db;
+	global $smarty;
+	$db = null; //db切断
+	$smarty->assign('message',$mes);
+	def();
 }
 
 

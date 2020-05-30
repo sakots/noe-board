@@ -1,6 +1,6 @@
 <?php
 /*
-  * noe-board v0.12.0～
+  * noe-board v0.16.0～
   * by sakots >> https://sakots.red/
   *
   * noe-boardの設定ファイルです。
@@ -19,12 +19,12 @@ define('LOG_MAX_T', '200');
 //テーマ(テンプレート)のディレクトリ。'/'まで
 //themeディレクトリに使いたいtemplateをいれて使ってください。(推奨)
 //別のディレクトリにしたい場合は設定してください。
-//例えばおまけのnoeeを使いたい場合はtheme_noee/とすることができます。初期値は theme/ です。
+//例えばおまけのnoe3を使いたい場合はtheme_noe3/とすることができます。初期値は theme/ です。
 define('THEMEDIR', 'theme/');
 
 //設置URL phpのあるフォルダの'/'まで
 //シェアボタンなどで使用
-define('BASE', 'https://localhost/dev/noe/');
+define('BASE', 'https://localhost/dev/noedev/');
 
 //掲示板のタイトル（<title>とTOP）
 define('TITLE', 'お絵かき掲示板');
@@ -52,7 +52,6 @@ define('DISP_ID', '1');
 /* ---------- スパム対策 ---------- */
 
 //拒絶する文字列
-//未実装
 $badstring = array("irc.s16.xrea.com","著作権の侵害","未承諾広告");
 
 //使用できない名前
@@ -94,7 +93,6 @@ $badstr_B = array("シャネル","シュプリーム","バレンシアガ","ブ�
 //拒絶する文字列で
 
 //本文に日本語がなければ拒絶
-//未実装
 define('USE_JAPANESEFILTER', '1');
 
 //指定文字列+本文へのURLの書き込みで拒絶（正規表現）
@@ -277,21 +275,17 @@ define('PROXY_CHECK', '0');
 define('ID_SEED', 'IDの種');
 
 //URLを自動リンクする する:1 しない:0
-//未実装
 define('AUTOLINK', '1');
 
 //名前を必須にする する:1 しない:0
-//未実装
 define('USE_NAME', '0');
 define('DEF_NAME', '名無しさん');	//未入力時の名前
 
 //本文を必須にする する:1 しない:0
-//未実装
 define('USE_COM', '0');
 define('DEF_COM', '本文無し');	//未入力時の本文
 
 //題名を必須にする する:1 しない:0
-//未実装
 define('USE_SUB', '0');
 define('DEF_SUB', '無題');	//未入力時の題名
 
