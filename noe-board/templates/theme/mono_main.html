@@ -90,7 +90,7 @@
 							{if $dispid == 1}<span class="id">ID：{$bbsline.id}</span>{/if}
 							<span class="sodane"><a href="{$self}?mode=sodane&amp;resto={$bbsline.tid}">そうだねx{$bbsline.exid}</a></span>
 						</h4>
-						{if isset($bbsline.picfile)}
+						{if $bbsline.picfile == true}
 						<figure>
 							<figcaption><a href="{$path}{$bbsline.picfile}" target="_blank" data-title="{$bbsline.picfile}">{$bbsline.picfile}</a><br>
 							{if $dptime == 1}描画時間：{$bbsline.time}｜{/if}

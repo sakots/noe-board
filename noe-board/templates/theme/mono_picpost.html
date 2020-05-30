@@ -44,6 +44,7 @@
 						<p>Not OEKAKI image</p>
 						{/if}
 					</div>
+					{if isset($temp)}
 					<form class="ppost postform" action="{$self}?mode=regist" method="post">
 						<table>
 							<tr>
@@ -89,6 +90,7 @@
 							</tr>
 						</table>
 					</form>
+					{/if}
 				</div>
 			</section>
 			<script>

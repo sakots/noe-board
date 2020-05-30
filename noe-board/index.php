@@ -9,13 +9,11 @@ require_once(__DIR__.'/libs/Smarty.class.php');
 $smarty = new Smarty();
 
 //スクリプトのバージョン
-$smarty->assign('ver','v0.14.1');
+$smarty->assign('ver','v0.15.0');
 
 //設定の読み込み
 require(__DIR__."/config.php");
 require(__DIR__."/templates/".THEMEDIR."template_ini.php");
-//DB接続
-//require(__DIR__."/dbconnect.php");
 
 //var_dump($_POST);
 
@@ -258,8 +256,37 @@ function regist() {
 				//ログ行数オーバーの場合
 				//id生成
 				$id = substr(crypt(md5($host.ID_SEED.date("Ymd", $utime)),'id'),-8);
-				$sql = "INSERT INTO tablelog (created, modified, name, sub, com, mail, url, picfile, pchfile, img_w, img_h, utime, parent, time, pwd, id, exid, tree, age, invz, host) VALUES (datetime('now', 'localtime'), datetime('now', 'localtime'), '$name', '$sub', '$com', '$mail', '$url', '$picfile', '$pchfile', '$img_w', '$img_h', '$utime', '$parent', '$time', '$pwd', '$id', '$exid', '$tree', '$age', '$invz', '$host'); DELETE FROM tablelog WHERE not exists( select * from tablelog as tb where tablelog.ID > tb.ID) LIMIT 1";
-				$db = $db->exec($sql);
+				$sql = "INSERT INTO tablelog (created, modified, name, sub, com, mail, url, picfile, pchfile, img_w, img_h, utime, parent, time, pwd, id, exid, tree, age, invz, host) VALUES (datetime('now', 'localtime'), datetime('now', 'localtime'), '$name', '$sub', '$com', '$mail', '$url', '$picfile', '$pchfile', '$img_w', '$img_h', '$utime', '$parent', '$time', '$pwd', '$id', '$exid', '$tree', '$age', '$invz', '$host')";
+				$db->exec($sql);
+				//最初の行にある画像の名前を取得
+				$sqlimg = "SELECT picfile FROM tablelog ORDER BY tid LIMIT 1";
+				$msgs = $db->prepare($sqlimg);
+				$msgs->execute();
+				$msg = $msgs->fetch();
+				$msgpic = $msg["picfile"]; //画像の名前取得できた
+				//画像とかの削除処理
+				if (file_exists(IMG_DIR.$msgpic)) {
+					$msgdat = str_replace( strrchr($msgpic,"."), "", $msgpic); //拡張子除去
+					if (file_exists(IMG_DIR.$msgdat.'.png')) {
+						unlink(IMG_DIR.$msgdat.'.png');
+					}
+					if (file_exists(IMG_DIR.$msgdat.'.jpg')) {
+						unlink(IMG_DIR.$msgdat.'.jpg'); //一応jpgも
+					}
+					if (file_exists(IMG_DIR.$msgdat.'.pch')) {
+						unlink(IMG_DIR.$msgdat.'.pch'); 
+					}
+					if (file_exists(IMG_DIR.$msgdat.'.spch')) {
+						unlink(IMG_DIR.$msgdat.'.spch'); 
+					}
+					if (file_exists(IMG_DIR.$msgdat.'.dat')) {
+						unlink(IMG_DIR.$msgdat.'.dat'); 
+					}
+				}
+				//↑画像とか削除処理完了
+				//db最初の行を削除
+				$sqldel = "DELETE FROM tablelog ORDER BY tid LIMIT 1";
+				$db = $db->exec($sqldel);
 			} elseif(empty($_POST["modid"])!=true && strpos($mail,'sage')!==false ) {
 				//レスの場合でメール欄にsageが含まれる
 				$tid = $_POST["modid"];
@@ -269,8 +296,39 @@ function regist() {
 					$sql = "INSERT INTO tabletree (created, modified, tid, name, sub, com, mail, url, picfile, pchfile, img_w, img_h, utime, parent, time, pwd, id, exid, tree, invz, host) VALUES (datetime('now', 'localtime') , datetime('now', 'localtime') , '$tid', '$name', '$sub', '$com', '$mail', '$url', '$picfile', '$pchfile', '$img_w', '$img_h', '$utime', '$parent', '$time', '$pwd', '$id', '$exid', '$tree', '$invz', '$host')";
 					$db = $db->exec($sql);
 				} else {
-					$sql = "INSERT INTO tabletree (created, modified, tid, name, sub, com, mail, url, picfile, pchfile, img_w, img_h, utime, parent, time, pwd, id, exid, tree, invz, host) VALUES (datetime('now', 'localtime') , datetime('now', 'localtime') , '$tid', '$name', '$sub', '$com', '$mail', '$url', '$picfile', '$pchfile', '$img_w', '$img_h', '$utime', '$parent', '$time', '$pwd', '$id', '$exid', '$tree', '$invz', '$host'); DELETE FROM tabletree WHERE not exists( select * from tabletree as tb where tabletree.ID > tb.ID) LIMIT 1";
-					$db = $db->exec($sql);
+					//ログ行数オーバーの場合
+					$sql = "INSERT INTO tabletree (created, modified, tid, name, sub, com, mail, url, picfile, pchfile, img_w, img_h, utime, parent, time, pwd, id, exid, tree, invz, host) VALUES (datetime('now', 'localtime') , datetime('now', 'localtime') , '$tid', '$name', '$sub', '$com', '$mail', '$url', '$picfile', '$pchfile', '$img_w', '$img_h', '$utime', '$parent', '$time', '$pwd', '$id', '$exid', '$tree', '$invz', '$host')";
+					$db->exec($sql);
+					//レス画像貼りは今のところ未対応だけど念のため
+					//最初の行にある画像の名前を取得
+					$sqlimg = "SELECT picfile FROM tabletree ORDER BY iid LIMIT 1";
+					$msgs = $db->prepare($sqlimg);
+					$msgs->execute();
+					$msg = $msgs->fetch();
+					$msgpic = $msg["picfile"]; //画像の名前取得できた
+					//画像とかの削除処理
+					if (file_exists(IMG_DIR.$msgpic)) {
+						$msgdat = str_replace( strrchr($msgpic,"."), "", $msgpic); //拡張子除去
+						if (file_exists(IMG_DIR.$msgdat.'.png')) {
+						unlink(IMG_DIR.$msgdat.'.png');
+						}
+						if (file_exists(IMG_DIR.$msgdat.'.jpg')) {
+							unlink(IMG_DIR.$msgdat.'.jpg'); //一応jpgも
+						}
+						if (file_exists(IMG_DIR.$msgdat.'.pch')) {
+							unlink(IMG_DIR.$msgdat.'.pch'); 
+						}
+						if (file_exists(IMG_DIR.$msgdat.'.spch')) {
+							unlink(IMG_DIR.$msgdat.'.spch'); 
+						}
+						if (file_exists(IMG_DIR.$msgdat.'.dat')) {
+							unlink(IMG_DIR.$msgdat.'.dat'); 
+						}
+					}
+					//↑画像とか削除処理完了
+					//db最初の行を削除
+					$sqlresdel = "DELETE FROM tabletree ORDER BY iid LIMIT 1";
+					$db = $db->exec($sqlresdel);
 				}
 			} else {
 				//レスの場合でメール欄にsageが含まれない
@@ -282,12 +340,43 @@ function regist() {
 					$sql = "INSERT INTO tabletree (created, modified, tid, name, sub, com, mail, url, picfile, pchfile, img_w, img_h, utime, parent, time, pwd, id, exid, tree, invz, host) VALUES (datetime('now', 'localtime') , datetime('now', 'localtime') , '$tid', '$name', '$sub', '$com', '$mail', '$url', '$picfile', '$pchfile', '$img_w', '$img_h', '$utime', '$parent', '$time', '$pwd', '$id', '$exid', '$tree', '$invz', '$host'); UPDATE tablelog set age = '$nage' where tid = '$tid'";
 					$db = $db->exec($sql);
 				} else {
-					$sql = "INSERT INTO tabletree (created, modified, tid, name, sub, com, mail, url, picfile, pchfile, img_w, img_h, utime, parent, time, pwd, id, exid, tree, invz, host) VALUES (datetime('now', 'localtime') , datetime('now', 'localtime') , '$tid', '$name', '$sub', '$com', '$mail', '$url', '$picfile', '$pchfile', '$img_w', '$img_h', '$utime', '$parent', '$time', '$pwd', '$id', '$exid', '$tree', '$invz', '$host'); UPDATE tablelog set age = '$nage' where tid = '$tid'; DELETE FROM tabletree WHERE not exists( select * from tabletree as tb where tabletree.ID > tb.ID) LIMIT 1";
-					$db = $db->exec($sql);
+					//ログ行数オーバーの場合
+					$sql = "INSERT INTO tabletree (created, modified, tid, name, sub, com, mail, url, picfile, pchfile, img_w, img_h, utime, parent, time, pwd, id, exid, tree, invz, host) VALUES (datetime('now', 'localtime') , datetime('now', 'localtime') , '$tid', '$name', '$sub', '$com', '$mail', '$url', '$picfile', '$pchfile', '$img_w', '$img_h', '$utime', '$parent', '$time', '$pwd', '$id', '$exid', '$tree', '$invz', '$host')";
+					$db->exec($sql);
+					//レス画像貼りは今のところ未対応だけど念のため
+					//最初の行にある画像の名前を取得
+					$sqlimg = "SELECT picfile FROM tabletree ORDER BY iid LIMIT 1";
+					$msgs = $db->prepare($sqlimg);
+					$msgs->execute();
+					$msg = $msgs->fetch();
+					$msgpic = $msg["picfile"]; //画像の名前取得できた
+					//画像とかの削除処理
+					if (file_exists(IMG_DIR.$msgpic)) {
+						$msgdat = str_replace( strrchr($msgpic,"."), "", $msgpic); //拡張子除去
+						if (file_exists(IMG_DIR.$msgdat.'.png')) {
+						unlink(IMG_DIR.$msgdat.'.png');
+						}
+						if (file_exists(IMG_DIR.$msgdat.'.jpg')) {
+							unlink(IMG_DIR.$msgdat.'.jpg'); //一応jpgも
+						}
+						if (file_exists(IMG_DIR.$msgdat.'.pch')) {
+							unlink(IMG_DIR.$msgdat.'.pch'); 
+						}
+						if (file_exists(IMG_DIR.$msgdat.'.spch')) {
+							unlink(IMG_DIR.$msgdat.'.spch'); 
+						}
+						if (file_exists(IMG_DIR.$msgdat.'.dat')) {
+							unlink(IMG_DIR.$msgdat.'.dat'); 
+						}
+					}
+					//↑画像とか削除処理完了
+					//db最初の行を削除
+					$sqlresdel = "DELETE FROM tabletree ORDER BY iid LIMIT 1";
+					$db = $db->exec($sqlresdel);
 				}
 			}
 			$smarty->assign('message','書き込みに成功しました。');
-			$db = null;
+			$db = null; //db切断
 		}
 	} catch (PDOException $e) {
 		echo "DB接続エラー:" .$e->getMessage();
@@ -682,10 +771,19 @@ function delmode(){
 	//記事呼び出し
 	try {
 		$db = new PDO("sqlite:noe.db");
+
+		//パスワードを取り出す
 		$sql ="SELECT pwd FROM $deltable WHERE $idk = $delno";
 		$msgs = $db->prepare($sql);
 		$msgs->execute();
 		$msg = $msgs->fetch();
+
+		//削除記事の画像を取り出す
+		$sqlp ="SELECT picfile FROM $deltable WHERE $idk = $delno";
+		$msgsp = $db->prepare($sqlp);
+		$msgsp->execute();
+		$msgp = $msgsp->fetch();
+		$msgpic = $msgp['picfile']; //画像の名前取得できた
 
 		if (isset($_POST["admindel"]) == true) {
 			$admindelmode = 1;
@@ -694,21 +792,67 @@ function delmode(){
 		}
 
 		if (password_verify($_POST["pwd"],$msg['pwd']) === true) {
+			//画像とかファイル削除
+			if (file_exists(IMG_DIR.$msgpic)) {
+				$msgdat = str_replace( strrchr($msgpic,"."), "", $msgpic); //拡張子除去
+				if (file_exists(IMG_DIR.$msgdat.'.png')) {
+					unlink(IMG_DIR.$msgdat.'.png');
+				}
+				if (file_exists(IMG_DIR.$msgdat.'.jpg')) {
+					unlink(IMG_DIR.$msgdat.'.jpg'); //一応jpgも
+				}
+				if (file_exists(IMG_DIR.$msgdat.'.pch')) {
+					unlink(IMG_DIR.$msgdat.'.pch'); 
+				}
+				if (file_exists(IMG_DIR.$msgdat.'.spch')) {
+					unlink(IMG_DIR.$msgdat.'.spch'); 
+				}
+				if (file_exists(IMG_DIR.$msgdat.'.dat')) {
+					unlink(IMG_DIR.$msgdat.'.dat'); 
+				}
+			}
+			//↑画像とか削除処理完了
+			//データベースから削除
 			$sql = "DELETE FROM $deltable WHERE $idk=$delno";
 			$db = $db->exec($sql);
 			$smarty->assign('message','削除しました。');
 		} elseif ($admin_pass == $_POST["pwd"] && $admindelmode == 1) {
+			//画像とかファイル削除
+			if (file_exists(IMG_DIR.$msgpic)) {
+				$msgdat = str_replace( strrchr($msgpic,"."), "", $msgpic); //拡張子除去
+				if (file_exists(IMG_DIR.$msgdat.'.png')) {
+					unlink(IMG_DIR.$msgdat.'.png');
+				}
+				if (file_exists(IMG_DIR.$msgdat.'.jpg')) {
+					unlink(IMG_DIR.$msgdat.'.jpg'); //一応jpgも
+				}
+				if (file_exists(IMG_DIR.$msgdat.'.pch')) {
+					unlink(IMG_DIR.$msgdat.'.pch'); 
+				}
+				if (file_exists(IMG_DIR.$msgdat.'.spch')) {
+					unlink(IMG_DIR.$msgdat.'.spch'); 
+				}
+				if (file_exists(IMG_DIR.$msgdat.'.dat')) {
+					unlink(IMG_DIR.$msgdat.'.dat'); 
+				}
+			}
+			//↑画像とか削除処理完了
+			//データベースから削除
 			$sql = "DELETE FROM $deltable WHERE $idk=$delno";
 			$db = $db->exec($sql);
 			$smarty->assign('message','削除しました。');
 		} elseif ($admin_pass == $_POST["pwd"] && $admindelmode != 1) {
+			//管理モード以外での管理者削除は
+			//データベースから削除はせずに非表示
 			$sql = "UPDATE $deltable SET invz=1 WHERE $idk=$delno";
 			$db = $db->exec($sql);
 			$smarty->assign('message','削除しました。');
 		} else {
 			$smarty->assign('message','パスワードまたは記事番号が違います。');
 		}
-		$db = null; //db切断 
+		$db = null; 
+		$msgp = null;
+		$msg = null;//db切断 
 	} catch (PDOException $e) {
 		echo "DB接続エラー:" .$e->getMessage();
 	}
