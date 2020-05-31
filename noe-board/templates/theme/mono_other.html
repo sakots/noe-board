@@ -71,6 +71,29 @@
 				</div>
             </section>
 			{/if}{* 記事編集モードおわり *}
+			{* 管理モードin *}{if $othermode == admin_in}
+			<h1 class="oekaki">管理モードin</h1>
+			<section>
+				<div class="thread">
+					<hr>
+					<form action="{$self}?mode=admin" method="post"><input type="hidden" name="admin" value="admin">
+						<label>ADMIN PASS <input class="form" type="password" name="adminpass" size="8"></label>
+						<input class="button" type="submit" value="SUBMIT">
+					</form>
+					<hr>
+					<p><a href="#" onclick="javascript:window.history.back(-1);return false;">[もどる]</a></p>
+				</div>
+			</section>
+			{/if}{* 管理モードinおわり *}
+			{* エラー画面 *}{if $othermode == err}
+			<h1 class="oekaki">エラー！！</h1>
+			<section>
+				<div class="thread">
+					<p class="err">{$errmes}</p>
+					<p><a href="#" onclick="javascript:window.history.back(-1);return false;">[もどる]</a></p>
+				</div>
+			</section>
+			{/if}{* エラー画面おわり *}
 			<script>
 				l(); //LoadCookie
 			</script>

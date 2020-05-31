@@ -9,7 +9,7 @@ require_once(__DIR__.'/libs/Smarty.class.php');
 $smarty = new Smarty();
 
 //スクリプトのバージョン
-$smarty->assign('ver','v0.17.2');
+$smarty->assign('ver','v0.18.0');
 
 //設定の読み込み
 require(__DIR__."/config.php");
@@ -17,7 +17,7 @@ require(__DIR__."/templates/".THEMEDIR."template_ini.php");
 
 //var_dump($_POST);
 
-$message = "(system message...)";
+$message = "";
 $self = PHP_SELF;
 
 $smarty->assign('base',BASE);
@@ -346,26 +346,18 @@ function regist() {
 				$wid = 'iid';
 			}
 			//最新コメント取得
-			$sqlw = "SELECT com FROM $table ORDER BY $wid DESC LIMIT 1";
+			$sqlw = "SELECT com, host FROM $table ORDER BY $wid DESC LIMIT 1";
 			$msgw = $db->prepare($sqlw);
 			$msgw->execute();
 			$msgwc = $msgw->fetch();
 			$msgwcom = $msgwc["com"]; //最新コメント取得できた
-			//最新のホストも取得
-			$sqlh = "SELECT host FROM $table ORDER BY $wid DESC LIMIT 1";
-			$msgwh = $db->prepare($sqlh);
-			$msgwh->execute();
-			$msgwhc = $msgwh->fetch();
-			$msgwhost = $msgwhc["host"]; //最新ホスト取得できた
+			$msgwhost = $msgwc["host"]; //最新ホスト取得できた
 			//どっちも一致すれば二重投稿だと思う
 			if($com == $msgwcom && $host == $msgwhost ){
-				$smarty->assign('message','二重投稿ですか？');
 				$msgs = null;
 				$msgw = null;
-				$msgwh = null;
 				$db = null; //db切断
-				header('Location:'.PHP_SELF);
-				def();
+				error('二重投稿ですか？');
 				exit;
 			}
 
@@ -1248,10 +1240,11 @@ function editexec(){
 
 //管理モードin
 function admin_in() {
-	global $self;
-	echo '<!DOCTYPE html>'."\n".'<head><meta charset="utf-8"><title>管理モードin</title></head>';
-	echo '<body><h1>管理モードin</h1><form action="'.$self.'?mode=admin" method="post"><input type="hidden" name="admin" value="admin"><input class="form" type="password" name="adminpass" size="8">
-	<input class="button" type="submit" value="SUBMIT"></form></body>';
+	global $smarty;
+	$smarty->assign('self',PHP_SELF);
+	$smarty->assign('othermode','admin_in');
+
+	$smarty->display( THEMEDIR.OTHERFILE );
 }
 
 //管理モード
@@ -1340,14 +1333,14 @@ function admin() {
 	}
 }
 
-//エラー画面（画面？？）
+//エラー画面
 function error($mes) {
 	global $db;
 	global $smarty;
 	$db = null; //db切断
-	$smarty->assign('message',$mes);
-	header('Location:'.PHP_SELF);
-	def();
+	$smarty->assign('errmes',$mes);
+	$smarty->assign('othermode','err');
+	$smarty->display( THEMEDIR.OTHERFILE );
 }
 
 
