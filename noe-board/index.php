@@ -9,7 +9,7 @@ require_once(__DIR__.'/libs/Smarty.class.php');
 $smarty = new Smarty();
 
 //スクリプトのバージョン
-$smarty->assign('ver','v0.17.1');
+$smarty->assign('ver','v0.17.2');
 
 //設定の読み込み
 require(__DIR__."/config.php");
@@ -157,9 +157,8 @@ $smarty->assign('usercode',$usercode);
 /* 記事書き込み */
 function regist() {
 	global $name,$com,$sub,$parent,$picfile,$mail,$url,$time,$pwd,$exid,$invz;
-	global $path,$badstring,$badip,$pwdc;
+	global $badstring,$badip;
 	global $ptime;
-	global $usercode;
 	global $badstr_A,$badstr_B,$badname;
 	global $smarty;
 	$userip = get_uip();
@@ -334,6 +333,40 @@ function regist() {
 				$img_w = 0;
 				$img_h = 0;
 				$pchfile = "";
+			}
+
+			// 二重投稿チェック
+			if (empty($_POST["modid"])==true) {
+				// スレ立ての場合
+				$table = 'tablelog';
+				$wid = 'tid';
+			} else {
+				// レスの場合
+				$table = 'tabletree';
+				$wid = 'iid';
+			}
+			//最新コメント取得
+			$sqlw = "SELECT com FROM $table ORDER BY $wid DESC LIMIT 1";
+			$msgw = $db->prepare($sqlw);
+			$msgw->execute();
+			$msgwc = $msgw->fetch();
+			$msgwcom = $msgwc["com"]; //最新コメント取得できた
+			//最新のホストも取得
+			$sqlh = "SELECT host FROM $table ORDER BY $wid DESC LIMIT 1";
+			$msgwh = $db->prepare($sqlh);
+			$msgwh->execute();
+			$msgwhc = $msgwh->fetch();
+			$msgwhost = $msgwhc["host"]; //最新ホスト取得できた
+			//どっちも一致すれば二重投稿だと思う
+			if($com == $msgwcom && $host == $msgwhost ){
+				$smarty->assign('message','二重投稿ですか？');
+				$msgs = null;
+				$msgw = null;
+				$msgwh = null;
+				$db = null; //db切断
+				header('Location:'.PHP_SELF);
+				def();
+				exit;
 			}
 
 			// URLとメールにリンク
@@ -512,12 +545,17 @@ function regist() {
 			}
 
 			$smarty->assign('message','書き込みに成功しました。');
+			$msgs = null;
+			$msgw = null;
+			$count = null;
+			$counts = null;
 			$db = null; //db切断
 		}
 	} catch (PDOException $e) {
 		echo "DB接続エラー:" .$e->getMessage();
 	}
 	unset($name,$mail,$sub,$com,$url,$pwd,$pwdh,$resto,$pictmp,$picfile,$mode);
+	header('Location:'.PHP_SELF);
 	def();
 }
 
@@ -614,6 +652,7 @@ function sodane(){
 	} catch (PDOException $e) {
 		echo "DB接続エラー:" .$e->getMessage();
 	}
+	header('Location:'.PHP_SELF);
 	def();
 }
 
@@ -631,6 +670,7 @@ function rsodane(){
 	} catch (PDOException $e) {
 		echo "DB接続エラー:" .$e->getMessage();
 	}
+	header('Location:'.PHP_SELF);
 	def();
 }
 
@@ -995,8 +1035,8 @@ function delmode(){
 	}
 	//変数クリア
 	unset($delno,$delt);
+	header('Location:'.PHP_SELF);
 	def();
-	//header('Location:'.PHP_SELF);
 }
 
 //編集モードくん入口
@@ -1067,7 +1107,7 @@ function editform() {
 //編集モードくん本体
 function editexec(){
 	global $smarty;
-	global $path,$badstring,$badip;
+	global $badstring,$badip;
 	global $badstr_A,$badstr_B,$badname;
 	$userip = get_uip();
 
@@ -1202,6 +1242,7 @@ function editexec(){
 		echo "DB接続エラー:" .$e->getMessage();
 	}
 	unset($name,$mail,$sub,$com,$url,$pwd,$pwdh,$resto,$pictmp,$picfile,$mode);
+	header('Location:'.PHP_SELF);
 	def();
 }
 
@@ -1305,6 +1346,7 @@ function error($mes) {
 	global $smarty;
 	$db = null; //db切断
 	$smarty->assign('message',$mes);
+	header('Location:'.PHP_SELF);
 	def();
 }
 
