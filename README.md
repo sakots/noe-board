@@ -42,7 +42,7 @@ POTI-board改で使用しているテンプレートエンジン「htmltemplate.
 
 ### [2020/05/31]
 
-- テーマのjavascript修正
+- テーマのjavascript、描画時間関連修正
 
 ### [2020/05/31]
 
