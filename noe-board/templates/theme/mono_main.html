@@ -115,7 +115,9 @@
 								</h4>
 								{if $res.picfile == true}
 								<figure>
-									<figcaption><a href="{$path}{$res.picfile}" target="_blank" data-title="{$res.picfile}">{$res.picfile}</a>{if $dptime == 1}{if $res.time != null}描画時間：{$res.time}｜{/if}{/if}{if $res.pchfile == true}｜<a href="{$self}?mode=anime&amp;pch={$res.pchfile}">●動画</a>{/if}</figcaption>
+									<figcaption><a href="{$path}{$res.picfile}" target="_blank" data-title="{$res.picfile}">{$res.picfile}</a><br>
+									{if $dptime == 1}{if $res.time != null}描画時間：{$res.time}｜{/if}{/if}
+									{if $res.pchfile == true}｜<a href="{$self}?mode=anime&amp;pch={$res.pchfile}">●動画</a>{/if}</figcaption>
 									<a href="{$path}{$res.picfile}" target="_blank" data-title="{$res.picfile}"><img src="{$path}{$res.picfile}" alt={$res.picfile}"></a>
 								</figure>
 								{/if}
