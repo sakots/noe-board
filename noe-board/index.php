@@ -9,7 +9,7 @@ require_once(__DIR__.'/libs/Smarty.class.php');
 $smarty = new Smarty();
 
 //スクリプトのバージョン
-$smarty->assign('ver','v0.17.0');
+$smarty->assign('ver','v0.17.1');
 
 //設定の読み込み
 require(__DIR__."/config.php");
@@ -176,7 +176,7 @@ function regist() {
 	$img_h = ( isset( $_POST["img_h"] )  === true ) ? newstring(trim($_POST["img_h"]))  : "";
 	$stime = ( isset( $_POST["stime"] )  === true ) ? newstring(trim($_POST["stime"]))  : "";
 	$pwd = ( isset( $_POST["pwd"] )  === true ) ? newstring(trim($_POST["pwd"]))  : "";
-	$pwd = password_hash($pwd,PASSWORD_DEFAULT);
+	$pwdh = password_hash($pwd,PASSWORD_DEFAULT);
 	$exid = ( isset( $_POST["exid"] )  === true ) ? newstring(trim($_POST["exid"]))  : "";
 
 	//チェックする項目から改行・スペース・タブを消す
@@ -369,13 +369,13 @@ function regist() {
 			if (empty($_POST["modid"])==true && $logt <= LOG_MAX_T) {
 				//id生成
 				$id = substr(crypt(md5($host.ID_SEED.date("Ymd", $utime)),'id'),-8);
-				$sql = "INSERT INTO tablelog (created, modified, name, sub, com, mail, url, picfile, pchfile, img_w, img_h, utime, parent, time, pwd, id, exid, tree, age, invz, host) VALUES (datetime('now', 'localtime'), datetime('now', 'localtime'), '$name', '$sub', '$com', '$mail', '$url', '$picfile', '$pchfile', '$img_w', '$img_h', '$utime', '$parent', '$time', '$pwd', '$id', '$exid', '$tree', '$age', '$invz', '$host')";
+				$sql = "INSERT INTO tablelog (created, modified, name, sub, com, mail, url, picfile, pchfile, img_w, img_h, utime, parent, time, pwd, id, exid, tree, age, invz, host) VALUES (datetime('now', 'localtime'), datetime('now', 'localtime'), '$name', '$sub', '$com', '$mail', '$url', '$picfile', '$pchfile', '$img_w', '$img_h', '$utime', '$parent', '$time', '$pwdh', '$id', '$exid', '$tree', '$age', '$invz', '$host')";
 				$db = $db->exec($sql);
 			} elseif(empty($_POST["modid"])==true && $logt > LOG_MAX_T) {
 				//ログ行数オーバーの場合
 				//id生成
 				$id = substr(crypt(md5($host.ID_SEED.date("Ymd", $utime)),'id'),-8);
-				$sql = "INSERT INTO tablelog (created, modified, name, sub, com, mail, url, picfile, pchfile, img_w, img_h, utime, parent, time, pwd, id, exid, tree, age, invz, host) VALUES (datetime('now', 'localtime'), datetime('now', 'localtime'), '$name', '$sub', '$com', '$mail', '$url', '$picfile', '$pchfile', '$img_w', '$img_h', '$utime', '$parent', '$time', '$pwd', '$id', '$exid', '$tree', '$age', '$invz', '$host')";
+				$sql = "INSERT INTO tablelog (created, modified, name, sub, com, mail, url, picfile, pchfile, img_w, img_h, utime, parent, time, pwd, id, exid, tree, age, invz, host) VALUES (datetime('now', 'localtime'), datetime('now', 'localtime'), '$name', '$sub', '$com', '$mail', '$url', '$picfile', '$pchfile', '$img_w', '$img_h', '$utime', '$parent', '$time', '$pwdh', '$id', '$exid', '$tree', '$age', '$invz', '$host')";
 				$db->exec($sql);
 				//最初の行にある画像の名前を取得
 				$sqlimg = "SELECT picfile FROM tablelog ORDER BY tid LIMIT 1";
@@ -412,11 +412,11 @@ function regist() {
 				//id生成
 				$id = substr(crypt(md5($host.ID_SEED.date("Ymd", $utime)),'id'),-8);
 				if ($age <= LOG_MAX_R) {
-					$sql = "INSERT INTO tabletree (created, modified, tid, name, sub, com, mail, url, picfile, pchfile, img_w, img_h, utime, parent, time, pwd, id, exid, tree, invz, host) VALUES (datetime('now', 'localtime') , datetime('now', 'localtime') , '$tid', '$name', '$sub', '$com', '$mail', '$url', '$picfile', '$pchfile', '$img_w', '$img_h', '$utime', '$parent', '$time', '$pwd', '$id', '$exid', '$tree', '$invz', '$host')";
+					$sql = "INSERT INTO tabletree (created, modified, tid, name, sub, com, mail, url, picfile, pchfile, img_w, img_h, utime, parent, time, pwd, id, exid, tree, invz, host) VALUES (datetime('now', 'localtime') , datetime('now', 'localtime') , '$tid', '$name', '$sub', '$com', '$mail', '$url', '$picfile', '$pchfile', '$img_w', '$img_h', '$utime', '$parent', '$time', '$pwdh', '$id', '$exid', '$tree', '$invz', '$host')";
 					$db = $db->exec($sql);
 				} else {
 					//ログ行数オーバーの場合
-					$sql = "INSERT INTO tabletree (created, modified, tid, name, sub, com, mail, url, picfile, pchfile, img_w, img_h, utime, parent, time, pwd, id, exid, tree, invz, host) VALUES (datetime('now', 'localtime') , datetime('now', 'localtime') , '$tid', '$name', '$sub', '$com', '$mail', '$url', '$picfile', '$pchfile', '$img_w', '$img_h', '$utime', '$parent', '$time', '$pwd', '$id', '$exid', '$tree', '$invz', '$host')";
+					$sql = "INSERT INTO tabletree (created, modified, tid, name, sub, com, mail, url, picfile, pchfile, img_w, img_h, utime, parent, time, pwd, id, exid, tree, invz, host) VALUES (datetime('now', 'localtime') , datetime('now', 'localtime') , '$tid', '$name', '$sub', '$com', '$mail', '$url', '$picfile', '$pchfile', '$img_w', '$img_h', '$utime', '$parent', '$time', '$pwdh', '$id', '$exid', '$tree', '$invz', '$host')";
 					$db->exec($sql);
 					//レス画像貼りは今のところ未対応だけど念のため
 					//最初の行にある画像の名前を取得
@@ -456,11 +456,11 @@ function regist() {
 				$id = substr(crypt(md5($host.ID_SEED.date("Ymd", $utime)),'id'),-8);
 				$nage = $age +1;
 				if ($age <= LOG_MAX_R) {
-					$sql = "INSERT INTO tabletree (created, modified, tid, name, sub, com, mail, url, picfile, pchfile, img_w, img_h, utime, parent, time, pwd, id, exid, tree, invz, host) VALUES (datetime('now', 'localtime') , datetime('now', 'localtime') , '$tid', '$name', '$sub', '$com', '$mail', '$url', '$picfile', '$pchfile', '$img_w', '$img_h', '$utime', '$parent', '$time', '$pwd', '$id', '$exid', '$tree', '$invz', '$host'); UPDATE tablelog set age = '$nage' where tid = '$tid'";
+					$sql = "INSERT INTO tabletree (created, modified, tid, name, sub, com, mail, url, picfile, pchfile, img_w, img_h, utime, parent, time, pwd, id, exid, tree, invz, host) VALUES (datetime('now', 'localtime') , datetime('now', 'localtime') , '$tid', '$name', '$sub', '$com', '$mail', '$url', '$picfile', '$pchfile', '$img_w', '$img_h', '$utime', '$parent', '$time', '$pwdh', '$id', '$exid', '$tree', '$invz', '$host'); UPDATE tablelog set age = '$nage' where tid = '$tid'";
 					$db = $db->exec($sql);
 				} else {
 					//ログ行数オーバーの場合
-					$sql = "INSERT INTO tabletree (created, modified, tid, name, sub, com, mail, url, picfile, pchfile, img_w, img_h, utime, parent, time, pwd, id, exid, tree, invz, host) VALUES (datetime('now', 'localtime') , datetime('now', 'localtime') , '$tid', '$name', '$sub', '$com', '$mail', '$url', '$picfile', '$pchfile', '$img_w', '$img_h', '$utime', '$parent', '$time', '$pwd', '$id', '$exid', '$tree', '$invz', '$host')";
+					$sql = "INSERT INTO tabletree (created, modified, tid, name, sub, com, mail, url, picfile, pchfile, img_w, img_h, utime, parent, time, pwd, id, exid, tree, invz, host) VALUES (datetime('now', 'localtime') , datetime('now', 'localtime') , '$tid', '$name', '$sub', '$com', '$mail', '$url', '$picfile', '$pchfile', '$img_w', '$img_h', '$utime', '$parent', '$time', '$pwdh', '$id', '$exid', '$tree', '$invz', '$host')";
 					$db->exec($sql);
 					//レス画像貼りは今のところ未対応だけど念のため
 					//最初の行にある画像の名前を取得
@@ -517,6 +517,7 @@ function regist() {
 	} catch (PDOException $e) {
 		echo "DB接続エラー:" .$e->getMessage();
 	}
+	unset($name,$mail,$sub,$com,$url,$pwd,$pwdh,$resto,$pictmp,$picfile,$mode);
 	def();
 }
 
@@ -992,6 +993,8 @@ function delmode(){
 	} catch (PDOException $e) {
 		echo "DB接続エラー:" .$e->getMessage();
 	}
+	//変数クリア
+	unset($delno,$delt);
 	def();
 	//header('Location:'.PHP_SELF);
 }
@@ -1074,7 +1077,7 @@ function editexec(){
 	$mail = ( isset( $_POST["mail"] )  === true ) ? newstring(trim($_POST["mail"]))  : "";
 	$com = ( isset( $_POST["com"] )  === true ) ? newstring(trim($_POST["com"]))  : "";
 	$pwd = ( isset( $_POST["pwd"] )  === true ) ? newstring(trim($_POST["pwd"]))  : "";
-	$pwd = password_hash($pwd,PASSWORD_DEFAULT);
+	$pwdh = password_hash($pwd,PASSWORD_DEFAULT);
 	$exid = ( isset( $_POST["exid"] )  === true ) ? newstring(trim($_POST["exid"]))  : "";
 	$resedit = ( isset( $_POST["resedit"] )  === true ) ? newstring(trim($_POST["resedit"]))  : "";
 	$e_no = ( isset( $_POST["e_no"] )  === true ) ? newstring(trim($_POST["e_no"]))  : "";
@@ -1191,13 +1194,14 @@ function editexec(){
 
 	try {
 		$db = new PDO("sqlite:noe.db");
-		$sql = "UPDATE $edittable set modified = datetime('now', 'localtime'), name = '$name', mail = '$mail', sub = '$sub', com = '$com', url = '$url', host = '$host', exid = '$exid', pwd = '$pwd' where $eid = $e_no";
+		$sql = "UPDATE $edittable set modified = datetime('now', 'localtime'), name = '$name', mail = '$mail', sub = '$sub', com = '$com', url = '$url', host = '$host', exid = '$exid', pwd = '$pwdh' where $eid = $e_no";
 		$db = $db->exec($sql);
 		$db = null;
 		$smarty->assign('message','編集完了しました。');
 	} catch (PDOException $e) {
 		echo "DB接続エラー:" .$e->getMessage();
 	}
+	unset($name,$mail,$sub,$com,$url,$pwd,$pwdh,$resto,$pictmp,$picfile,$mode);
 	def();
 }
 
