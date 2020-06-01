@@ -7,6 +7,9 @@
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 		<title>{$btitle}</title>
 		<script src="loadcookie.js"></script>
+		{* ok画面専用ヘッダ *}{if $othermode == ok}
+		<meta http-equiv="refresh" content="1; URL={$self}">
+		{/if}
 	</head>
 	<body>
 		<header>
@@ -85,6 +88,15 @@
 				</div>
 			</section>
 			{/if}{* 管理モードinおわり *}
+			{* ok画面 *}{if $othermode == ok}
+			<h1 class="oekaki">OK！</h1>
+			<section>
+				<div class="thread">
+					<p class="ok">{$okmes}</p>
+					<p><a href="{$self}">[リロード]</a></p>
+				</div>
+			</section>
+			{/if}{* ok画面おわり *}
 			{* エラー画面 *}{if $othermode == err}
 			<h1 class="oekaki">エラー！！</h1>
 			<section>

@@ -9,7 +9,7 @@ require_once(__DIR__.'/libs/Smarty.class.php');
 $smarty = new Smarty();
 
 //スクリプトのバージョン
-$smarty->assign('ver','v0.18.0');
+$smarty->assign('ver','v0.18.1');
 
 //設定の読み込み
 require(__DIR__."/config.php");
@@ -547,8 +547,8 @@ function regist() {
 		echo "DB接続エラー:" .$e->getMessage();
 	}
 	unset($name,$mail,$sub,$com,$url,$pwd,$pwdh,$resto,$pictmp,$picfile,$mode);
-	header('Location:'.PHP_SELF);
-	def();
+	//header('Location:'.PHP_SELF);
+	ok('書き込みに成功しました。画面を切り替えます。');
 }
 
 //通常時
@@ -640,7 +640,7 @@ function sodane(){
 		$sql = "UPDATE tablelog set exid = exid+1 where tid = '$resto'";
 		$db = $db->exec($sql);
 		$db = null;
-		$smarty->assign('message','そうだね。');
+		//$smarty->assign('message','そうだね。');
 	} catch (PDOException $e) {
 		echo "DB接続エラー:" .$e->getMessage();
 	}
@@ -658,7 +658,7 @@ function rsodane(){
 		$sql = "UPDATE tabletree set exid = exid+1 where iid = '$resto'";
 		$db = $db->exec($sql);
 		$db = null;
-		$smarty->assign('message','そうだね。');
+		//$smarty->assign('message','そうだね。');
 	} catch (PDOException $e) {
 		echo "DB接続エラー:" .$e->getMessage();
 	}
@@ -1027,8 +1027,8 @@ function delmode(){
 	}
 	//変数クリア
 	unset($delno,$delt);
-	header('Location:'.PHP_SELF);
-	def();
+	//header('Location:'.PHP_SELF);
+	ok('削除しました。画面を切り替えます。');
 }
 
 //編集モードくん入口
@@ -1234,8 +1234,8 @@ function editexec(){
 		echo "DB接続エラー:" .$e->getMessage();
 	}
 	unset($name,$mail,$sub,$com,$url,$pwd,$pwdh,$resto,$pictmp,$picfile,$mode);
-	header('Location:'.PHP_SELF);
-	def();
+	//header('Location:'.PHP_SELF);
+	ok('編集に成功しました。画面を切り替えます。');
 }
 
 //管理モードin
@@ -1331,6 +1331,14 @@ function admin() {
 	} catch (PDOException $e) {
 		echo "DB接続エラー:" .$e->getMessage();
 	}
+}
+
+//OK画面
+function ok($mes) {
+	global $smarty;
+	$smarty->assign('okmes',$mes);
+	$smarty->assign('othermode','ok');
+	$smarty->display( THEMEDIR.OTHERFILE );
 }
 
 //エラー画面
