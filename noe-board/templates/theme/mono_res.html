@@ -102,7 +102,7 @@
 						<figure>
 							<figcaption><a href="{$path}{$bbsline.picfile}" target="_blank" data-title="{$bbsline.picfile}">{$bbsline.picfile}</a><br>
 							{if $dptime == 1}{if $bbsline.time != null}描画時間：{$bbsline.time}｜{/if}{/if}
-							{if isset($bbsline.pchfile)}<a href="{$self}?mode=anime&amp;pch={$bbsline.pchfile}">●動画</a>{/if}</figcaption>
+							{if $bbsline.pchfile != null}<a href="{$self}?mode=anime&amp;pch={$bbsline.pchfile}">●動画</a>{/if}</figcaption>
 							<a href="{$path}{$bbsline.picfile}" target="_blank"data-lightbox="b{$bbsline.picfile}" data-title="{$bbsline.picfile}"><img src="{$path}{$bbsline.picfile}" alt="{$bbsline.picfile}>"></a>
 						</figure>
 						{/if}
@@ -122,7 +122,7 @@
 								<figure>
 									<figcaption><a href="{$path}{$res.picfile}" target="_blank" title="{$res.picfile}">{$res.picfile}</a><br>
 									{if $dptime == 1}{if $res.time != null}描画時間：{$res.time}｜{/if}{/if}
-									{if $res.pchfile == true}｜<a href="{$self}?mode=anime&amp;pch={$res.pchfile}">●動画</a>{/if}
+									{if $res.pchfile != null}｜<a href="{$self}?mode=anime&amp;pch={$res.pchfile}">●動画</a>{/if}
 									</figcaption>
 									<a href="{$path}{$res.picfile}" target="_blank"data-lightbox="b{$res.picfile}" data-title="{$res.picfile}"><img src="{$path}{$res.picfile}" alt="{$res.picfile}"></a>
 								</figure>
