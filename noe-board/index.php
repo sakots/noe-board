@@ -9,7 +9,7 @@ require_once(__DIR__.'/libs/Smarty.class.php');
 $smarty = new Smarty();
 
 //スクリプトのバージョン
-$smarty->assign('ver','v0.18.2');
+$smarty->assign('ver','v0.18.3');
 
 //設定の読み込み
 require(__DIR__."/config.php");
@@ -610,6 +610,7 @@ function def() {
 		$smarty->assign('oya',$oya);
 
 		//スレッドの記事を取得
+		//全ページの全スレッドを取得しているのでどうにかしたい
 		$sqli = "SELECT iid, tid, created, modified, name, mail, sub, com, url, host, exid, id, pwd, utime, picfile, pchfile, img_w, img_h, time, tree, parent FROM tabletree WHERE invz=0 ORDER BY tree DESC";
 		$postsi = $db->query($sqli);
 		$ko = array();
@@ -1017,7 +1018,8 @@ function delmode(){
 			$db = $db->exec($sql);
 			$smarty->assign('message','削除しました。');
 		} else {
-			$smarty->assign('message','パスワードまたは記事番号が違います。');
+			error('パスワードまたは記事番号が違います。');
+			exit;
 		}
 		$db = null; 
 		$msgp = null;
@@ -1077,11 +1079,10 @@ function editform() {
 			}
 			$smarty->assign('message','管理者編集モード...');
 		} else {
-			$smarty->assign('message','パスワードまたは記事番号が違います。');
 			$db = null; 
 			$msgs = null;
 			$msg = null;//db切断 
-			def();
+			error('パスワードまたは記事番号が違います。');
 			exit;
 		}
 		$db = null; 
