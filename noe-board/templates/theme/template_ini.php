@@ -51,6 +51,11 @@ define('RE_END', '</span>');
 //※記事を編集したら日付の後ろに付きます
 define('UPDATE_MARK', ' *');
 
+//日付の書式 …テンプレート内で決定
+//※下記のURL参照
+//  https://www.php.net/strftime
+//define('DATE_FORMAT', '%Y/%m/%d(%a) %H:%i');
+
 //エラーメッセージ
 define('MSG001', "該当記事がみつかりません[Log is not found.]");
 define('MSG002', "絵が選択されていません[Picture has not been selected.]");

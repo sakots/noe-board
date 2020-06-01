@@ -9,7 +9,7 @@ require_once(__DIR__.'/libs/Smarty.class.php');
 $smarty = new Smarty();
 
 //スクリプトのバージョン
-$smarty->assign('ver','v0.18.1');
+$smarty->assign('ver','v0.18.2');
 
 //設定の読み込み
 require(__DIR__."/config.php");
@@ -601,7 +601,7 @@ function def() {
 	//1ページの全スレッド取得
 	try {
 		$db = new PDO("sqlite:noe.db");
-		$sql = "SELECT * FROM tablelog WHERE invz=0 ORDER BY age DESC, tree DESC LIMIT $start,$page_def"; 
+		$sql = "SELECT tid, created, modified, name, mail, sub, com, url, host, exid, id, pwd, utime, picfile, pchfile, img_w, img_h, time, tree, parent, age FROM tablelog WHERE invz=0 ORDER BY age DESC, tree DESC LIMIT $start,$page_def"; 
 		$posts = $db->query($sql);
 		$oya = array();
 		while ($bbsline = $posts->fetch() ) {
@@ -610,7 +610,7 @@ function def() {
 		$smarty->assign('oya',$oya);
 
 		//スレッドの記事を取得
-		$sqli = "SELECT * FROM tabletree WHERE invz=0 ORDER BY tree DESC";
+		$sqli = "SELECT iid, tid, created, modified, name, mail, sub, com, url, host, exid, id, pwd, utime, picfile, pchfile, img_w, img_h, time, tree, parent FROM tabletree WHERE invz=0 ORDER BY tree DESC";
 		$postsi = $db->query($sqli);
 		$ko = array();
 		while ($res = $postsi->fetch() ) {
