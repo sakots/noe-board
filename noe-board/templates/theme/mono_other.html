@@ -74,6 +74,57 @@
 				</div>
             </section>
 			{/if}{* 記事編集モードおわり *}
+			{* コンティニューモードin *}{if $othermode == incontinue}
+			<h1 class="oekaki">続きから描く</h1>
+			<section>
+				<div class="thread">
+					{foreach from=$oya item=bbsline}
+					<figure>
+						<img src="{$path}{$bbsline.picfile}">
+						<figcaption>{$bbsline.picfile}{if $dptime == 1}{if $bbsline.time != null} 描画時間：{$bbsline.time}{/if}{/if}</figcaption>
+					</figure>
+					<hr class="hr">
+					<form action="{$self}" method="post" enctype="multipart/form-data">
+						<input type="hidden" name="mode" value="contpaint">
+						<input type="hidden" name="anime" value="true">
+						<input type="hidden" name="picw" value="{$bbsline.img_w}">
+						<input type="hidden" name="pich" value="{$bbsline.img_h}">
+						<input type="hidden" name="no" value="{$bbsline.tid}">
+						<input type="hidden" name="pch" value="{$bbsline.pchfile}">
+						<input type="hidden" name="img" value="{$bbsline.picfile}">
+						<select class="form" name="ctype">
+							{if $ctype_pch == true}<option value="pch">動画から</option>{/if}
+							{if $ctype_img == true}<option value="img">画像から</option>{/if}
+						</select>
+						<select class="form" name="type">
+							<option value="rep">差し替え</option>
+							<option value="new" selected>新規投稿</option>
+						</select>
+						{if $passflag == true}Pass<input class="form" type="password" name="pwdf" size="8" value=""> {/if}
+						<input class="button" type="submit" value="続きを描く">
+						<!-- NEOを使う -->
+						{if $ctype_pch == false}
+						<label><input type="checkbox" name="useneo" checked="checked"><span class="use_neo">USE NEO</span></label>
+						{/if}
+						{if $useneo == false}
+						<input type="hidden" name="shi" value="1">
+						{else}
+						<input type="hidden" name="useneo" value="1">
+						{/if}
+					</form>
+					{if $passflag == true}
+					<ul>
+						{if $newpost_nopassword == true}
+						<li>新規投稿なら削除キーがなくても続きを描く事ができます。</li>
+						{else}
+						<li>続きを描くには描いたときの削除キーが必要です。</li>
+						{/if}
+						</ul>
+					{/if}
+					{/foreach}
+				</div>
+			</section>
+			{/if}{* コンティニューモードin おわり *}
 			{* 管理モードin *}{if $othermode == admin_in}
 			<h1 class="oekaki">管理モードin</h1>
 			<section>

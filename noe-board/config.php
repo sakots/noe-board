@@ -1,6 +1,6 @@
 <?php
 /*
-  * noe-board v0.16.0～
+  * noe-board v0.19.0～
   * by sakots >> https://sakots.red/
   *
   * noe-boardの設定ファイルです。
@@ -95,12 +95,7 @@ $badstr_B = array("シャネル","シュプリーム","バレンシアガ","ブ�
 //本文に日本語がなければ拒絶
 define('USE_JAPANESEFILTER', '1');
 
-//指定文字列+本文へのURLの書き込みで拒絶（正規表現）
-//未実装
-$badstring_and_url = array("ブランド","偽物","財布","\[\/URL\]");
-
 //本文へのURLの書き込みを禁止する する:1 しない:0
-//未実装
 define('DENY_COMMENTS_URL', '1');
 
 //指定した日数を過ぎたスレッドのフォームを閉じる
@@ -113,19 +108,17 @@ define('DENY_COMMENTS_URL', '1');
 define('ELAPSED_DAYS','365');
 
 //拒絶するファイルのmd5
-//未実装
+//…使う？？
 $badfile = array("dummy","dummy2");
 
 //拒絶するホスト
-//未実装
 $badip = array("addr.dummy.com","185.36.102.114");
 
 /* ---------- ADD:2019/08/23 ---------- */
 
 //ペイント画面のパスワードの暗号鍵
 //あまり頻繁に変えないように
-//未実装
-define('CRYPT_PASS','fbgtK4pj9t8Auek');
+define('CRYPT_PASS','qRyFfhV6nyUggSb');
 
 //↑ 暗号化と解読のためのパスワード。
 //phpの内部で処理するので覚えておく必要はありません。
@@ -149,6 +142,7 @@ define('CRYPT_PASS','fbgtK4pj9t8Auek');
 // 4:最高　…　無条件でチェック。最新ログ20件と連続・二重投稿チェックする事になる
 //※中・高レベルのとき、未入力項目は無視
 //未実装
+//IPとコメントが同じ場合二重投稿として処理
 define('POST_CHECKLEVEL', '0');
 
 // 連続・二重投稿対象セキュリティレベルが 高 のときの類似率(単位％)
@@ -173,12 +167,12 @@ define('COMMENT_LIMIT_MIDDLE', '90');
 define('COMMENT_LIMIT_HIGH', '80');
 
 // 言語設定
-//未実装
+//未実装…要らないような？
 define('LANG', 'Japanese');
 
 //ユーザー削除権限 (0:不可 1:許可)
 //※treeのみを消して後に残ったlogは管理者のみ削除可能
-//未実装
+//未実装（現在1のみ実装）
 define('USER_DEL', '1');
 
 /* ---------- お絵かきアプレット設定 ---------- */
@@ -342,11 +336,9 @@ define('PCH_SPEED', '10');
 define('IP_CHECK', '1');
 
 //コンティニューを使用する する:1 しない:0
-//未実装
 define('USE_CONTINUE', '1');
 
-//コンティニュー時、削除キーを必要とする 必要:1 不要:0
-//未実装
+//新規投稿でコンティニューする時にも削除キーが必要 必要:1 不要:0
 define('CONTINUE_PASS', '1');
 
 //初期レイヤー数［しぃペインターのみ］

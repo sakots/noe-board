@@ -9,7 +9,7 @@ require_once(__DIR__.'/libs/Smarty.class.php');
 $smarty = new Smarty();
 
 //スクリプトのバージョン
-$smarty->assign('ver','v0.18.3');
+$smarty->assign('ver','v0.19.0');
 
 //設定の読み込み
 require(__DIR__."/config.php");
@@ -37,12 +37,22 @@ $smarty->assign('updatemark',UPDATE_MARK);
 
 $smarty->assign('useanime',USE_ANIME);
 $smarty->assign('defanime',DEF_ANIME);
+$smarty->assign('use_continue',USE_CONTINUE);
 
 $smarty->assign('dptime',DSP_PAINTTIME);
 
 $smarty->assign('share_button',SHARE_BUTTON);
 
+$path = realpath("./").'/'.IMG_DIR;
+$temppath = realpath("./").'/'.TEMP_DIR;
 
+//ペイント画面の$pwdの暗号化
+if(!defined('CRYPT_PASS')){//config.phpで未定義なら初期値が入る
+	define('CRYPT_PASS','qRyFfhV6nyUggSb');//暗号鍵初期値
+	}
+define('CRYPT_METHOD','aes-128-cbc');
+define('CRYPT_IV','T3pkYxNyjN7Wz3pu');//半角英数16文字
+	
 
 //スパム無効化関数
 function newstring($string) {
@@ -105,6 +115,10 @@ if(filter_input(INPUT_GET, 'mode')==="sodane"){
 if(filter_input(INPUT_GET, 'mode')==="rsodane"){
 	$mode = "rsodane";
 	$resto = filter_input(INPUT_GET, 'resto',FILTER_VALIDATE_INT);
+}
+if(filter_input(INPUT_GET, 'mode')==="continue"){
+	$no = filter_input(INPUT_GET, 'no');
+	$mode = "continue";
 }
 if(filter_input(INPUT_GET, 'mode')==="del"){
 	$mode = "del";
@@ -703,9 +717,10 @@ function res(){
 }
 
 //お絵描き画面
-
 function paintform(){
-	global $message,$usercode,$quality,$qualitys;
+	global $message,$usercode,$quality,$qualitys,$pwd,$no;
+	global $mode,$ctype,$pch,$type;
+	global $useneo; //NEOを使う
 	global $smarty;
 
 	//NEOを使う or しぃペインター
@@ -760,19 +775,79 @@ function paintform(){
 
 	$smarty->assign('usercode',$usercode);
 	$smarty->assign('stime',time());
-
+	
 	$userip = get_uip();
-
-	if((SECURITY_CLICK || SECURITY_TIMER) && SECURITY_URL){
-		$smarty->assign('security',true);
-		$smarty->assign('security_click',SECURITY_CLICK);
-		$smarty->assign('security_timer',SECURITY_TIMER);
-	}
 
 	//しぃペインター
 	$smarty->assign('layer_count',LAYER_COUNT);
 	$qq = $quality ? $quality : $qualitys[0];
 	$smarty->assign('quality',$qq);
+
+	if($mode=="contpaint"){
+		$ctype = filter_input(INPUT_POST, 'ctype');
+		$type = filter_input(INPUT_POST, 'type');
+		$smarty->assign('no',$no);
+		$smarty->assign('pwd',$pwd);
+		$smarty->assign('ctype',$ctype);
+		if(is_file(IMG_DIR.$pch.'.pch')){
+			$useneo = true;
+			$smarty->assign('useneo',true);
+		}elseif(is_file(IMG_DIR.$pch.'.spch')){
+			$useneo = false;
+			$smarty->assign('useneo',false);
+		}
+		if((C_SECURITY_CLICK || C_SECURITY_TIMER) && SECURITY_URL){
+			$smarty->assign('security',true);
+			$smarty->assign('security_click',C_SECURITY_CLICK);
+			$smarty->assign('security_timer',C_SECURITY_TIMER);
+		}
+	}else{
+		if((SECURITY_CLICK || SECURITY_TIMER) && SECURITY_URL){
+			$smarty->assign('security',true);
+			$smarty->assign('security_click',SECURITY_CLICK);
+			$smarty->assign('security_timer',SECURITY_TIMER);
+		}
+		$smarty->assign('newpaint',true);
+	}
+	$smarty->assign('security_url',SECURITY_URL);
+
+	//if($pwd){
+	//	$pwd=openssl_encrypt ($pwd,CRYPT_METHOD, CRYPT_PASS, true, CRYPT_IV);//暗号化
+	//	$pwd=bin2hex($pwd);//16進数に
+	//}
+
+	if($ctype=='pch'){
+		//if(is_file(__DIR__.'/'.IMG_DIR.$pch.'.pch')){
+		//	$datpch = './'.IMG_DIR.$pch.'.pch';
+		//	$smarty->assign('pchfile',$datpch);
+		//} 
+		//elseif(is_file(__DIR__.'/'.IMG_DIR.$pch.'.spch')){
+		//	$datpch = './'.IMG_DIR.$pch.'.spch';
+		//	$smarty->assign('pchfile',$datpch);
+		//}
+		$pchfile = filter_input(INPUT_POST, 'pch');
+		$smarty->assign('pchfile',IMG_DIR.$pchfile);
+	}
+	if($ctype=='img'){
+		$smarty->assign('animeform',false);
+		$smarty->assign('anime',false);
+		$imgfile = filter_input(INPUT_POST, 'img');
+		$smarty->assign('imgfile',IMG_DIR.$imgfile);
+	}
+
+	//差し換え時の認識コード追加
+	if($type==='rep'){
+		$no = filter_input(INPUT_POST, 'no',FILTER_VALIDATE_INT);
+		$pwdf = filter_input(INPUT_POST, 'pwdf');
+		$time=time();
+		$repcode = substr(crypt(md5($no.$userip.$pwdf.date("Ymd", $time)),$time),-8);
+		//念の為にエスケープ文字があればアルファベットに変換
+		$repcode = strtr($repcode,"!\"#$%&'()+,/:;<=>?@[\\]^`/{|}~","ABCDEFGHIJKLMNOabcdefghijklmn");
+		$datmode = 'picrep&amp;no='.$no.'&amp;pwd='.$pwdf.'&amp;repcode='.$repcode;
+		$smarty->assign('mode',$datmode);
+		$datusercode = $usercode.'&amp;repcode='.$repcode;
+		$smarty->assign('usercode',$datusercode);
+	}
 
 	//出力
 	$smarty->display( THEMEDIR.PAINTFILE );
@@ -923,6 +998,60 @@ function paintcom(){
 	$smarty->display( THEMEDIR.PICFILE );
 }
 
+//コンティニュー画面in 今のところレス画像には非対応
+function incontinue($no) {
+	global $smarty;
+	$smarty->assign('othermode','incontinue');
+	$smarty->assign('continue_mode',true);
+	$smarty->assign('path',IMG_DIR);
+
+	//コンティニュー時は削除キーを常に表示
+	$smarty->assign('passflag',true);
+	//新規投稿で削除キー不要の時 true
+	if(! CONTINUE_PASS) {
+		$smarty->assign('newpost_nopassword',true);
+	} else {
+		$smarty->assign('newpost_nopassword',false);
+	}
+
+	try{
+		$db = new PDO("sqlite:noe.db");
+		$sql = "SELECT * FROM tablelog WHERE picfile='$no' ORDER BY tree DESC";
+		$posts = $db->query($sql);
+
+		$oya = array();
+		while ($bbsline = $posts->fetch() ) {
+			$oya[] = $bbsline;
+			$smarty->assign('oya',$oya); //配列に格納
+		}
+		$pchh = str_replace( strrchr($no,"."), "", $no); //拡張子除去
+		$pchfilename = IMG_DIR.$pchh;
+		if(is_file($pchfilename.'.spch')){
+			//$pchfile = IMG_DIR.$pch;
+			$smarty->assign('useshi',true);
+			$smarty->assign('useneo',false); //拡張子がspchのときはしぃぺ
+			$smarty->assign('ctype_pch',true);
+		}elseif(is_file($pchfilename.'.pch')){
+			//$pchfile = IMG_DIR.$pch;
+			$smarty->assign('useshi',false);
+			$smarty->assign('useneo',true); //拡張子がpchのときはNEO
+			$smarty->assign('ctype_pch',true);
+		}else { //どっちもない＝動画が無い時
+			//$w=$h=$picw=$pich=$datasize="";
+			$smarty->assign('useneo',true);
+			$smarty->assign('useshi',true);
+			$smarty->assign('ctype_pch',false);
+		}
+		$smarty->assign('ctype_img',true);
+
+		$db = null; //db切断
+	} catch (PDOException $e) {
+		echo "DB接続エラー:" .$e->getMessage();
+	}
+
+	$smarty->display( THEMEDIR.OTHERFILE );
+}
+
 //削除くん
 
 function delmode(){
@@ -1032,6 +1161,153 @@ function delmode(){
 	//header('Location:'.PHP_SELF);
 	ok('削除しました。画面を切り替えます。');
 }
+
+//画像差し替え レス画像には非対応
+function picreplace($no,$pwdf,$stime){
+	global $path,$badip;
+	$repcode = filter_input(INPUT_GET, 'repcode');
+	$pwdf = filter_input(INPUT_GET, 'pwdf');
+	$userip = get_uip();
+	
+	//ホスト取得
+	$host = gethostbyaddr($userip);
+
+	foreach($badip as $value){ //拒絶host
+		if(preg_match("/$value$/i",$host)) error(MSG016);
+	}
+
+	/*--- テンポラリ捜査 ---*/
+	$find=false;
+	$handle = opendir(TEMP_DIR);
+	while ($file = readdir($handle)) {
+		if(!is_dir($file) && preg_match("/\.(dat)$/i",$file)) {
+			$fp = fopen(TEMP_DIR.$file, "r");
+			$userdata = fread($fp, 1024);
+			fclose($fp);
+			list($uip,$uhost,$uagent,$imgext,$ucode,$urepcode) = explode("\t", rtrim($userdata)."\t");//区切りの"\t"を行末に190610
+			$file_name = preg_replace("/\.(dat)$/i","",$file);
+			//画像があり、認識コードがhitすれば抜ける 
+			//ここで詰まる
+			if($file_name && is_file(TEMP_DIR.$file_name.$imgext && $urepcode === $repcode)){
+				$find=true;
+				break;
+			}
+		}
+	}
+	closedir($handle);
+	if(!$find){
+		error('画像が見当たりません。アップロード途中の画像で見つかるかもしれません。');
+		exit;
+	}
+
+	// 時間
+	$time = time();
+
+	//描画時間
+	if($stime){
+		$ptime = '';
+		if($stime){
+			$psec = $time-$stime;
+			if($psec >= 86400){
+				$D=($psec - ($psec % 86400)) / 86400;
+				$ptime .= $D.PTIME_D;
+				$psec -= $D*86400;
+			}
+			if($psec >= 3600){
+				$H=($psec - ($psec % 3600)) / 3600;
+				$ptime .= $H.PTIME_H;
+				$psec -= $H*3600;
+			}
+			if($psec >= 60){
+				$M=($psec - ($psec % 60)) / 60;
+				$ptime .= $M.PTIME_M;
+				$psec -= $M*60;
+			}
+			if($psec){
+				$ptime .= $psec.PTIME_S;
+			}
+		}
+	}
+
+	// 記事上書き
+	//$flag = false;
+	//$pwd=hex2bin($pwd);//バイナリに
+	//$pwd=openssl_decrypt($pwd,CRYPT_METHOD, CRYPT_PASS, true, CRYPT_IV);//復号化
+
+	// ログ読み込み
+	try {
+		$db = new PDO("sqlite:noe.db");
+		//記事を取り出す ...もっといい方法がありそう　
+		$sql ="SELECT pwd FROM tablelog WHERE tid = '$no'";
+		$msgs = $db->prepare($sql);
+		$msgs->execute();
+		$msgpwd = $msgs->fetch();
+		$sqlimg ="SELECT picfile FROM tablelog WHERE tid = '$no'";
+		$msgsi = $db->prepare($sqlimg);
+		$msgsi->execute();
+		$msgimg = $msgsi->fetch();
+		$sqlpch ="SELECT pchfile FROM tablelog WHERE tid = '$no'";
+		$msgsp = $db->prepare($sqlpch);
+		$msgsp->execute();
+		$msgpch = $msgsp->fetch();
+		$sqltime ="SELECT time FROM tablelog WHERE tid = '$no'";
+		$msgt = $db->prepare($sqltime);
+		$msgt->execute();
+		$msgtime = $msgt->fetch();
+
+		//パスワード照合　今はしない
+		//if(password_verify($pwdf,$msgpwd["pwd"])||$msgpwd["pwd"]=== substr(md5($pwdf),2,8)){
+		if($pwdf == $pwdf){
+			//あってたら画像アップロード処理
+			$picfile = $file_name.$imgext;
+
+			if ( $picfile == true ) {
+				rename( TEMP_DIR.$picfile , IMG_DIR.$picfile );
+				chmod( IMG_DIR.$picfile , 0606);
+				$picdat = strtr($picfile , 'png', 'dat');
+				rename( TEMP_DIR.$picdat, IMG_DIR.$picdat );
+				chmod( IMG_DIR.$picdat , 0606);
+
+				$spchfile = str_replace('png','spch', $picfile);
+				$pchfile = strtr($picfile , 'png', 'pch');
+				
+				if ( file_exists(TEMP_DIR.$pchfile) == TRUE ) {
+					rename( TEMP_DIR.$pchfile, IMG_DIR.$pchfile );
+					chmod( IMG_DIR.$pchfile , 0606);
+				} elseif( file_exists(TEMP_DIR.$spchfile) == TRUE ) {
+					rename( TEMP_DIR.$spchfile, IMG_DIR.$spchfile );
+					chmod( IMG_DIR.$spchfile , 0606);
+					$pchfile = $spchfile;
+				} else {
+					$pchfile = "";
+				}
+			} else { //念のため
+				$pchfile = "";
+			}
+			//旧ファイル削除
+			if(is_file($path.$msgimg["picfile"])) unlink($path.$msgimg["picfile"]);
+			if(is_file($path.$msgpch["pchfile"])) unlink($path.$msgpch["pchfile"]);
+			$msgedat = str_replace( strrchr($msgimg["picfile"],"."), "", $msgimg["picfile"]); //拡張子除去
+			$msgedat = $msgedat.'.dat';
+			if(is_file($path.$msgedat)) unlink($path.$msgedat);
+			//描画時間追加
+			if($msgtime["time"]) $time = $msgtime["time"].'+'.$ptime;
+			//id生成
+			$utime = time();
+			$id = substr(crypt(md5($host.ID_SEED.date("Ymd", $utime)),'id'),-8);
+			//db上書き
+			$sqlrep = "UPDATE tablelog set modified = datetime('now', 'localtime'), picfile = '$picfile', pchfile = '$pchfile', host = '$host', id = '$id', time = '$time' where tid = $no";
+			$db = $db->exec($sqlrep);
+		} else {
+			error(MSG028);exit;
+		}
+		$db = null; //db切断
+	} catch (PDOException $e) {
+		echo "DB接続エラー:" .$e->getMessage();
+	}
+	ok('編集に成功しました。画面を切り替えます。');
+}
+
 
 //編集モードくん入口
 function editform() {
@@ -1334,6 +1610,33 @@ function admin() {
 	}
 }
 
+// コンティニュー認証 レス画像には非対応
+function usrchk(){
+	$no = filter_input(INPUT_POST, 'no',FILTER_VALIDATE_INT);
+	$pwdf = filter_input(INPUT_POST, 'pwdf');
+	$flag = FALSE;
+	try {
+		$db = new PDO("sqlite:noe.db");
+		//パスワードを取り出す
+		$sql ="SELECT pwd FROM tablelog WHERE tid = $no";
+		$msgs = $db->prepare($sql);
+		$msgs->execute();
+		$msg = $msgs->fetch();
+		if(password_verify($pwdf,$msg['pwd'])||substr(md5($pwdf),2,8) === $msg['pwd']){
+			$flag = true;
+		} else {
+			$flag = false;
+		}
+		$db = null; //切断
+	} catch (PDOException $e) {
+		echo "DB接続エラー:" .$e->getMessage();
+	}
+	if(!$flag) {
+		error(MSG028);
+		exit;
+	}
+}
+
 //OK画面
 function ok($mes) {
 	global $smarty;
@@ -1453,6 +1756,19 @@ switch($mode){
 		if(!isset($sp)){$sp="";}
 		openpch($pch,$sp);
 		break;
+	case 'continue':
+		incontinue($no);
+		break;
+	case 'contpaint':
+		//パスワードが必要なのは差し換えの時だけ
+		if(CONTINUE_PASS||$type==='rep') usrchk();
+		// if(ADMIN_NEWPOST) $admin=$pwd;
+		$palette="";
+		paintform($palette);
+		break;
+	case 'picrep':
+		picreplace($no,$pwd,$stime);
+	break;
 	case 'edit':
 		editform();
 		break;
