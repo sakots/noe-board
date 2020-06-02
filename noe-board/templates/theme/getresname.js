@@ -3,7 +3,7 @@ function c(resnames){
     var dest = document.getElementsByClassName('resname');
     var resnames = "";
     for(var i = 0; i < dest.length; ++i){
-        resnames = `${resnames + dest[i].innerHTML}さん `; 
+        resnames = resnames + dest[i].innerHTML + "さん "; 
     }
     // テキストエリアを用意する
     var copyFrom = document.createElement("textarea");
