@@ -6,7 +6,6 @@
 		<link rel="stylesheet" href="./templates/{$skindir}mono_main.css" type="text/css">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 		<title>{$btitle}</title>
-		<script src="loadcookie.js"></script>
 		{* ok画面専用ヘッダ *}{if $othermode == ok}
 		<meta http-equiv="refresh" content="1; URL={$self}">
 		{/if}
@@ -166,6 +165,7 @@
 				</div>
 			</section>
 			{/if}{* 画像差し替え失敗専用おわり *}
+			<script src="loadcookie.js"></script>
 			<script>
 				l(); //LoadCookie
 			</script>
