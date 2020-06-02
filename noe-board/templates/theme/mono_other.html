@@ -157,6 +157,15 @@
 				</div>
 			</section>
 			{/if}{* エラー画面おわり *}
+			{* 画像差し替え失敗専用 *}{if $othermode == err2}
+			<h1 class="oekaki">エラー？</h1>
+			<section>
+				<div class="thread">
+					<p class="err">画像が見当たりません。</p>
+					<p>投稿に失敗している可能性があります。<a href="{$self}?mode=piccom">アップロード途中の画像</a>に残っているかもしれません。</p>
+				</div>
+			</section>
+			{/if}{* 画像差し替え失敗専用おわり *}
 			<script>
 				l(); //LoadCookie
 			</script>

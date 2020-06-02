@@ -9,7 +9,7 @@ require_once(__DIR__.'/libs/Smarty.class.php');
 $smarty = new Smarty();
 
 //スクリプトのバージョン
-$smarty->assign('ver','v0.20.0');
+$smarty->assign('ver','v0.21.0');
 
 //設定の読み込み
 require(__DIR__."/config.php");
@@ -1196,7 +1196,7 @@ function picreplace($no,$pwdf,$stime){
 	}
 	closedir($handle);
 	if(!$find){
-		error('画像が見当たりません。アップロード途中の画像で見つかるかもしれません。');
+		error2();
 		exit;
 	}
 
@@ -1652,6 +1652,15 @@ function error($mes) {
 	$db = null; //db切断
 	$smarty->assign('errmes',$mes);
 	$smarty->assign('othermode','err');
+	$smarty->display( THEMEDIR.OTHERFILE );
+}
+
+//画像差し替え失敗
+function error2() {
+	global $db;
+	global $smarty;
+	$db = null; //db切断
+	$smarty->assign('othermode','err2');
 	$smarty->display( THEMEDIR.OTHERFILE );
 }
 
