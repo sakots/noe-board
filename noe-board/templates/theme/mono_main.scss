@@ -60,7 +60,7 @@ footer {
 	@extend main;
 	text-align: right;
 }
-input, textarea, button {
+input, textarea {
 	border-style: none;
 	border-radius: 4px;
 	padding: 4px;
@@ -153,6 +153,14 @@ p.oya {
 			color: $button_moji;
 		}
 	}
+}
+button {
+	@extend input[type="submit"];
+	border-style: none;
+	border-radius: 4px;
+	padding: 4px;
+	background-color: $button;
+	color: $button_moji;
 }
 .oyano, .oyaresno {
 	@extend button;

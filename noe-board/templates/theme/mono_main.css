@@ -63,7 +63,7 @@ footer {
   text-align: right;
 }
 
-input, select, em.thispage, .se, textarea, button, .button, .oyano, .oyaresno {
+input, select, em.thispage, .se, textarea {
   border-style: none;
   border-radius: 4px;
   padding: 4px;
@@ -79,7 +79,7 @@ input[name="picw"], select[name="picw"], em.thispage[name="picw"], .se[name="pic
   width: 3em;
 }
 
-input[type="submit"], select[type="submit"], em.thispage[type="submit"], .se[type="submit"], .button {
+input[type="submit"], select[type="submit"], em.thispage[type="submit"], .se[type="submit"], .button, button, .oyano, .oyaresno {
   background-color: #396;
   color: #FFF;
 }
@@ -171,6 +171,14 @@ p.oya {
 }
 
 .button a i {
+  color: #FFF;
+}
+
+button, .button, .oyano, .oyaresno {
+  border-style: none;
+  border-radius: 4px;
+  padding: 4px;
+  background-color: #396;
   color: #FFF;
 }
 

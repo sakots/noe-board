@@ -87,7 +87,7 @@
 					<h3><span class="oyano">{$bbsline.tid}</span>{$bbsline.sub}</h3>
 					<section>
 						<h4>
-							名前：{if $bbsline.mail == true }<a href="mailto:{$bbsline.mail}">{/if}{$bbsline.name}{if $bbsline.mail == true }</a>{/if}：
+							名前：{if $bbsline.mail == true }<a href="mailto:{$bbsline.mail}">{/if}<span class="oyaname">{$bbsline.name}</span>{if $bbsline.mail == true }</a>{/if}：
 							{if $bbsline.modified == $bbsline.created }{$bbsline.modified|date_format:"%y/%m/%d (%a) %H:%M"}{else}{$bbsline.created|date_format:"%y/%m/%d (%a) %H:%M"} {$updatemark} {$bbsline.modified|date_format:"%y/%m/%d (%a) %H:%M"}{/if}
 							{if $bbsline.url == true} <span class="button"><a href="{$bbsline.url}" target="_blank" rel="nofollow noopener noreferrer"><i class="fas fa-flag-checkered"></i> URL</a></span>{/if}
 							{if $dispid == 1}<span class="id">ID：{$bbsline.id}</span>{/if}
@@ -108,7 +108,7 @@
 							<section>
 								<h3><span class="oyano">{$res.iid}</span>{$res.sub}</h3>
 								<h4>
-									名前：{if $res.mail == true }<a href="mailto:{$res.mail}">{/if}{$res.name}{if $res.mail == true }</a>{/if}：
+									名前：{if $res.mail == true }<a href="mailto:{$res.mail}">{/if}<span class="resname">{$res.name}</span>{if $res.mail == true }</a>{/if}：
 									{if $res.modified == $res.created }{$res.modified|date_format:"%y/%m/%d (%a) %H:%M"}{else}{$res.created|date_format:"%y/%m/%d (%a) %H:%M"} {$updatemark} {$res.modified|date_format:"%y/%m/%d (%a) %H:%M"}{/if}
 									{if $res.url == true}<span class="button"><a href="{$res.url}" target="_blank" rel="nofollow noopener noreferrer"><i class="fas fa-flag-checkered"></i> URL</a></span>{/if}
 									{if $dispid == 1}<span class="id">ID：{$res.id}</span>{/if}
