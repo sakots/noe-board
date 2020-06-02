@@ -4,7 +4,8 @@
 		<meta charset="utf-8">
 		<title>{$btitle}</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-		<link rel="stylesheet" href="./templates/{$skindir}mono_main.css" type="text/css">
+		<link rel="stylesheet" href="./templates/{$skindir}nee3_main.css" type="text/css">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 	</head>
 	<body>
 		<header id="header">
@@ -13,15 +14,16 @@
 			<div>
 				<section>
 					<p class="top menu">
-						<a href="{$home}">[ホーム]</a>
-						<a href="{$self}">[リロード]</a>
-						<a href="#footer">[↓]</i></a>
+						<a href="{$home}"><i class="fas fa-home fa-fw fa-lg" title="ホーム"></i></a>
+						<a href="{$self}"><i class="fas fa-sync fa-fw fa-lg" title="リロード"></i></a>
+						<a href="#footer"><i class="fas fa-arrow-down fa-fw fa-lg" title="一番下へ"></i></a>
 					</p>
 				</section>
 				<section>
 					<p class="sysmsg">{$message}</p>
 				</section>
 			</div>
+			<hr>
 			<div>
 				<section class="epost">
 					<p>ADMIN MODE</p>
@@ -41,28 +43,30 @@
 						</p>
 					</form>
 				</section>
+				<hr>
 				<section class="paging">
-					<p>
-						{if $back == 0}
-						<span class="se">[START]</span>
-						{else}
-						<span class="se">&lt;&lt;<a href="{$self}?page={$back}">[BACK]</a></span> 
-						{/if}
-						{foreach from=$paging item=pp}
-						{if $pp.p == $nowpage}<em class="thispage">{else}<a href="{$self}?page={$pp.p}">{/if}[{$pp.p}]{if $pp.p == $nowpage}</em>{else}</a>{/if}
-						{/foreach}
-						{if $next == ($max_page + 1)}
-						<span class="se">[END]</span>
-						{else}
-						<span class="button"><a href="{$self}?page={$next}">[NEXT]</a>&gt;&gt;</span> 
-						{/if}
-					</p>
-				</section>
+						<p>
+							{if $back == 0}
+							<span class="se">START</span>
+							{else}
+							<span class="button"><a href="{$self}?page={$back}">BACK</a></span> 
+							{/if}
+							{foreach from=$paging item=pp}
+							{if $pp.p == $nowpage}<em class="thispage">{else}<a href="{$self}?page={$pp.p}">[{/if}{$pp.p}{if $pp.p == $nowpage}</em>{else}]</a>{/if}
+							{/foreach}
+							{if $next == ($max_page + 1)}
+							<span class="se">END</span>
+							{else}
+							<span class="button"><a href="{$self}?page={$next}">NEXT</a></span> 
+							{/if}
+						</p>
+					</section>
 			</div>
 			<hr>
 		</header>
 		<main>
 			<div>
+				<hr>
 				<section class="thread">
 					<table>
 						<tr>
@@ -101,51 +105,19 @@
 						{/foreach}{/if}
 					</table>
 				</section>
+				<hr>
 			</div>
 			<script src="loadcookie.js"></script>
 			<script>
 				l(); //LoadCookie
 			</script>
-			<div class="thread">
-				<section class="paging">
-					<p>
-						{if $back == 0}
-						<span class="se">[START]</span>
-						{else}
-						<span class="se">&lt;&lt;<a href="{$self}?page={$back}">[BACK]</a></span> 
-						{/if}
-						{foreach from=$paging item=pp}
-						{if $pp.p == $nowpage}<em class="thispage">{else}<a href="{$self}?page={$pp.p}">{/if}[{$pp.p}]{if $pp.p == $nowpage}</em>{else}</a>{/if}
-						{/foreach}
-						{if $next == ($max_page + 1)}
-						<span class="se">[END]</span>
-						{else}
-						<span class="button"><a href="{$self}?page={$next}">[NEXT]</a>&gt;&gt;</span> 
-						{/if}
-					</p>
-				</section>
-				<section class="delf">
-					<form action="{$self}?mode=del" method="post">
-						<p>
-							<select name="delt">
-								<option value="1">レス</option>
-								<option value="0">親</option>
-							</select>
-							No <input class="form" type="text" name="delno" value="" autocomplete="section-no">
-							Pass <input class="form" type="password" name="pwd" value="" autocomplete="new-password">
-							<input class="button" type="submit" value=" 削除 ">
-							<input type="hidden" name="admindel" value="admindel">
-						</p>
-					</form>
-				</section>
-			</div>
 		</main>
 		<footer id="footer">
 			<div class="copy">
 				<!-- 著作権表示 -->
 				<p>
 					<a href="https://sakots.red/" target="_top">noe-board {$ver}</a>
-					Web Style by <a href="https://sakots.red/" target="_top" title="MONO {$tver} (by 赤原文庫)">MONO</a>
+					Web Style by <a href="https://sakots.red/" target="_top" title="nee3 {$tver} (by 赤原文庫)">nee3</a>
 				</p>
 				<p>
 					OekakiApplet - <a href="http://hp.vector.co.jp/authors/VA016309/" target="_blank" rel="noopener noreferrer" title="by しぃちゃん">Shi-Painter</a>

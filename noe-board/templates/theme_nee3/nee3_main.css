@@ -5,124 +5,106 @@
   padding: 0px;
 }
 
-label {
-  cursor: pointer;
-}
-
 body {
-  background-color: #CCC;
-  color: #000;
+  background-color: #222;
+  color: #FFF;
   font-family: sans-serif;
   word-wrap: break-word;
   overflow-wrap: break-word;
 }
 
 a:link {
-  color: #036;
+  color: #FFF;
 }
 
 a:visited {
-  color: #666;
+  color: #999;
 }
 
 a:active {
-  color: #F00;
+  color: #FFF;
 }
 
 a:hover {
-  color: #F00;
+  color: #FFF;
 }
 
 a i {
-  color: #000;
+  color: #FFF;
 }
 
 hr {
-  border-style: dashed;
+  border-style: solid;
   border-width: 1px;
-  border-color: #036;
+  border-color: #222;
   margin: 1ex auto;
   clear: left;
 }
 
-header, .thread, footer, footer {
-  background-color: #EEE;
+header, main, footer, footer {
+  background-color: #333;
+  border-radius: 8px;
   padding: 8px;
-  margin-left: auto;
-  margin-right: auto;
-  width: 80%;
 }
 
 header {
-  margin-top: 12px;
-  margin-bottom: 12px;
-  border-width: 1px;
-  border-style: solid;
-  border-color: #036;
+  width: 300px;
+  position: fixed;
+  margin: 12px;
+  top: 0px;
 }
 
-main {
+main, footer {
   display: block;
-}
-
-.thread, footer {
-  display: block;
-  border-width: 1px;
-  border-style: solid;
-  border-color: #036;
-  margin-top: 12px;
-  margin-bottom: 12px;
-}
-
-.delf {
-  text-align: right;
+  margin: 12px 12px 12px 340px;
 }
 
 footer {
   text-align: right;
 }
 
-input, select, textarea {
-  border-style: solid;
-  border-color: #036 #36F #36F #036;
-  border-width: 1px;
-  padding: 2px;
+input, select, em.thispage, .se, textarea {
+  border-style: none;
+  border-radius: 4px;
+  padding: 4px;
   color: #000;
   background-color: #FFF;
 }
 
 select {
   padding: 2px;
-  vertical-align: middle;
 }
 
-input[name="picw"], select[name="picw"], input[name="pich"], select[name="pich"], input[name="delno"], select[name="delno"] {
+input[name="picw"], select[name="picw"], em.thispage[name="picw"], .se[name="picw"], input[name="pich"], select[name="pich"], em.thispage[name="pich"], .se[name="pich"], input[name="delno"], select[name="delno"], em.thispage[name="delno"], .se[name="delno"], input[name="pwd"], select[name="pwd"], em.thispage[name="pwd"], .se[name="pwd"] {
   width: 3em;
 }
 
-input[name="pwd"], select[name="pwd"] {
-  width: 6em;
-}
-
-input[type="submit"], select[type="submit"], .button, button {
-  background-color: #369;
-  border-color: #36F #036 #036 #36F;
+input[type="submit"], select[type="submit"], em.thispage[type="submit"], .se[type="submit"], .button, button, .oyano, .oyaresno {
+  background-color: #396;
   color: #FFF;
 }
 
-input[name="upfile"], select[name="upfile"] {
+input[name="upfile"], select[name="upfile"], em.thispage[name="upfile"], .se[name="upfile"] {
   width: 10em;
 }
 
 em.thispage {
+  background-color: #222;
+  color: #FFF;
   font-style: normal;
   font-weight: bold;
+}
+
+.se {
+  background-color: #222;
+  color: #FFF;
+  font-style: normal;
 }
 
 figure {
   float: left;
   padding-right: 8px;
-  background-color: #EEE;
+  background-color: #333;
   margin-bottom: 1ex;
 }
 
@@ -149,7 +131,7 @@ p.oya {
 }
 
 .res {
-  border-top: dashed 1px #036;
+  border-top: solid 2px #222;
   margin-top: 1em;
 }
 
@@ -169,7 +151,7 @@ p.oya {
 }
 
 .resma {
-  color: #363;
+  color: #999;
 }
 
 .thfoot {
@@ -178,8 +160,6 @@ p.oya {
 }
 
 .button {
-  border-width: 1px;
-  border-style: solid;
   padding-left: 1ex;
   padding-right: 1ex;
   display: inline-block;
@@ -194,17 +174,20 @@ p.oya {
   color: #FFF;
 }
 
-button, .button {
-  border-style: solid;
-  padding: 2px;
-  background-color: #369;
+button, .button, .oyano, .oyaresno {
+  border-style: none;
+  border-radius: 4px;
+  padding: 4px;
+  background-color: #396;
   color: #FFF;
 }
 
-.oyat, .siihelp h2 {
-  border-left: solid 1ex #036;
-  background-color: #9CF;
-  padding: 0.2em;
+.oyano, .oyaresno {
+  background-color: #222;
+  color: #FFF;
+  display: inline-block;
+  text-align: center;
+  min-width: 2em;
 }
 
 .oekaki {
@@ -228,11 +211,11 @@ button, .button {
 }
 
 .NEO .color_bk {
-  color: #69F;
+  color: #333;
 }
 
 .NEO .color_bk2 {
-  color: #369;
+  color: #222;
 }
 
 .NEO .color_tool_icon {
@@ -252,15 +235,15 @@ button, .button {
 }
 
 .NEO .color_bar {
-  color: #369;
+  color: #333;
 }
 
 .NEO .tool_color_button {
-  color: #669;
+  color: #369;
 }
 
 .NEO .tool_color_button2 {
-  color: #336;
+  color: #036;
 }
 
 .NEO .tool_color_text {
@@ -268,11 +251,11 @@ button, .button {
 }
 
 .NEO .tool_color_bar {
-  color: #69F;
+  color: #333;
 }
 
 .NEO .tool_color_frame {
-  color: #369;
+  color: #222;
 }
 
 .palette {
@@ -287,8 +270,31 @@ button, .button {
   text-align: center;
 }
 
-.siihelp dt {
-  font-weight: bold;
+#catalog {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+}
+
+#catalog div {
+  width: 166px;
+  text-align: center;
+  overflow: hidden;
+}
+
+#catalog p {
+  margin: 0.5ex auto;
+}
+
+#catalog img {
+  width: 150px;
+  height: 150px;
 }
 
 .delfo {
@@ -296,7 +302,7 @@ button, .button {
 }
 
 .delfo th, .delfo td {
-  border: 1px solid #CCC;
+  border: 1px solid #222;
 }
 
 .ppost {
@@ -310,26 +316,37 @@ button, .button {
 }
 
 @media screen and (max-width: 768px) {
-  header, .thread, footer, footer {
-    width: 90%;
+  header {
+    width: auto;
+    position: relative;
+    margin: 12px;
   }
-  main {
+  main, footer {
     display: block;
+    margin: 12px;
   }
-  #paintmode main {
+  #paintmode header {
+    width: 300px;
+    position: relative;
+    margin: 12px;
+  }
+  #paintmode main, #paintmode footer {
     display: block;
+    margin: 12px;
   }
   #paintmode footer {
     text-align: right;
+    margin: 12px;
   }
 }
 
 @media screen and (max-width: 450px) {
   footer {
     text-align: right;
+    margin: 12px;
   }
   #appstage {
     display: block;
   }
 }
-/*# sourceMappingURL=mono_main.css.map */
+/*# sourceMappingURL=nee3_main.css.map */

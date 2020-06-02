@@ -4,7 +4,8 @@
 		<meta charset="utf-8">
 		<title>{$btitle}</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link rel="stylesheet" href="./templates/{$skindir}mono_main.css" type="text/css">
+		<link rel="stylesheet" href="./templates/{$skindir}nee3_main.css" type="text/css">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 		{foreach from=$oya item=bbsline}
 		<meta name="twitter:card" content="summary">
 		<meta property="og:title" content="[{$bbsline.tid}] {$bbsline.sub} by {$bbsline.name} - {$btitle}">
@@ -23,10 +24,10 @@
 			<div>
 				<section>
 					<p class="top menu">
-						<a href="{$self}">[トップ]</a>
-						<a href="{$home}">[ホーム]</a>
-						<a href="{$self}">[リロード]</a>
-						<a href="#footer">[↓]</i></a>
+						<a href="{$self}"><i class="fas fa-star fa-fw fa-lg" title="トップ"></i></a>
+						<a href="{$home}"><i class="fas fa-home fa-fw fa-lg" title="ホーム"></i></a>
+						<a href="{$self}"><i class="fas fa-sync fa-fw fa-lg" title="リロード"></i></a>
+						<a href="#footer"><i class="fas fa-arrow-down fa-fw fa-lg" title="一番下へ"></i></a>
 					</p>
 				</section>
 				<section>
@@ -73,7 +74,7 @@
 							<tr>
 								<td>comment</td>
 								<td>
-									<textarea name="com" rows="4" cols="40"></textarea>
+									<textarea name="com" rows="4" cols="28"></textarea>
 								</td>
 							</tr>
 							<tr>
@@ -87,17 +88,18 @@
 			<hr>
 		</header>
 		<main>
-			<div class="thread">
+			<div>
+				<hr>
 				{foreach from=$oya item=bbsline}{if isset($bbsline.com)}
-				<section>
-					<h3 class="oyat"><span class="oyano">[{$bbsline.tid}]</span> {$bbsline.sub}</h3>
+				<section class="thread">
+					<h3><span class="oyano">{$bbsline.tid}</span>{$bbsline.sub}</h3>
 					<section>
 						<h4>
 							名前：{if $bbsline.mail == true }<a href="mailto:{$bbsline.mail}">{/if}<span class="oyaname">{$bbsline.name}</span>{if $bbsline.mail == true }</a>{/if}：
 							{if $bbsline.modified == $bbsline.created }{$bbsline.modified|date_format:"%y/%m/%d (%a) %H:%M"}{else}{$bbsline.created|date_format:"%y/%m/%d (%a) %H:%M"} {$updatemark} {$bbsline.modified|date_format:"%y/%m/%d (%a) %H:%M"}{/if}
 							{if $bbsline.url == true} <span class="button"><a href="{$bbsline.url}" target="_blank" rel="nofollow noopener noreferrer"><i class="fas fa-flag-checkered"></i> URL</a></span>{/if}
 							{if $dispid == 1}<span class="id">ID：{$bbsline.id}</span>{/if}
-							<span class="sodane"><a href="{$self}?mode=sodane&amp;resto={$bbsline.tid}">そうだね{if $bbsline.exid == 0} + {else}x{$bbsline.exid}{/if}</a></span>
+							<span class="sodane"><a href="{$self}?mode=sodane&amp;resto={$bbsline.tid}">そうだねx{$bbsline.exid}</a></span>
 						</h4>
 						{if $bbsline.picfile == true}
 						<figure>
@@ -112,13 +114,13 @@
 						{if isset($ko)}{foreach from=$ko item=res}{if $res.com == true}
 						<section class="res">
 							<section>
-								<h3><span class="oyano">[{$res.iid}]</span> {$res.sub}</h3>
+								<h3><span class="oyano">{$res.iid}</span>{$res.sub}</h3>
 								<h4>
 									名前：{if $res.mail == true }<a href="mailto:{$res.mail}">{/if}<span class="resname">{$res.name}</span>{if $res.mail == true }</a>{/if}：
 									{if $res.modified == $res.created }{$res.modified|date_format:"%y/%m/%d (%a) %H:%M"}{else}{$res.created|date_format:"%y/%m/%d (%a) %H:%M"} {$updatemark} {$res.modified|date_format:"%y/%m/%d (%a) %H:%M"}{/if}
 									{if $res.url == true}<span class="button"><a href="{$res.url}" target="_blank" rel="nofollow noopener noreferrer"><i class="fas fa-flag-checkered"></i> URL</a></span>{/if}
 									{if $dispid == 1}<span class="id">ID：{$res.id}</span>{/if}
-									<span class="sodane"><a href="{$self}?mode=rsodane&amp;resto={$res.iid}">そうだね{if $res.exid == 0} + {else}x{$res.exid}{/if}</a></span>
+									<span class="sodane"><a href="{$self}?mode=rsodane&amp;resto={$res.iid}">そうだねx{$res.exid}</a></span>
 								</h4>
 								{if $res.picfile == true}
 								<figure>
@@ -133,8 +135,7 @@
 							</section>
 						</section>
 						{/if}{/foreach}{else}{/if}
-					</section>
-				<hr>	
+					</section>	
 				</section>
 				{if $share_button == 1}
 				<div class="thfoot">
@@ -142,15 +143,13 @@
 						(function(){ //byさとぴあさん
 							var url = encodeURIComponent('{$base}{$self}?mode=res&amp;{$resno}'); //ページURL
 							var title = encodeURIComponent('[{$bbsline.tid}] {$bbsline.sub} by {$bbsline.name} - {$btitle}'); //ページタイトル
-							document.write( '<span class="button"><a target="_blank" href="https://twitter.com/intent/tweet?&amp;text=' + title + '&amp;url=' + url + '"><img src="./templates/{$skindir}icons/twitter.svg" width="16" height="16"> tweet</a></a></span> <span class="button"><a target="_blank" class="fb btn" href="http://www.facebook.com/share.php?u=' + url + '"><img src="./templates/{$skindir}icons/facebook.svg" width="16" height="16"> share</a></span>' );}
+							document.write( '<span class="button"><a target="_blank" href="https://twitter.com/intent/tweet?&amp;text=' + title + '&amp;url=' + url + '"><i class="fab fa-twitter fa-fw fa-lg"></i>tweet</a></span> <span class="button"><a target="_blank" class="fb btn" href="http://www.facebook.com/share.php?u=' + url + '"><i class="fab fa-facebook fa-fw fa-lg"></i>share</a></span>' );}
 						)();
 					</script>
 				</div>
-				{/if}{/if}
-				<div class="thfoot">
-					<a href="#header">[↑]</a>
-				</div>
-				{/foreach}
+				{/if}
+				<hr>
+				{/if}{/foreach}
 			</div>
 			<script src="loadcookie.js"></script>
 			<script>
@@ -162,7 +161,7 @@
 				<!-- 著作権表示 -->
 				<p>
 					<a href="https://sakots.red/" target="_top">noe-board {$ver}</a>
-					Web Style by <a href="https://sakots.red/" target="_top" title="MONO {$tver} (by 赤原文庫)">MONO</a>
+					Web Style by <a href="https://sakots.red/" target="_top" title="nee3 {$tver} (by 赤原文庫)">nee3</a>
 				</p>
 				<p>
 					OekakiApplet - <a href="http://hp.vector.co.jp/authors/VA016309/" target="_blank" rel="noopener noreferrer" title="by しぃちゃん">Shi-Painter</a>

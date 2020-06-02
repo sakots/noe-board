@@ -4,9 +4,10 @@
 		<meta charset="utf-8">
 		<title>{$btitle}</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-		<link rel="stylesheet" href="./templates/{$skindir}mono_main.css" type="text/css">
-		{if $useneo == true}
+		<link rel="stylesheet" href="./templates/{$skindir}nee3_main.css" type="text/css">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 		<link rel="stylesheet" href="neo.css" type="text/css">
+		{if $useneo == true}
 		<script src="neo.js" charset="utf-8"></script>
 		{else}
 		<!-- Javaが使えるかどうか判定 使えなければcheerpJをロード -->
@@ -31,13 +32,14 @@
 			<hr>
 			<section>
 				<p class="top menu">
-					<a href="{$self}">[トップ]</a>
-					<a href="{$home}" target="_top">[ホーム]</i></a>
+					<a href="{$self}"><i class="fas fa-star fa-fw fa-lg" title="トップ"></i></a>
+					<a href="{$home}" target="_top"><i class="fas fa-home fa-fw fa-lg" title="ホーム"></i></a>
 				</p>
 			</section>
 			<hr>
 			<h2 class="oekaki">OEKAKI MODE</h2>
 		</header>
+
 		<main>
 			<script>
 				var DynamicColor = 1;	// パレットリストに色表示
@@ -659,7 +661,7 @@
 				<!-- 著作権表示 -->
 				<p>
 					<a href="https://sakots.red/" target="_top">noe-board {$ver}</a>
-					Web Style by <a href="https://sakots.red/" target="_top" title="MONO {$tver} (by 赤原文庫)">MONO</a>
+					Web Style by <a href="https://sakots.red/" target="_top" title="nee3 {$tver} (by 赤原文庫)">nee3</a>
 				</p>
 				<p>
 					OekakiApplet - <a href="http://hp.vector.co.jp/authors/VA016309/" target="_blank" rel="noopener noreferrer" title="by しぃちゃん">Shi-Painter</a>

@@ -2,19 +2,13 @@
 /*! =====このcssファイルはsassから生成されています。===== */
 
 //設定ファイルの読み込み
-@import "mono_conf";
+@import "nee3_conf";
 
 //リセット
 * {
 	margin: 0px;
 	padding: 0px;
 }
-
-//iOS対策
-
-label {  
-	cursor: pointer;
-}  
 
 //全体的指定
 body {
@@ -40,75 +34,65 @@ a i {
 	color: $moji;
 }
 hr {
-	border-style: dashed;
+	border-style: solid;
 	border-width: 1px;
-	border-color: $border;
+	border-color: $ushiro;
 	margin: 1ex auto;
 	clear: left;
 }
 //----------
-header, .thread, footer {
+header, main, footer {
 	background-color: $haikei;
+	border-radius: 8px;
 	padding: 8px;
-	margin-left: auto;
-	margin-right: auto;
-	width: 80%;
 }
 header {
-	margin-top: 12px;
-	margin-bottom: 12px;
-	border-width: 1px;
-	border-style: solid;
-	border-color: $border;
+	width: 300px;
+	position: fixed;
+	margin: 12px;
+	top: 0px;
 }
 main {
 	display: block;
-}
-.thread {
-	display: block;
-	border-width: 1px;
-	border-style: solid;
-	border-color: $border;
-	margin-top: 12px;
-	margin-bottom: 12px;
-}
-.delf {
-	text-align: right;
+	margin: 12px 12px 12px 340px;
 }
 footer {
-	@extend .thread;
+	@extend main;
 	text-align: right;
 }
 input, textarea {
-	border-style: solid;
-	border-color: $b_border_u $b_border $b_border $b_border_u;
-	border-width: 1px;
-	padding: 2px;
+	border-style: none;
+	border-radius: 4px;
+	padding: 4px;
 	color: $form_txt;
 	background-color: $form_txt_bk;
 }
 select {
 	@extend input;
 	padding: 2px;
-	vertical-align: middle;
 }
-input[name="picw"], input[name="pich"], input[name="delno"] {
+input[name="picw"], input[name="pich"], input[name="delno"], input[name="pwd"] {
 	width: 3em;
-}
-input[name="pwd"] {
-	width: 6em;
 }
 input[type="submit"] {
 	background-color: $button;
-	border-color: $b_border $b_border_u $b_border_u $b_border;
 	color: $button_moji;
 }
 input[name="upfile"] {
 	width: 10em;
 }
 em.thispage {
+	@extend input;
+	background-color: $ushiro;
+	color: $moji;
 	font-style: normal;
 	font-weight: bold;
+}
+.se {
+	@extend input;
+	background-color: $ushiro;
+	color: $moji;
+	font-style: normal;
 }
 figure {
 	float: left;
@@ -134,7 +118,7 @@ p.oya {
 	text-decoration: none;
 }
 .res {
-	border-top: dashed 1px $border;
+	border-top: solid 2px $ushiro;
 	margin-top: 1em;
 	section {
 		margin-top: 1em;
@@ -159,8 +143,6 @@ p.oya {
 .button {
 	@extend button;
 	@extend input[type="submit"];
-	border-width: 1px;
-	border-style: solid;
 	padding-left: 1ex;
 	padding-right: 1ex;
 	display: inline-block;
@@ -174,15 +156,19 @@ p.oya {
 }
 button {
 	@extend input[type="submit"];
-	border-style: solid;
-	padding: 2px;
+	border-style: none;
+	border-radius: 4px;
+	padding: 4px;
 	background-color: $button;
 	color: $button_moji;
 }
-.oyat {
-	border-left: solid 1ex $border;
-	background-color: $th_bg;
-	padding: 0.2em;
+.oyano, .oyaresno {
+	@extend button;
+	background-color: $ushiro;
+	color: $moji;
+	display: inline-block;
+	text-align: center;
+	min-width: 2em;
 }
 .oekaki {
 	font-size: smaller;
@@ -218,16 +204,23 @@ button {
 .c {
 	text-align: center;
 }
-
-.siihelp{
-	h2 {
-		@extend .oyat
+#catalog {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	div {
+		width: $cat_img_size + 16px;
+		text-align: center;
+		overflow: hidden;
 	}
-	dt {
-		font-weight: bold;
+	p {
+		margin: 0.5ex auto;
 	}
-} 
-
+	img {
+		width: $cat_img_size;
+		height: $cat_img_size;
+	}
+}
 .delfo {
 	font-size: smaller;
 	th, td {
@@ -245,24 +238,35 @@ button {
 	}
 }
 @media screen and (max-width: 768px) {
-	header, .thread, footer {
-		width: 90%;
+	header {
+		width: auto;
+		position: relative;
+		margin: 12px;
 	}
 	main {
 		display: block;
+		margin: 12px;
 	}
 	#paintmode {
+		header {
+			width: 300px;
+			position: relative;
+			margin: 12px;
+		}
 		main {
 			display: block;
+			margin: 12px;
 		}
 		footer {
 			text-align: right;
+			margin: 12px;
 		}
 	}
 }
 @media screen and (max-width: 450px) {
 	footer {
 		text-align: right;
+		margin: 12px;
 	}
 	#appstage {
 		display: block;

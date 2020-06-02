@@ -25,7 +25,7 @@ POTI-board改で使用しているテンプレートエンジン「htmltemplate.
 
 - パスワードその他を設定  
 - アップロード   
-- OK！
+- OK！ index.phpにアクセスしてください。
 
 ## 注意
 
@@ -36,6 +36,10 @@ POTI-board改で使用しているテンプレートエンジン「htmltemplate.
 <a href="https://sakots.red/noe/">noe</a>
 
 ## 履歴
+
+### [2020/06/03]
+
+- 標準テーマ「MONO」
 
 ### [2020/06/03]
 

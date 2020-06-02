@@ -3,7 +3,8 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-		<link rel="stylesheet" href="./templates/{$skindir}mono_main.css" type="text/css">
+		<link rel="stylesheet" href="./templates/{$skindir}nee3_main.css" type="text/css">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 		<title>{$btitle}</title>
 		{* ok画面専用ヘッダ *}{if $othermode == ok}
 		<meta http-equiv="refresh" content="1; URL={$self}">
@@ -15,8 +16,8 @@
 			<hr>
 			<section>
 				<p class="menu">
-					<a href="{$self}">[トップ]</a>
-					<a href="{$home}" target="_top">[ホーム]</i></a>
+					<a href="{$self}"><i class="fas fa-star fa-fw fa-lg" title="トップ"></i></a>
+					<a href="{$home}" target="_top"><i class="fas fa-home fa-fw fa-lg" title="ホーム"></i></a>
 					</p>
 			</section>
 			<section>
@@ -26,9 +27,9 @@
 		</header>
 		<main>
             {* 記事編集モードスタート *}{if $othermode == edit}
+			<h1 class="oekaki">投稿フォーム</h1>
 			<section>
 				<div class="thread">
-					<h1 class="oekaki">投稿フォーム</h1>
                     {foreach from=$oya item=bbsline}
 					<form class="ppost postform" action="{$self}?mode=editexec" method="post">
 						<table>
@@ -73,9 +74,9 @@
             </section>
 			{/if}{* 記事編集モードおわり *}
 			{* コンティニューモードin *}{if $othermode == incontinue}
+			<h1 class="oekaki">続きから描く</h1>
 			<section>
 				<div class="thread">
-					<h1 class="oekaki">続きから描く</h1>
 					{foreach from=$oya item=bbsline}
 					<figure>
 						<img src="{$path}{$bbsline.picfile}">
@@ -124,9 +125,9 @@
 			</section>
 			{/if}{* コンティニューモードin おわり *}
 			{* 管理モードin *}{if $othermode == admin_in}
+			<h1 class="oekaki">管理モードin</h1>
 			<section>
 				<div class="thread">
-					<h1 class="oekaki">管理モードin</h1>
 					<hr>
 					<form action="{$self}?mode=admin" method="post"><input type="hidden" name="admin" value="admin">
 						<label>ADMIN PASS <input class="form" type="password" name="adminpass" size="8"></label>
@@ -138,30 +139,27 @@
 			</section>
 			{/if}{* 管理モードinおわり *}
 			{* ok画面 *}{if $othermode == ok}
+			<h1 class="oekaki">OK！</h1>
 			<section>
 				<div class="thread">
-					<h1 class="oekaki">OK！</h1>
-					<hr>
 					<p class="ok">{$okmes}</p>
 					<p><a href="{$self}">[リロード]</a></p>
 				</div>
 			</section>
 			{/if}{* ok画面おわり *}
 			{* エラー画面 *}{if $othermode == err}
+			<h1 class="oekaki">エラー！！</h1>
 			<section>
 				<div class="thread">
-					<h1 class="oekaki">エラー！！</h1>
-					<hr>
 					<p class="err">{$errmes}</p>
 					<p><a href="#" onclick="javascript:window.history.back(-1);return false;">[もどる]</a></p>
 				</div>
 			</section>
 			{/if}{* エラー画面おわり *}
 			{* 画像差し替え失敗専用 *}{if $othermode == err2}
+			<h1 class="oekaki">エラー？</h1>
 			<section>
 				<div class="thread">
-					<h1 class="oekaki">エラー？</h1>
-					<hr>
 					<p class="err">画像が見当たりません。</p>
 					<p>投稿に失敗している可能性があります。<a href="{$self}?mode=piccom">アップロード途中の画像</a>に残っているかもしれません。</p>
 				</div>
@@ -177,7 +175,7 @@
 				<!-- 著作権表示 -->
 				<p>
 					<a href="https://sakots.red/" target="_top">noe-board {$ver}</a>
-					Web Style by <a href="https://sakots.red/" target="_top" title="MONO {$tver} (by 赤原文庫)">MONO</a>
+					Web Style by <a href="https://sakots.red/" target="_top" title="nee3 {$tver} (by 赤原文庫)">nee3</a>
 				</p>
 				<p>
 					OekakiApplet - <a href="http://hp.vector.co.jp/authors/VA016309/" target="_blank" rel="noopener noreferrer" title="by しぃちゃん">Shi-Painter</a>
