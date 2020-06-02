@@ -9,7 +9,7 @@ require_once(__DIR__.'/libs/Smarty.class.php');
 $smarty = new Smarty();
 
 //スクリプトのバージョン
-$smarty->assign('ver','v0.19.0');
+$smarty->assign('ver','v0.20.0');
 
 //設定の読み込み
 require(__DIR__."/config.php");
@@ -96,7 +96,7 @@ if(filter_input(INPUT_GET, 'mode')==="piccom"){
 	$mode = "piccom";
 }
 if(filter_input(INPUT_GET, 'mode')==="picrep"){
-	$no = filter_input(INPUT_GET, 'no',FILTER_VALIDATE_INT);
+	$no = filter_input(INPUT_GET, 'no');
 	$pwd = newstring(filter_input(INPUT_GET, 'pwd'));
 	$repcode = newstring(filter_input(INPUT_GET, 'repcode'));
 	$stime = filter_input(INPUT_GET, 'stime',FILTER_VALIDATE_INT);
@@ -786,8 +786,9 @@ function paintform(){
 	if($mode=="contpaint"){
 		$ctype = filter_input(INPUT_POST, 'ctype');
 		$type = filter_input(INPUT_POST, 'type');
+		$pwdf = filter_input(INPUT_POST, 'pwdf');
 		$smarty->assign('no',$no);
-		$smarty->assign('pwd',$pwd);
+		$smarty->assign('pwd',$pwdf);
 		$smarty->assign('ctype',$ctype);
 		if(is_file(IMG_DIR.$pch.'.pch')){
 			$useneo = true;
@@ -1187,8 +1188,7 @@ function picreplace($no,$pwdf,$stime){
 			list($uip,$uhost,$uagent,$imgext,$ucode,$urepcode) = explode("\t", rtrim($userdata)."\t");//区切りの"\t"を行末に190610
 			$file_name = preg_replace("/\.(dat)$/i","",$file);
 			//画像があり、認識コードがhitすれば抜ける 
-			//ここで詰まる
-			if($file_name && is_file(TEMP_DIR.$file_name.$imgext && $urepcode === $repcode)){
+			if($file_name && is_file(TEMP_DIR.$file_name.$imgext) && $urepcode === $repcode){
 				$find=true;
 				break;
 			}
