@@ -33,55 +33,8 @@
 					<hr>
 					<p>
 						RES MODE
-						<button class="copy_button" onclick="c();">投稿者名をコピー</button>
 					</p> 
 					<p class="sysmsg">{$message}</p>
-				</section>
-			</div>
-			<hr>
-			<div>
-				<section>
-					<form action="{$self}?mode=regist" method="post" class="postform">
-						<table>
-							<tr>
-								<td>name</td>
-								<td><input type="text" name="name" size="12" value="" autocomplete="username"></td>
-							</tr>
-							<tr>
-								<td>mail</td>
-								<td><input type="text" name="mail" size="12" value="" autocomplete="email"></td>
-							</tr>
-							<tr>
-								<td>URL</td>
-								<td><input type="text" name="url" size="12" value="" autocomplete="url"></td>
-							</tr>
-							<tr>
-								<td>subject</td>
-								<td>
-									<input type="text" name="sub" size="12" value="" autocomplete="section-sub">
-									<input type="submit" name="send" value="書き込む">
-									<input type="hidden" name="picfile" value="">
-									<input type="hidden" name="parent" value="{$resno}">
-									<input type="hidden" name="invz" value="0">
-									<input type="hidden" name="img_w" value="0">
-									<input type="hidden" name="img_h" value="0">
-									<input type="hidden" name="time" value="0">
-									<input type="hidden" name="exid" value="0">
-									<input type="hidden" name="modid" value="{$resno}">
-								</td>
-							</tr>
-							<tr>
-								<td>comment</td>
-								<td>
-									<textarea name="com" rows="4" cols="40"></textarea>
-								</td>
-							</tr>
-							<tr>
-								<td>pass</td>
-								<td><input type="password" name="pwd" size="6" value="" autocomplete="current-password"></td>
-							</tr>
-						</table>
-					</form>
 				</section>
 			</div>
 			<hr>
@@ -95,7 +48,7 @@
 						<h4>
 							名前：{if $bbsline.mail == true }<a href="mailto:{$bbsline.mail}">{/if}<span class="oyaname">{$bbsline.name}</span>{if $bbsline.mail == true }</a>{/if}：
 							{if $bbsline.modified == $bbsline.created }{$bbsline.modified|date_format:"%y/%m/%d (%a) %H:%M"}{else}{$bbsline.created|date_format:"%y/%m/%d (%a) %H:%M"} {$updatemark} {$bbsline.modified|date_format:"%y/%m/%d (%a) %H:%M"}{/if}
-							{if $bbsline.url == true} <span class="button"><a href="{$bbsline.url}" target="_blank" rel="nofollow noopener noreferrer"><i class="fas fa-flag-checkered"></i> URL</a></span>{/if}
+							{if $bbsline.url == true} <span class="url"><a href="{$bbsline.url}" target="_blank" rel="nofollow noopener noreferrer">[URL]</a></span>{/if}
 							{if $dispid == 1}<span class="id">ID：{$bbsline.id}</span>{/if}
 							<span class="sodane"><a href="{$self}?mode=sodane&amp;resto={$bbsline.tid}">そうだね{if $bbsline.exid == 0} + {else}x{$bbsline.exid}{/if}</a></span>
 						</h4>
@@ -116,7 +69,7 @@
 								<h4>
 									名前：{if $res.mail == true }<a href="mailto:{$res.mail}">{/if}<span class="resname">{$res.name}</span>{if $res.mail == true }</a>{/if}：
 									{if $res.modified == $res.created }{$res.modified|date_format:"%y/%m/%d (%a) %H:%M"}{else}{$res.created|date_format:"%y/%m/%d (%a) %H:%M"} {$updatemark} {$res.modified|date_format:"%y/%m/%d (%a) %H:%M"}{/if}
-									{if $res.url == true}<span class="button"><a href="{$res.url}" target="_blank" rel="nofollow noopener noreferrer"><i class="fas fa-flag-checkered"></i> URL</a></span>{/if}
+									{if $res.url == true}<span class="url"><a href="{$res.url}" target="_blank" rel="nofollow noopener noreferrer">[URL]</a></span>{/if}
 									{if $dispid == 1}<span class="id">ID：{$res.id}</span>{/if}
 									<span class="sodane"><a href="{$self}?mode=rsodane&amp;resto={$res.iid}">そうだね{if $res.exid == 0} + {else}x{$res.exid}{/if}</a></span>
 								</h4>
@@ -147,6 +100,59 @@
 					</script>
 				</div>
 				{/if}{/if}
+				<div>
+					<section>
+						<h3 class="oekaki">このスレにレス</h1>
+						<p>
+							<button class="copy_button" onclick="c();">投稿者名をコピー</button>
+							（レスの投稿者名をクリップボードにコピーできます）
+						</p>
+						<form action="{$self}?mode=regist" method="post" class="postform">
+							<table>
+								<tr>
+									<td>name</td>
+									<td><input type="text" name="name" size="18" value="" autocomplete="username"></td>
+								</tr>
+								<tr>
+									<td>mail</td>
+									<td><input type="text" name="mail" size="18" value="" autocomplete="email"></td>
+								</tr>
+								<tr>
+									<td>URL</td>
+									<td><input type="text" name="url" size="18" value="" autocomplete="url"></td>
+								</tr>
+								<tr>
+									<td>subject</td>
+									<td>
+										<input type="text" name="sub" size="18" value="" autocomplete="section-sub">
+										<input type="submit" name="send" value="書き込む">
+										<input type="hidden" name="picfile" value="">
+										<input type="hidden" name="parent" value="{$resno}">
+										<input type="hidden" name="invz" value="0">
+										<input type="hidden" name="img_w" value="0">
+										<input type="hidden" name="img_h" value="0">
+										<input type="hidden" name="time" value="0">
+										<input type="hidden" name="exid" value="0">
+										<input type="hidden" name="modid" value="{$resno}">
+									</td>
+								</tr>
+								<tr>
+									<td>comment</td>
+									<td>
+										<textarea name="com" rows="4" cols="48"></textarea>
+									</td>
+								</tr>
+								<tr>
+									<td>pass</td>
+									<td>
+										<input type="password" name="pwd" size="8" value="" autocomplete="current-password">
+										(記事の編集削除用。英数字で)
+									</td>
+								</tr>
+							</table>
+						</form>
+					</section>
+				</div>
 				<div class="thfoot">
 					<a href="#header">[↑]</a>
 				</div>
