@@ -9,7 +9,7 @@ require_once(__DIR__.'/libs/Smarty.class.php');
 $smarty = new Smarty();
 
 //スクリプトのバージョン
-$smarty->assign('ver','v0.21.0');
+$smarty->assign('ver','v0.21.1');
 
 //設定の読み込み
 require(__DIR__."/config.php");
@@ -565,7 +565,7 @@ function regist() {
 	ok('書き込みに成功しました。画面を切り替えます。');
 }
 
-//通常時
+//通常表示モード
 function def() {
 	global $smarty;
 	$dspres = DSP_RES;
@@ -786,7 +786,7 @@ function paintform(){
 	if($mode=="contpaint"){
 		$ctype = filter_input(INPUT_POST, 'ctype');
 		$type = filter_input(INPUT_POST, 'type');
-		$pwdf = filter_input(INPUT_POST, 'pwdf');
+		$pwdf = filter_input(INPUT_POST, 'pwd');
 		$smarty->assign('no',$no);
 		$smarty->assign('pwd',$pwdf);
 		$smarty->assign('ctype',$ctype);
@@ -839,7 +839,7 @@ function paintform(){
 	//差し換え時の認識コード追加
 	if($type==='rep'){
 		$no = filter_input(INPUT_POST, 'no',FILTER_VALIDATE_INT);
-		$pwdf = filter_input(INPUT_POST, 'pwdf');
+		$pwdf = filter_input(INPUT_POST, 'pwd');
 		$time=time();
 		$repcode = substr(crypt(md5($no.$userip.$pwdf.date("Ymd", $time)),$time),-8);
 		//念の為にエスケープ文字があればアルファベットに変換
@@ -1167,7 +1167,7 @@ function delmode(){
 function picreplace($no,$pwdf,$stime){
 	global $path,$badip;
 	$repcode = filter_input(INPUT_GET, 'repcode');
-	$pwdf = filter_input(INPUT_GET, 'pwdf');
+	$pwdf = filter_input(INPUT_GET, 'pwd');
 	$userip = get_uip();
 	
 	//ホスト取得
@@ -1613,7 +1613,7 @@ function admin() {
 // コンティニュー認証 レス画像には非対応
 function usrchk(){
 	$no = filter_input(INPUT_POST, 'no',FILTER_VALIDATE_INT);
-	$pwdf = filter_input(INPUT_POST, 'pwdf');
+	$pwdf = filter_input(INPUT_POST, 'pwd');
 	$flag = FALSE;
 	try {
 		$db = new PDO("sqlite:noe.db");
