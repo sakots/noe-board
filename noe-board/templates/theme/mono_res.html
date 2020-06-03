@@ -101,6 +101,7 @@
 				</div>
 				{/if}{/if}
 				<div>
+					{foreach from=$oya item=bbsline}{if isset($bbsline.com)}
 					<section>
 						<h3 class="oekaki">このスレにレス</h1>
 						<p>
@@ -110,7 +111,7 @@
 						<form action="{$self}?mode=regist" method="post" class="postform">
 							<table>
 								<tr>
-									<td>name</td>
+									<td>name{if $use_name == 1} *{/if}</td>
 									<td><input type="text" name="name" size="18" value="" autocomplete="username"></td>
 								</tr>
 								<tr>
@@ -122,9 +123,13 @@
 									<td><input type="text" name="url" size="18" value="" autocomplete="url"></td>
 								</tr>
 								<tr>
-									<td>subject</td>
+									<td>subject{if $use_sub == 1} *{/if}</td>
 									<td>
+										{if $use_resub == 1}
+										<input type="text" name="sub" size="18" value="Re:{$bbsline.sub}" autocomplete="section-sub">
+										{else}
 										<input type="text" name="sub" size="18" value="" autocomplete="section-sub">
+										{/if}
 										<input type="submit" name="send" value="書き込む">
 										<input type="hidden" name="picfile" value="">
 										<input type="hidden" name="parent" value="{$resno}">
@@ -137,7 +142,7 @@
 									</td>
 								</tr>
 								<tr>
-									<td>comment</td>
+									<td>comment{if $use_com == 1} *{/if}</td>
 									<td>
 										<textarea name="com" rows="4" cols="48"></textarea>
 									</td>
@@ -152,6 +157,7 @@
 							</table>
 						</form>
 					</section>
+					{/if}{/foreach}
 				</div>
 				<div class="thfoot">
 					<a href="#header">[↑]</a>

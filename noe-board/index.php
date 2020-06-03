@@ -9,7 +9,7 @@ require_once(__DIR__.'/libs/Smarty.class.php');
 $smarty = new Smarty();
 
 //スクリプトのバージョン
-$smarty->assign('ver','v0.22.2');
+$smarty->assign('ver','v0.22.3');
 
 //設定の読み込み
 require(__DIR__."/config.php");
@@ -34,10 +34,15 @@ $smarty->assign('tver',TEMPLATE_VER);
 
 $smarty->assign('dispid',DISP_ID);
 $smarty->assign('updatemark',UPDATE_MARK);
+$smarty->assign('use_resub',USE_RESUB);
 
 $smarty->assign('useanime',USE_ANIME);
 $smarty->assign('defanime',DEF_ANIME);
 $smarty->assign('use_continue',USE_CONTINUE);
+
+$smarty->assign('use_name',USE_NAME);
+$smarty->assign('use_com',USE_COM);
+$smarty->assign('use_sub',USE_SUB);
 
 $smarty->assign('dptime',DSP_PAINTTIME);
 
