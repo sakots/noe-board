@@ -9,7 +9,7 @@ require_once(__DIR__.'/libs/Smarty.class.php');
 $smarty = new Smarty();
 
 //スクリプトのバージョン
-$smarty->assign('ver','v0.22.1');
+$smarty->assign('ver','v0.22.2');
 
 //設定の読み込み
 require(__DIR__."/config.php");
@@ -40,6 +40,8 @@ $smarty->assign('defanime',DEF_ANIME);
 $smarty->assign('use_continue',USE_CONTINUE);
 
 $smarty->assign('dptime',DSP_PAINTTIME);
+
+$smarty->assign('addinfo',$addinfo);
 
 $smarty->assign('share_button',SHARE_BUTTON);
 
@@ -753,9 +755,7 @@ function paintform(){
 	$smarty->assign('tver',TEMPLATE_VER);
 
 	$picw = filter_input(INPUT_POST, 'picw',FILTER_VALIDATE_INT);
-	$smarty->assign('picw',$picw);
 	$pich = filter_input(INPUT_POST, 'pich',FILTER_VALIDATE_INT);
-	$smarty->assign('pich',$pich);
 	$anime = isset($_POST["anime"]) ? true : false;
 	$smarty->assign('anime',$anime);
 	
@@ -763,6 +763,9 @@ function paintform(){
 	if($pich < 300) $pich = 300;
 	if($picw > PMAX_W) $picw = PMAX_W;
 	if($pich > PMAX_H) $pich = PMAX_H;
+
+	$smarty->assign('picw',$picw);
+	$smarty->assign('pich',$pich);
 
 	if(!$useneo) { //しぃペインターの時の幅と高さ
 		$ww = $picw + 510;
