@@ -9,7 +9,7 @@ require_once(__DIR__.'/libs/Smarty.class.php');
 $smarty = new Smarty();
 
 //スクリプトのバージョン
-$smarty->assign('ver','v0.21.1');
+$smarty->assign('ver','v0.22.0');
 
 //設定の読み込み
 require(__DIR__."/config.php");
@@ -586,7 +586,7 @@ function def() {
 		//最大何ページあるのか
 		$sql = "SELECT COUNT(*) as cnt FROM tablelog WHERE invz=0";
 		$counts = $db->query("$sql");
-		$count = $counts->fetch();
+		$count = $counts->fetch(); //スレ数取得できた
 		$max_page = floor($count["cnt"] / $page_def) + 1;
 		$smarty->assign('max_page',$max_page);
 
@@ -624,22 +624,28 @@ function def() {
 		$smarty->assign('oya',$oya);
 
 		//スレッドの記事を取得
-		//全ページの全スレッドを取得しているのでどうにかしたい
-		$sqli = "SELECT iid, tid, created, modified, name, mail, sub, com, url, host, exid, id, pwd, utime, picfile, pchfile, img_w, img_h, time, tree, parent FROM tabletree WHERE invz=0 ORDER BY tree DESC";
-		$postsi = $db->query($sqli);
+		//1ページの全レスを取得してるけど前よりマシ
+		$i = 0;
 		$ko = array();
-		while ($res = $postsi->fetch() ) {
-			$ko[] = $res;
+		while ($i < $page_def) {
+			if(array_key_exists($i, $oya) == false) {
+				break; //表示スレ数が1ページ限界より少なくなった時は抜ける
+			}
+			//スレのiidを取得
+			$oid = $oya[$i][0];
+			$sqli = "SELECT iid, tid, created, modified, name, mail, sub, com, url, host, exid, id, pwd, utime, picfile, pchfile, img_w, img_h, time, tree, parent FROM tabletree WHERE tid = $oid and invz=0 ORDER BY tree DESC";
+			$postsi = $db->query($sqli);
+			while ($res = $postsi->fetch() ) {
+				$ko[] = $res;
+			}
+			$i++;
 		}
 		$smarty->assign('ko',$ko);
-
-
 		$smarty->assign('path',IMG_DIR);
-
 
 		//$smarty->debugging = true;
 		$smarty->display(THEMEDIR.MAINFILE);
-		$db = null;
+		$db = null; //db切断
 	} catch (PDOException $e) {
 		echo "DB接続エラー:" .$e->getMessage();
 	}
