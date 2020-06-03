@@ -9,7 +9,7 @@ require_once(__DIR__.'/libs/Smarty.class.php');
 $smarty = new Smarty();
 
 //スクリプトのバージョン
-$smarty->assign('ver','v0.22.3');
+$smarty->assign('ver','v0.22.4');
 
 //設定の読み込み
 require(__DIR__."/config.php");
@@ -1272,9 +1272,8 @@ function picreplace($no,$pwdf,$stime){
 		$msgt->execute();
 		$msgtime = $msgt->fetch();
 
-		//パスワード照合　今はしない
-		//if(password_verify($pwdf,$msgpwd["pwd"])||$msgpwd["pwd"]=== substr(md5($pwdf),2,8)){
-		if($pwdf == $pwdf){
+		//パスワード照合
+		if(password_verify($pwdf,$msgpwd["pwd"])||$msgpwd["pwd"]=== substr(md5($pwdf),2,8)){
 			//あってたら画像アップロード処理
 			$picfile = $file_name.$imgext;
 
