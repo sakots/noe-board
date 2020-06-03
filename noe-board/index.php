@@ -9,7 +9,7 @@ require_once(__DIR__.'/libs/Smarty.class.php');
 $smarty = new Smarty();
 
 //スクリプトのバージョン
-$smarty->assign('ver','v0.22.0');
+$smarty->assign('ver','v0.22.1');
 
 //設定の読み込み
 require(__DIR__."/config.php");
@@ -162,10 +162,7 @@ function get_uip(){
 	} 
 	return $userip;
 }
-
 $smarty->assign('usercode',$usercode);
-
-
 
 //投稿があればデータベースへ保存する
 /* 記事書き込み */
@@ -588,6 +585,12 @@ function def() {
 		$counts = $db->query("$sql");
 		$count = $counts->fetch(); //スレ数取得できた
 		$max_page = floor($count["cnt"] / $page_def) + 1;
+		//最後にスレ数0のページができたら表示しない処理
+		if(($count["cnt"] % $page_def) == 0){
+			$max_page = $max_page - 1;
+			//ただしそれが1ページ目なら困るから表示
+			$max_page = max($max_page,1);
+		}
 		$smarty->assign('max_page',$max_page);
 
 		//リンク作成用
@@ -1321,6 +1324,9 @@ function editform() {
 	global $smarty;
 
 	$editno = $_POST["delno"];
+	if ($editno == "") {
+		error('記事番号を入力してください');exit;
+	}
 	$editt = $_POST["delt"]; //0親1レス
 	if ($editt == 0) {
 		$edittable = 'tablelog';
@@ -1339,8 +1345,15 @@ function editform() {
 		$msgs = $db->prepare($sql);
 		$msgs->execute();
 		$msg = $msgs->fetch();
-
-		if (password_verify($_POST["pwd"],$msg['pwd']) === true) {
+		if (empty($msg)) {
+			error('そんな記事ないです。');exit;
+		}
+		if ($_POST["pwd"] == null) {
+			$postpwd = "";
+		} else {
+			$postpwd = $_POST["pwd"];
+		}
+		if (password_verify($postpwd,$msg['pwd']) === true) {
 			//パスワードがあってたら
 			$sqli ="SELECT * FROM $edittable WHERE $idk = $editno";
 			$posts = $db->query($sqli);
@@ -1350,7 +1363,7 @@ function editform() {
 				$smarty->assign('oya',$oya);
 			}
 			$smarty->assign('message','編集モード...');
-		} elseif ($admin_pass == $_POST["pwd"] ) {
+		} elseif ($admin_pass == $postpwd ) {
 			//管理者編集モード
 			$sqli ="SELECT * FROM $edittable WHERE $idk = $editno";
 			$posts = $db->query($sqli);
