@@ -1,6 +1,6 @@
 <?php
 // noe-boardの最新画像をサイトの入り口のHTMLファイルに呼び出すphp
-// noe_newimg.php(c)さこつ 2020 lot.200604
+// noe_newimg.php(c)さこつ 2020 lot.200604a
 // https://sakots.red/
 //フリーウェアですが著作権は放棄しません。
 
@@ -37,9 +37,9 @@ if (!is_file("noe.db")) {
         //db接続
         $db = new PDO("sqlite:noe.db"); 
         //tidが一番大きい=最後の行=最新 の画像ファイル名を取り出す
-        //ORDER BY tid で tidの順、DESCで大きい順を指定
+        //ORDER BY modified で modified（最終更新）の順、DESCで大きい順を指定
         //LIMIT 1 で1行だけ取り出すので最新のものだけになる
-        $sql ="SELECT picfile FROM tablelog ORDER BY tid DESC LIMIT 1";
+        $sql ="SELECT picfile FROM tablelog ORDER BY modified DESC LIMIT 1";
         $msgs = $db->prepare($sql);
         $msgs->execute();
         $msg = $msgs->fetch(); //取り出せた
