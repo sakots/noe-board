@@ -5,7 +5,7 @@
 //--------------------------------------------------
 
 //スクリプトのバージョン
-define('NOE_VER','v0.22.7');
+define('NOE_VER','v0.22.8.200604.0');
 
 //smarty-3.1.34
 require_once(__DIR__.'/libs/Smarty.class.php');
@@ -53,6 +53,11 @@ $smarty->assign('share_button',SHARE_BUTTON);
 
 $path = realpath("./").'/'.IMG_DIR;
 $temppath = realpath("./").'/'.TEMP_DIR;
+
+//指定した日数を過ぎたスレッドのフォームを閉じる　→def()へ
+if(!defined('ELAPSED_DAYS')){//config.phpで未定義なら0
+	define('ELAPSED_DAYS','0');
+}
 
 //ペイント画面の$pwdの暗号化
 if(!defined('CRYPT_PASS')){//config.phpで未定義なら初期値が入る
@@ -596,6 +601,13 @@ function def() {
 	$page_def = PAGE_DEF;
 	$smarty->assign('dspres',$dspres);
 
+	//古いスレのレスボタンを表示しない
+	$elapsed_time = ELAPSED_DAYS * 86400; //デフォルトの1年だと31536000
+	$nowtime = time(); //いまのunixタイムスタンプを取得
+	//あとはテーマ側で計算する
+	$smarty->assign('elapsed_time',$elapsed_time);
+	$smarty->assign('nowtime',$nowtime);
+
 	//ページング
 	try {
 		$db = new PDO("sqlite:noe.db");
@@ -642,10 +654,11 @@ function def() {
 		echo "DB接続エラー:" .$e->getMessage();
 	}
 	//読み込み
-	//1ページの全スレッド取得
+	
 	try {
 		$db = new PDO("sqlite:noe.db");
-		$sql = "SELECT tid, created, modified, name, mail, sub, com, url, host, exid, id, pwd, utime, picfile, pchfile, img_w, img_h, time, tree, parent, age FROM tablelog WHERE invz=0 ORDER BY age DESC, tree DESC LIMIT $start,$page_def"; 
+		//1ページの全スレッド取得
+		$sql = "SELECT tid, created, modified, name, mail, sub, com, url, host, exid, id, pwd, utime, picfile, pchfile, img_w, img_h, time, tree, parent, age, utime FROM tablelog WHERE invz=0 ORDER BY age DESC, tree DESC LIMIT $start,$page_def"; 
 		$posts = $db->query($sql);
 		$oya = array();
 		while ($bbsline = $posts->fetch() ) {
@@ -654,7 +667,7 @@ function def() {
 		$smarty->assign('oya',$oya);
 
 		//スレッドの記事を取得
-		//1ページの全レスを取得してるけど前よりマシ
+		//1ページの全レスを取得してる
 		$i = 0;
 		$ko = array();
 		while ($i < $page_def) {

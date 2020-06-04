@@ -135,7 +135,11 @@
 								)();
 							</script>
 							{/if}
+							{if $elapsed_time == 0 || $nowtime - $bbsline.utime < $elapsed_time}
 							<span class="button"><a href="{$self}?mode=res&amp;res={$bbsline.tid}"><i class="fas fa-reply-all"></i> 返信</a></span>
+							{else}
+							このスレは古いので返信できません…
+							{/if}
 						</div>
 					</section>
 				</section>
