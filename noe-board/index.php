@@ -4,12 +4,12 @@
 //　by sakots https://sakots.red/
 //--------------------------------------------------
 
+//スクリプトのバージョン
+define('NOE_VER','v0.22.6');
+
 //smarty-3.1.34
 require_once(__DIR__.'/libs/Smarty.class.php');
 $smarty = new Smarty();
-
-//スクリプトのバージョン
-$smarty->assign('ver','v0.22.5');
 
 //設定の読み込み
 require(__DIR__."/config.php");
@@ -20,6 +20,7 @@ require(__DIR__."/templates/".THEMEDIR."template_ini.php");
 $message = "";
 $self = PHP_SELF;
 
+$smarty->assign('ver',NOE_VER);
 $smarty->assign('base',BASE);
 $smarty->assign('btitle',TITLE);
 $smarty->assign('home',HOME);
@@ -377,16 +378,18 @@ function regist() {
 			$msgw = $db->prepare($sqlw);
 			$msgw->execute();
 			$msgwc = $msgw->fetch();
-			$msgsub = $msgwc["sub"]; //最新タイトル
-			$msgwcom = $msgwc["com"]; //最新コメント取得できた
-			$msgwhost = $msgwc["host"]; //最新ホスト取得できた
-			//どれも一致すれば二重投稿だと思う
-			if($com == $msgwcom && $host == $msgwhost && $sub == $msgsub ){
-				$msgs = null;
-				$msgw = null;
-				$db = null; //db切断
-				error('二重投稿ですか？');
-				exit;
+			if(!empty($msgwc)){
+				$msgsub = $msgwc["sub"]; //最新タイトル
+				$msgwcom = $msgwc["com"]; //最新コメント取得できた
+				$msgwhost = $msgwc["host"]; //最新ホスト取得できた
+				//どれも一致すれば二重投稿だと思う
+				if($com == $msgwcom && $host == $msgwhost && $sub == $msgsub ){
+					$msgs = null;
+					$msgw = null;
+					$db = null; //db切断
+					error('二重投稿ですか？');
+					exit;
+				}
 			}
 
 			// URLとメールにリンク
@@ -1102,14 +1105,23 @@ function delmode(){
 		//パスワードを取り出す
 		$sql ="SELECT pwd FROM $deltable WHERE $idk = $delno";
 		$msgs = $db->prepare($sql);
+		if ($msgs == false) {
+			error('そんな記事ない気がします。');exit;
+		}
 		$msgs->execute();
 		$msg = $msgs->fetch();
+		if (empty($msg)) {
+			error('そんな記事ない気がします。');exit;
+		}
 
 		//削除記事の画像を取り出す
 		$sqlp ="SELECT picfile FROM $deltable WHERE $idk = $delno";
 		$msgsp = $db->prepare($sqlp);
 		$msgsp->execute();
 		$msgp = $msgsp->fetch();
+		if (empty($msgp)) {
+			error('画像が見当たりません。');exit;
+		}
 		$msgpic = $msgp['picfile']; //画像の名前取得できた
 
 		if (isset($_POST["admindel"]) == true) {
@@ -1264,26 +1276,14 @@ function picreplace($no,$pwdf,$stime){
 	// ログ読み込み
 	try {
 		$db = new PDO("sqlite:noe.db");
-		//記事を取り出す ...もっといい方法がありそう　
-		$sql ="SELECT pwd FROM tablelog WHERE tid = '$no'";
+		//記事を取り出す
+		$sql ="SELECT pwd, picfile, pchfile, time FROM tablelog WHERE tid = '$no'";
 		$msgs = $db->prepare($sql);
 		$msgs->execute();
-		$msgpwd = $msgs->fetch();
-		$sqlimg ="SELECT picfile FROM tablelog WHERE tid = '$no'";
-		$msgsi = $db->prepare($sqlimg);
-		$msgsi->execute();
-		$msgimg = $msgsi->fetch();
-		$sqlpch ="SELECT pchfile FROM tablelog WHERE tid = '$no'";
-		$msgsp = $db->prepare($sqlpch);
-		$msgsp->execute();
-		$msgpch = $msgsp->fetch();
-		$sqltime ="SELECT time FROM tablelog WHERE tid = '$no'";
-		$msgt = $db->prepare($sqltime);
-		$msgt->execute();
-		$msgtime = $msgt->fetch();
+		$msg_d = $msgs->fetch();
 
 		//パスワード照合
-		if(password_verify($pwdf,$msgpwd["pwd"])||$msgpwd["pwd"]=== substr(md5($pwdf),2,8)){
+		if(password_verify($pwdf,$msg_d["pwd"])||$msg_d["pwd"]=== substr(md5($pwdf),2,8)){
 			//あってたら画像アップロード処理
 			$picfile = $file_name.$imgext;
 
@@ -1311,13 +1311,13 @@ function picreplace($no,$pwdf,$stime){
 				$pchfile = "";
 			}
 			//旧ファイル削除
-			if(is_file($path.$msgimg["picfile"])) unlink($path.$msgimg["picfile"]);
-			if(is_file($path.$msgpch["pchfile"])) unlink($path.$msgpch["pchfile"]);
-			$msgedat = str_replace( strrchr($msgimg["picfile"],"."), "", $msgimg["picfile"]); //拡張子除去
+			if(is_file($path.$msg_d["picfile"])) unlink($path.$msg_d["picfile"]);
+			if(is_file($path.$msg_d["pchfile"])) unlink($path.$msg_d["pchfile"]);
+			$msgedat = str_replace( strrchr($msg_d["picfile"],"."), "", $msg_d["picfile"]); //拡張子除去
 			$msgedat = $msgedat.'.dat';
 			if(is_file($path.$msgedat)) unlink($path.$msgedat);
 			//描画時間追加
-			if($msgtime["time"]) $time = $msgtime["time"].'+'.$ptime;
+			if($msg_d["time"]) $time = $msg_d["time"].'+'.$ptime;
 			//id生成
 			$utime = time();
 			$id = substr(crypt(md5($host.ID_SEED.date("Ymd", $utime)),'id'),-8);
