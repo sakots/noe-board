@@ -168,6 +168,11 @@ p.oya {
   float: none;
 }
 
+.limit {
+  margin-top: 1em;
+  background-color: #FCC;
+}
+
 .resma {
   color: #363;
 }

@@ -62,6 +62,11 @@
 						</figure>
 						{/if}
 						<p class="comment oya">{$bbsline.com}</p>
+						{if ($m_tid - $bbsline.tid) > $thid }
+						<div class="res">
+							<p class="limit">このスレは古いのでもうすぐ消えます。</p>
+						</div>
+						{/if}
 						{if isset($ko)}{foreach from=$ko item=res}{if $res.com == true}
 						<section class="res">
 							<section>

@@ -150,6 +150,11 @@ p.oya {
   float: none;
 }
 
+.limit {
+  margin-top: 1em;
+  background-color: #300;
+}
+
 .resma {
   color: #999;
 }
