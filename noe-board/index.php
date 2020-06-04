@@ -9,7 +9,7 @@ require_once(__DIR__.'/libs/Smarty.class.php');
 $smarty = new Smarty();
 
 //スクリプトのバージョン
-$smarty->assign('ver','v0.22.4');
+$smarty->assign('ver','v0.22.5');
 
 //設定の読み込み
 require(__DIR__."/config.php");
@@ -158,6 +158,12 @@ $exid = ( isset( $_POST["exid"] )  === true ) ? newstring(trim($_POST["exid"])) 
 $pwdc = filter_input(INPUT_COOKIE, 'pwdc');
 $usercode = filter_input(INPUT_COOKIE, 'usercode');//nullならuser-codeを発行
 
+//$_SERVERから変数を取得
+//var_dump($_SERVER);
+
+$req_method = ( isset($_SERVER["REQUEST_METHOD"]) === true ) ? ($_SERVER["REQUEST_METHOD"]): "";
+//INPUT_SERVER が動作しないサーバがあるので$_SERVERを使う。
+
 //ユーザーip
 function get_uip(){
 	$userip = getenv("HTTP_CLIENT_IP");
@@ -176,6 +182,7 @@ $smarty->assign('usercode',$usercode);
 function regist() {
 	global $name,$com,$sub,$parent,$picfile,$mail,$url,$time,$pwd,$exid,$invz;
 	global $badstring,$badip;
+	global $req_method;
 	global $ptime;
 	global $badstr_A,$badstr_B,$badname;
 	global $smarty;
@@ -195,6 +202,8 @@ function regist() {
 	$pwd = ( isset( $_POST["pwd"] )  === true ) ? newstring(trim($_POST["pwd"]))  : "";
 	$pwdh = password_hash($pwd,PASSWORD_DEFAULT);
 	$exid = ( isset( $_POST["exid"] )  === true ) ? newstring(trim($_POST["exid"]))  : "";
+
+	if($req_method !== "POST") {error(MSG006);exit;}
 
 	//チェックする項目から改行・スペース・タブを消す
 	$chk_com  = preg_replace("/\s/u", "", $com );
@@ -364,14 +373,15 @@ function regist() {
 				$wid = 'iid';
 			}
 			//最新コメント取得
-			$sqlw = "SELECT com, host FROM $table ORDER BY $wid DESC LIMIT 1";
+			$sqlw = "SELECT sub, com, host FROM $table ORDER BY $wid DESC LIMIT 1";
 			$msgw = $db->prepare($sqlw);
 			$msgw->execute();
 			$msgwc = $msgw->fetch();
+			$msgsub = $msgwc["sub"]; //最新タイトル
 			$msgwcom = $msgwc["com"]; //最新コメント取得できた
 			$msgwhost = $msgwc["host"]; //最新ホスト取得できた
-			//どっちも一致すれば二重投稿だと思う
-			if($com == $msgwcom && $host == $msgwhost ){
+			//どれも一致すれば二重投稿だと思う
+			if($com == $msgwcom && $host == $msgwhost && $sub == $msgsub ){
 				$msgs = null;
 				$msgw = null;
 				$db = null; //db切断
@@ -1403,6 +1413,7 @@ function editform() {
 function editexec(){
 	global $smarty;
 	global $badstring,$badip;
+	global $req_method;
 	global $badstr_A,$badstr_B,$badname;
 	$userip = get_uip();
 
@@ -1416,6 +1427,8 @@ function editexec(){
 	$exid = ( isset( $_POST["exid"] )  === true ) ? newstring(trim($_POST["exid"]))  : "";
 	$resedit = ( isset( $_POST["resedit"] )  === true ) ? newstring(trim($_POST["resedit"]))  : "";
 	$e_no = ( isset( $_POST["e_no"] )  === true ) ? newstring(trim($_POST["e_no"]))  : "";
+
+	if($req_method !== "POST") {error(MSG006);exit;}
 
 	//チェックする項目から改行・スペース・タブを消す
 	$chk_com  = preg_replace("/\s/u", "", $com );
