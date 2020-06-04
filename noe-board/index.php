@@ -5,7 +5,7 @@
 //--------------------------------------------------
 
 //スクリプトのバージョン
-define('NOE_VER','v0.22.9.200604.1');
+define('NOE_VER','v0.22.10.200604.2');
 
 //smarty-3.1.34
 require_once(__DIR__.'/libs/Smarty.class.php');
@@ -931,6 +931,9 @@ function paintform(){
 		$repcode = substr(crypt(md5($no.$userip.$pwdf.date("Ymd", $time)),$time),-8);
 		//念の為にエスケープ文字があればアルファベットに変換
 		$repcode = strtr($repcode,"!\"#$%&'()+,/:;<=>?@[\\]^`/{|}~","ABCDEFGHIJKLMNOabcdefghijklmn");
+		//パスワード暗号化
+		$pwdf = openssl_encrypt ($pwdf,CRYPT_METHOD, CRYPT_PASS, true, CRYPT_IV);//暗号化
+		$pwdf = bin2hex($pwdf);//16進数に
 		$datmode = 'picrep&amp;no='.$no.'&amp;pwd='.$pwdf.'&amp;repcode='.$repcode;
 		$smarty->assign('mode',$datmode);
 		$datusercode = $usercode.'&amp;repcode='.$repcode;
@@ -1264,6 +1267,8 @@ function picreplace($no,$pwdf,$stime){
 	global $path,$badip;
 	$repcode = filter_input(INPUT_GET, 'repcode');
 	$pwdf = filter_input(INPUT_GET, 'pwd');
+	$pwdf = hex2bin($pwdf);//バイナリに
+	$pwdf = openssl_decrypt($pwdf,CRYPT_METHOD, CRYPT_PASS, true, CRYPT_IV);//復号化
 	$userip = get_uip();
 	
 	//ホスト取得
