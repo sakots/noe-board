@@ -36,7 +36,7 @@ if (!is_file("noe.db")) {
     try {
         //db接続
         $db = new PDO("sqlite:noe.db"); 
-        //tidが一番大きい=最後の行=最新 の画像ファイル名を取り出す
+        //modifiedが一番大きい=最新 の画像ファイル名を取り出す
         //ORDER BY modified で modified（最終更新）の順、DESCで大きい順を指定
         //LIMIT 1 で1行だけ取り出すので最新のものだけになる
         $sql ="SELECT picfile FROM tablelog ORDER BY modified DESC LIMIT 1";
