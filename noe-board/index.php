@@ -5,7 +5,7 @@
 //--------------------------------------------------
 
 //スクリプトのバージョン
-define('NOE_VER','v0.22.6');
+define('NOE_VER','v0.22.7');
 
 //smarty-3.1.34
 require_once(__DIR__.'/libs/Smarty.class.php');
@@ -333,6 +333,42 @@ function regist() {
 				$time = $ptime;
 			}
 
+			// 二重投稿チェック
+			if (empty($_POST["modid"])==true) {
+				// スレ立ての場合
+				$table = 'tablelog';
+				$wid = 'tid';
+			} else {
+				// レスの場合
+				$table = 'tabletree';
+				$wid = 'iid';
+			}
+			//最新コメント取得
+			$sqlw = "SELECT sub, com, host, picfile FROM $table ORDER BY $wid DESC LIMIT 1";
+			$msgw = $db->prepare($sqlw);
+			$msgw->execute();
+			$msgwc = $msgw->fetch();
+			if(!empty($msgwc)){
+				$msgsub = $msgwc["sub"]; //最新タイトル
+				$msgwcom = $msgwc["com"]; //最新コメント取得できた
+				$msgwhost = $msgwc["host"]; //最新ホスト取得できた
+				//どれも一致すれば二重投稿だと思う
+				if($com == $msgwcom && $host == $msgwhost && $sub == $msgsub ){
+					$msgs = null;
+					$msgw = null;
+					$db = null; //db切断
+					error('二重投稿ですか？');
+					exit;
+				}
+				//画像番号が一致の場合(投稿してブラウザバック、また投稿とか)
+				//二重投稿と判別(画像がない場合は処理しない)
+				if($msgwc["picfile"] !== "" && $picfile == $msgwc["picfile"]){
+					error('二重投稿ですか？');
+					exit;
+				}
+			}
+			//↑二重投稿チェックおわり
+
 			//画像ファイルとか処理
 			if ( $picfile == true ) {
 				$imagesize = getimagesize(TEMP_DIR.$picfile);
@@ -361,35 +397,6 @@ function regist() {
 				$img_w = 0;
 				$img_h = 0;
 				$pchfile = "";
-			}
-
-			// 二重投稿チェック
-			if (empty($_POST["modid"])==true) {
-				// スレ立ての場合
-				$table = 'tablelog';
-				$wid = 'tid';
-			} else {
-				// レスの場合
-				$table = 'tabletree';
-				$wid = 'iid';
-			}
-			//最新コメント取得
-			$sqlw = "SELECT sub, com, host FROM $table ORDER BY $wid DESC LIMIT 1";
-			$msgw = $db->prepare($sqlw);
-			$msgw->execute();
-			$msgwc = $msgw->fetch();
-			if(!empty($msgwc)){
-				$msgsub = $msgwc["sub"]; //最新タイトル
-				$msgwcom = $msgwc["com"]; //最新コメント取得できた
-				$msgwhost = $msgwc["host"]; //最新ホスト取得できた
-				//どれも一致すれば二重投稿だと思う
-				if($com == $msgwcom && $host == $msgwhost && $sub == $msgsub ){
-					$msgs = null;
-					$msgw = null;
-					$db = null; //db切断
-					error('二重投稿ですか？');
-					exit;
-				}
 			}
 
 			// URLとメールにリンク
