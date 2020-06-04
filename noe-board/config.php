@@ -198,7 +198,6 @@ define('C_SECURITY_CLICK', '1');
 define('C_SECURITY_TIMER', '1');
 
 //そろそろ消える表示のボーダー。最大ログ数からみたパーセンテージ
-//未実装
 define('LOG_LIMIT', '92');
 
 

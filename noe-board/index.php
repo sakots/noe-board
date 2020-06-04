@@ -5,7 +5,7 @@
 //--------------------------------------------------
 
 //スクリプトのバージョン
-define('NOE_VER','v0.22.8.200604.0');
+define('NOE_VER','v0.22.9.200604.1');
 
 //smarty-3.1.34
 require_once(__DIR__.'/libs/Smarty.class.php');
@@ -649,7 +649,26 @@ function def() {
 
 		$smarty->assign('next',$page + 1);
 
-		$db = null;
+		//そろそろ消える用
+		//一番大きい（新しい）スレのIDを取得
+		$sql_log_m = "SELECT tid FROM tablelog ORDER by tid DESC LIMIT 1";
+		$log_mid = $db->prepare($sql_log_m);
+		$log_mid->execute();
+		$mid = $log_mid->fetch(); //取り出せた
+		if(!empty($mid)) {
+			$m_tid = $mid['tid'];
+		} else {
+			$m_tid = 0;
+		} //一番大きいスレID または0
+		$smarty->assign('m_tid',$m_tid); //テーマのほうでこれから親idを引く
+		// →「スレの古さ番号」が出る。大きいほど古い。
+		//閾値を考える
+		$thid = LOG_MAX_T * LOG_LIMIT/100; //閾値
+		$smarty->assign('thid',$thid);
+		//テーマのほうでこの数字と「スレの古さ番号」を比べる
+		//thidよりスレの古さ番号が大きいスレは消えるリミットフラグが立つ
+
+		$db = null; //db切断
 	} catch (PDOException $e) {
 		echo "DB接続エラー:" .$e->getMessage();
 	}
@@ -755,6 +774,24 @@ function res(){
 			$oya[] = $bbsline;
 			$smarty->assign('oya',$oya);
 		}
+		//そろそろ消える用
+		//一番大きい（新しい）スレのIDを取得
+		$sql_log_m = "SELECT tid FROM tablelog ORDER by tid DESC LIMIT 1";
+		$log_mid = $db->prepare($sql_log_m);
+		$log_mid->execute();
+		$mid = $log_mid->fetch(); //取り出せた
+		if(!empty($mid)) {
+			$m_tid = $mid['tid'];
+		} else {
+			$m_tid = 0;
+		} //一番大きいスレID または0
+		$smarty->assign('m_tid',$m_tid); //テーマのほうでこれから親idを引く
+		// →「スレの古さ番号」が出る。大きいほど古い。
+		//閾値を考える
+		$thid = LOG_MAX_T * LOG_LIMIT/100; //閾値
+		$smarty->assign('thid',$thid);
+		//テーマのほうでこの数字と「スレの古さ番号」を比べる
+		//thidよりスレの古さ番号が大きいスレは消えるリミットフラグが立つ
 		$db = null;
 	} catch (PDOException $e) {
 		echo "DB接続エラー:" .$e->getMessage();
