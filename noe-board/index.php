@@ -5,7 +5,7 @@
 //--------------------------------------------------
 
 //スクリプトのバージョン
-define('NOE_VER','v0.22.10.200604.2');
+define('NOE_VER','v0.22.11'); //lot.200605.1
 
 //smarty-3.1.34
 require_once(__DIR__.'/libs/Smarty.class.php');
@@ -599,7 +599,6 @@ function def() {
 	global $smarty;
 	$dspres = DSP_RES;
 	$page_def = PAGE_DEF;
-	$smarty->assign('dspres',$dspres);
 
 	//古いスレのレスボタンを表示しない
 	$elapsed_time = ELAPSED_DAYS * 86400; //デフォルトの1年だと31536000
@@ -679,30 +678,23 @@ function def() {
 		//1ページの全スレッド取得
 		$sql = "SELECT tid, created, modified, name, mail, sub, com, url, host, exid, id, pwd, utime, picfile, pchfile, img_w, img_h, time, tree, parent, age, utime FROM tablelog WHERE invz=0 ORDER BY age DESC, tree DESC LIMIT $start,$page_def"; 
 		$posts = $db->query($sql);
-		$oya = array();
-		while ($bbsline = $posts->fetch() ) {
-			$oya[] = $bbsline;
-		} 
-		$smarty->assign('oya',$oya);
 
-		//スレッドの記事を取得
-		//1ページの全レスを取得してる
-		$i = 0;
 		$ko = array();
-		while ($i < $page_def) {
-			if(array_key_exists($i, $oya) == false) {
-				break; //表示スレ数が1ページ限界より少なくなった時は抜ける
-			}
-			//スレのiidを取得
-			$oid = $oya[$i][0];
+		$oya = array();
+
+		while ($bbsline = $posts->fetch() ) {
+			$oid = $bbsline["tid"]; //スレのtid(親番号)を取得
 			$sqli = "SELECT iid, tid, created, modified, name, mail, sub, com, url, host, exid, id, pwd, utime, picfile, pchfile, img_w, img_h, time, tree, parent FROM tabletree WHERE tid = $oid and invz=0 ORDER BY tree DESC";
+			//レス取得
 			$postsi = $db->query($sqli);
-			while ($res = $postsi->fetch() ) {
+			while ( $res = $postsi->fetch() ) {
 				$ko[] = $res;
 			}
-			$i++;
+			$oya[] = $bbsline;
 		}
+
 		$smarty->assign('ko',$ko);
+		$smarty->assign('oya',$oya);
 		$smarty->assign('path',IMG_DIR);
 
 		//$smarty->debugging = true;
