@@ -319,6 +319,12 @@ define('PDEF_H', '300');	//高さ
 //描画時間の表示 する:1 しない:0
 define('DSP_PAINTTIME', '1');
 
+//描画時間表示するときに「秘密」にできる設定を　使う:1 使わない:0
+define('SEC_PAINTTIME', '1');
+
+//描画時間「秘密」の書式
+define('PTIME_SEC', '秘密');
+
 //パレットデータファイル名
 //直接組み込んだので使用しない
 //define('PALETTEFILE', 'palette.txt');

@@ -5,7 +5,7 @@
 //--------------------------------------------------
 
 //スクリプトのバージョン
-define('NOE_VER','v0.23.0'); //lot.200605.2
+define('NOE_VER','v0.24.0'); //lot.200606.1
 
 //smarty-3.1.34
 require_once(__DIR__.'/libs/Smarty.class.php');
@@ -58,6 +58,17 @@ $temppath = realpath("./").'/'.TEMP_DIR;
 if(!defined('ELAPSED_DAYS')){//config.phpで未定義なら0
 	define('ELAPSED_DAYS','0');
 }
+
+//描画時間表示するときに「秘密」にできる設定を　使う:1 使わない:0
+if(!defined('SEC_PAINTTIME')){
+	define('SEC_PAINTTIME', '1'); //configで未定義なら1
+}
+if(!defined('PTIME_SEC')){
+	define('PTIME_SEC', '秘密'); //configで未定義なら「秘密」
+}
+
+$smarty->assign('sptime',SEC_PAINTTIME);
+
 
 //ペイント画面の$pwdの暗号化
 if(!defined('CRYPT_PASS')){//config.phpで未定義なら初期値が入る
@@ -204,10 +215,12 @@ function regist() {
 	$invz = ( isset( $_POST["invz"] )  === true ) ? newstring(trim($_POST["invz"]))  : "";
 	$img_w = ( isset( $_POST["img_w"] )  === true ) ? newstring(trim($_POST["img_w"]))  : "";
 	$img_h = ( isset( $_POST["img_h"] )  === true ) ? newstring(trim($_POST["img_h"]))  : "";
-	$stime = ( isset( $_POST["stime"] )  === true ) ? newstring(trim($_POST["stime"]))  : "";
+	$ptime = ( isset( $_POST["ptime"] )  === true ) ? newstring(trim($_POST["ptime"]))  : "";
 	$pwd = ( isset( $_POST["pwd"] )  === true ) ? newstring(trim($_POST["pwd"]))  : "";
 	$pwdh = password_hash($pwd,PASSWORD_DEFAULT);
 	$exid = ( isset( $_POST["exid"] )  === true ) ? newstring(trim($_POST["exid"]))  : "";
+
+	$secptime = isset($_POST["secptime"]);
 
 	if($req_method !== "POST") {error(MSG006);exit;}
 
@@ -296,6 +309,13 @@ function regist() {
 		if(preg_match("/$value$/i",$host)) {error(MSG016);exit;}
 	}
 	//↑セキュリティ関連ここまで
+
+	//投稿時間を隠す設定
+	if($secptime == true) {
+		$time = PTIME_SEC;
+	} else {
+		$time = $ptime;
+	}
 	
 	try {
 		$db = new PDO("sqlite:noe.db");
@@ -310,33 +330,6 @@ function regist() {
 				$parent = $utime;
 			}
 			$tree = ($parent * 1000000000) - $utime;
-
-			if($stime){
-				$ptime = '';
-				if($stime){
-					$psec = time()-$stime;
-					if($psec >= 86400){
-						$D=($psec - ($psec % 86400)) / 86400;
-						$ptime .= $D.PTIME_D;
-						$psec -= $D*86400;
-					}
-					if($psec >= 3600){
-						$H=($psec - ($psec % 3600)) / 3600;
-						$ptime .= $H.PTIME_H;
-						$psec -= $H*3600;
-					}
-					if($psec >= 60){
-						$M=($psec - ($psec % 60)) / 60;
-						$ptime .= $M.PTIME_M;
-						$psec -= $M*60;
-					}
-					if($psec){
-						$ptime .= $psec.PTIME_S;
-					}
-				}
-				$smarty->assign('ptime',$ptime);
-				$time = $ptime;
-			}
 
 			// 二重投稿チェック
 			if (empty($_POST["modid"])==true) {
@@ -1014,7 +1007,7 @@ function openpch($pch,$sp="") {
 
 //お絵かき投稿
 function paintcom(){
-	global $usercode,$stime;
+	global $usercode,$stime,$ptime;
 	global $smarty;
 
 	$smarty->assign('btitle',TITLE);
@@ -1029,8 +1022,38 @@ function paintcom(){
 
 	$smarty->assign('parent',$_SERVER['REQUEST_TIME']);
 	$smarty->assign('stime',$stime);
-
 	$smarty->assign('usercode',$usercode);
+
+	//----------
+	$time = time();
+
+	//描画時間
+	if($stime){
+		$ptime = '';
+		if($stime){
+			$psec = $time-$stime;
+			if($psec >= 86400){
+				$D=($psec - ($psec % 86400)) / 86400;
+				$ptime .= $D.PTIME_D;
+				$psec -= $D*86400;
+			}
+			if($psec >= 3600){
+				$H=($psec - ($psec % 3600)) / 3600;
+				$ptime .= $H.PTIME_H;
+				$psec -= $H*3600;
+			}
+			if($psec >= 60){
+				$M=($psec - ($psec % 60)) / 60;
+				$ptime .= $M.PTIME_M;
+				$psec -= $M*60;
+			}
+			if($psec){
+				$ptime .= $psec.PTIME_S;
+			}
+		}
+	}
+
+	$smarty->assign('ptime',$ptime);
 
 	//----------
 
@@ -1343,11 +1366,6 @@ function picreplace($no,$pwdf,$stime){
 		}
 	}
 
-	// 記事上書き
-	//$flag = false;
-	//$pwd=hex2bin($pwd);//バイナリに
-	//$pwd=openssl_decrypt($pwd,CRYPT_METHOD, CRYPT_PASS, true, CRYPT_IV);//復号化
-
 	// ログ読み込み
 	try {
 		$db = new PDO("sqlite:noe.db");
@@ -1392,7 +1410,12 @@ function picreplace($no,$pwdf,$stime){
 			$msgedat = $msgedat.'.dat';
 			if(is_file($path.$msgedat)) unlink($path.$msgedat);
 			//描画時間追加
-			if($msg_d["time"]) $time = $msg_d["time"].'+'.$ptime;
+			//秘密の時は秘密
+			if($msg_d["time"] == PTIME_SEC) {
+				$time = PTIME_SEC;
+			} elseif($msg_d["time"]) {
+				$time = $msg_d["time"].'+'.$ptime;
+			}
 			//id生成
 			$utime = time();
 			$id = substr(crypt(md5($host.ID_SEED.date("Ymd", $utime)),'id'),-8);
