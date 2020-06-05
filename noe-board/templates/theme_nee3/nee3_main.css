@@ -103,6 +103,8 @@ em.thispage {
 
 figure {
   float: left;
+  display: table;
+  width: 300px;
   padding-right: 8px;
   background-color: #333;
   margin-bottom: 1ex;
