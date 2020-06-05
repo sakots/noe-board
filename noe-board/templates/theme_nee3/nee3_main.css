@@ -152,7 +152,7 @@ p.oya {
 
 .limit {
   margin-top: 1em;
-  background-color: #300;
+  background-color: #030;
 }
 
 .resma {
@@ -200,19 +200,13 @@ button, .button, .oyano, .oyaresno {
 }
 
 #appstage {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  display: block;
+  text-align: center;
 }
 
-#appstage .app {
-  margin: 0px 4px;
+#appstage > * {
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .NEO .color_bk {

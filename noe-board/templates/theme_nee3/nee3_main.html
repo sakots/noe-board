@@ -107,7 +107,12 @@
 							<p class="limit">このスレは古いのでもうすぐ消えます。</p>
 						</div>
 						{/if}
-						{if isset($ko)}{foreach from=$ko item=res}{if $bbsline.tid == $res.tid}
+						{if $bbsline.rflag == true}
+						<div class="res">
+							<p class="limit">レス{$bbsline.res_d_su}件省略。すべて見るには返信ボタンを押してください。</p>
+						</div>
+						{/if}
+						{if isset($ko)}{foreach from=$ko item=res}{if $bbsline.tid == $res.tid}{if $res.resno <= $bbsline.res_d_su}{else}
 						<section class="res">
 							<section>
 								<h3><span class="oyano">{$res.iid}</span>{$res.sub}</h3>
@@ -129,7 +134,7 @@
 								<p class="comment">{$res.com}</p>
 							</section>
 						</section>
-						{/if}{/foreach}{/if}
+						{/if}{/if}{/foreach}{/if}
 						<div class="thfoot">
 							{if $share_button == 1}
 							<script>
