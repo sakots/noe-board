@@ -41,6 +41,10 @@
 					</div>
 					{if isset($temp)}
 					<form class="ppost postform" action="{$self}?mode=regist" method="post">
+						{if isset($ptime)}<p>
+							描画時間：{$ptime}
+							{if $sptime == 1} <label><input type="checkbox" name="secptime" value="true">描画時間を隠す</label> {/if}
+						</p>{/if}
 						<table>
 							<tr>
 								<td>name{if $use_name == 1} *{/if}</td>
@@ -63,7 +67,7 @@
 									<input type="hidden" name="invz" value="0">
 									<input type="hidden" name="img_w" value="0">
 									<input type="hidden" name="img_h" value="0">
-									{if isset($stime)}<input type="hidden" name="stime" value="{$stime}">{/if}
+									{if isset($ptime)}<input type="hidden" name="ptime" value="{$ptime}">{/if}
 									<input type="hidden" name="exid" value="0">
 								</td>
 							</tr>
