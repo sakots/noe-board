@@ -5,7 +5,7 @@
 //--------------------------------------------------
 
 //スクリプトのバージョン
-define('NOE_VER','v0.22.11'); //lot.200605.1
+define('NOE_VER','v0.23.0'); //lot.200605.2
 
 //smarty-3.1.34
 require_once(__DIR__.'/libs/Smarty.class.php');
@@ -597,7 +597,7 @@ function regist() {
 //通常表示モード
 function def() {
 	global $smarty;
-	$dspres = DSP_RES;
+	$dsp_res = DSP_RES;
 	$page_def = PAGE_DEF;
 
 	//古いスレのレスボタンを表示しない
@@ -682,19 +682,40 @@ function def() {
 		$ko = array();
 		$oya = array();
 
-		while ($bbsline = $posts->fetch() ) {
+		$i = 0;
+		while ( $i < PAGE_DEF) {
+			$bbsline = $posts->fetch();
+			if(empty($bbsline)){break;} //スレがなくなったら抜ける
 			$oid = $bbsline["tid"]; //スレのtid(親番号)を取得
 			$sqli = "SELECT iid, tid, created, modified, name, mail, sub, com, url, host, exid, id, pwd, utime, picfile, pchfile, img_w, img_h, time, tree, parent FROM tabletree WHERE tid = $oid and invz=0 ORDER BY tree DESC";
 			//レス取得
 			$postsi = $db->query($sqli);
-			while ( $res = $postsi->fetch() ) {
+			$j = 0;
+			$flag = true;
+			while ( $flag == true) {
+				$res = $postsi->fetch();
+				if(empty($res)){ //レスがなくなったら
+					$bbsline['ressu'] = $j; //スレのレス数
+					$bbsline['res_d_su'] = $j - DSP_RES; //スレのレス省略数
+					if ($j > DSP_RES) { //スレのレス数が規定より多いと
+						$bbsline['rflag'] = true; //省略フラグtrue
+					} else {
+						$bbsline['rflag'] = false; //省略フラグfalse
+					}
+					$flag = false;
+					break;
+				} //抜ける
+				$res['resno'] = $j +1; //レス番号
 				$ko[] = $res;
+				$j++;
 			}
 			$oya[] = $bbsline;
+			$i++;
 		}
 
 		$smarty->assign('ko',$ko);
 		$smarty->assign('oya',$oya);
+		$smarty->assign('dsp_res',DSP_RES);
 		$smarty->assign('path',IMG_DIR);
 
 		//$smarty->debugging = true;
@@ -1756,7 +1777,6 @@ function error2() {
 	$smarty->assign('othermode','err2');
 	$smarty->display( THEMEDIR.OTHERFILE );
 }
-
 
 //初期設定
 
