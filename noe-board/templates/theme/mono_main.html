@@ -91,7 +91,7 @@
 							<p class="limit">このスレは古いのでもうすぐ消えます。</p>
 						</div>
 						{/if}
-						{if isset($ko)}{foreach from=$ko item=res}{if $bbsline.tid == $res.tid}{if $res@index >= $dspres}...{else}
+						{if isset($ko)}{foreach from=$ko item=res}{if $bbsline.tid == $res.tid}
 						<section class="res">
 							<section>
 								<h3>[{$res.iid}] {$res.sub}</h3>
@@ -113,7 +113,7 @@
 								<p class="comment">{$res.com}</p>
 							</section>
 						</section>
-						{/if}{/if}{/foreach}{/if}
+						{/if}{/foreach}{/if}
 						<div class="thfoot">
 							{if $share_button == 1}
 							<script>
