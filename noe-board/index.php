@@ -5,7 +5,7 @@
 //--------------------------------------------------
 
 //スクリプトのバージョン
-define('NOE_VER','v0.24.1'); //lot.200606.2
+define('NOE_VER','v0.24.2'); //lot.200606.3
 
 //smarty-3.1.34
 require_once(__DIR__.'/libs/Smarty.class.php');
@@ -167,7 +167,7 @@ $img_w = ( isset( $_POST["img_w"] )  === true ) ? newstring(trim($_POST["img_w"]
 $img_h = ( isset( $_POST["img_h"] )  === true ) ? newstring(trim($_POST["img_h"]))  : "";
 $time = ( isset( $_POST["time"] )  === true ) ? newstring(trim($_POST["time"]))  : "";
 $pwd = ( isset( $_POST["pwd"] )  === true ) ? newstring(trim($_POST["pwd"]))  : "";
-$pwd = password_hash($pwd,PASSWORD_DEFAULT);
+$pwdh = password_hash($pwd,PASSWORD_DEFAULT);
 $exid = ( isset( $_POST["exid"] )  === true ) ? newstring(trim($_POST["exid"]))  : "";
 
 //var_dump($_COOKIE);
@@ -197,29 +197,16 @@ $smarty->assign('usercode',$usercode);
 //投稿があればデータベースへ保存する
 /* 記事書き込み */
 function regist() {
-	global $name,$com,$sub,$parent,$picfile,$mail,$url,$time,$pwd,$exid,$invz;
+	global $name,$com,$sub,$parent,$picfile,$mail,$url,$time,$pwd,$pwdh,$exid,$invz;
 	global $badstring,$badip;
 	global $req_method;
-	global $ptime;
 	global $badstr_A,$badstr_B,$badname;
 	global $smarty;
 	$userip = get_uip();
 
-	$sub = ( isset( $_POST["sub"] ) === true ) ? newstring($_POST["sub"]): "";
-	$name = ( isset( $_POST["name"] ) === true ) ? newstring($_POST["name"]): "";
-	$url = ( isset( $_POST["url"] )  === true ) ? newstring(trim($_POST["url"]))  : "";
-	$mail = ( isset( $_POST["mail"] )  === true ) ? newstring(trim($_POST["mail"]))  : "";
-	$com = ( isset( $_POST["com"] )  === true ) ? newstring(trim($_POST["com"]))  : "";
-	$parent = ( isset( $_POST["parent"] )  === true ) ? newstring(trim($_POST["parent"]))  : "";
-	$picfile = ( isset( $_POST["picfile"] )  === true ) ? newstring(trim($_POST["picfile"]))  : "";
-	$invz = ( isset( $_POST["invz"] )  === true ) ? newstring(trim($_POST["invz"]))  : "";
+	$ptime = ( isset( $_POST["ptime"] )  === true ) ? newstring(trim($_POST["ptime"]))  : "";
 	$img_w = ( isset( $_POST["img_w"] )  === true ) ? newstring(trim($_POST["img_w"]))  : "";
 	$img_h = ( isset( $_POST["img_h"] )  === true ) ? newstring(trim($_POST["img_h"]))  : "";
-	$ptime = ( isset( $_POST["ptime"] )  === true ) ? newstring(trim($_POST["ptime"]))  : "";
-	$pwd = ( isset( $_POST["pwd"] )  === true ) ? newstring(trim($_POST["pwd"]))  : "";
-	$pwdh = password_hash($pwd,PASSWORD_DEFAULT);
-	$exid = ( isset( $_POST["exid"] )  === true ) ? newstring(trim($_POST["exid"]))  : "";
-
 	$secptime = isset($_POST["secptime"]);
 
 	if($req_method !== "POST") {error(MSG006);exit;}
