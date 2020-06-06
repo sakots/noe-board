@@ -5,7 +5,7 @@
 //--------------------------------------------------
 
 //スクリプトのバージョン
-define('NOE_VER','v0.24.2'); //lot.200606.3
+define('NOE_VER','v0.24.3'); //lot.200606.4
 
 //smarty-3.1.34
 require_once(__DIR__.'/libs/Smarty.class.php');
@@ -155,20 +155,20 @@ if(filter_input(INPUT_GET, 'mode')==="editexec"){
 }
 
 $message ="";
-$sub = ( isset( $_POST["sub"] ) === true ) ? newstring($_POST["sub"]): "";
-$name = ( isset( $_POST["name"] ) === true ) ? newstring($_POST["name"]): "";
-$url = ( isset( $_POST["url"] )  === true ) ? newstring(trim($_POST["url"]))  : "";
-$mail = ( isset( $_POST["mail"] )  === true ) ? newstring(trim($_POST["mail"]))  : "";
-$com = ( isset( $_POST["com"] )  === true ) ? newstring(trim($_POST["com"]))  : "";
-$parent = ( isset( $_POST["parent"] )  === true ) ? newstring(trim($_POST["parent"]))  : "";
-$picfile = ( isset( $_POST["picfile"] )  === true ) ? newstring(trim($_POST["picfile"]))  : "";
-$invz = ( isset( $_POST["invz"] )  === true ) ? newstring(trim($_POST["invz"]))  : "";
-$img_w = ( isset( $_POST["img_w"] )  === true ) ? newstring(trim($_POST["img_w"]))  : "";
-$img_h = ( isset( $_POST["img_h"] )  === true ) ? newstring(trim($_POST["img_h"]))  : "";
-$time = ( isset( $_POST["time"] )  === true ) ? newstring(trim($_POST["time"]))  : "";
-$pwd = ( isset( $_POST["pwd"] )  === true ) ? newstring(trim($_POST["pwd"]))  : "";
+$sub = newstring(filter_input(INPUT_POST, 'sub'));
+$name = newstring(filter_input(INPUT_POST, 'name'));
+$mail = newstring(filter_input(INPUT_POST, 'mail'));
+$url = newstring(filter_input(INPUT_POST, 'url'));
+$com = newstring(filter_input(INPUT_POST, 'com'));
+$parent = newstring(trim(filter_input(INPUT_POST, 'parent')));
+$picfile = newstring(trim(filter_input(INPUT_POST, 'picfile')));
+$invz = newstring(trim(filter_input(INPUT_POST, 'invz')));
+$img_w = newstring(trim(filter_input(INPUT_POST, 'img_w')));
+$img_h = newstring(trim(filter_input(INPUT_POST, 'img_h')));
+$time = newstring(trim(filter_input(INPUT_POST, 'time')));
+$pwd = newstring(trim(filter_input(INPUT_POST, 'pwd')));
 $pwdh = password_hash($pwd,PASSWORD_DEFAULT);
-$exid = ( isset( $_POST["exid"] )  === true ) ? newstring(trim($_POST["exid"]))  : "";
+$exid = newstring(trim(filter_input(INPUT_POST, 'exid')));
 
 //var_dump($_COOKIE);
 
@@ -197,17 +197,15 @@ $smarty->assign('usercode',$usercode);
 //投稿があればデータベースへ保存する
 /* 記事書き込み */
 function regist() {
-	global $name,$com,$sub,$parent,$picfile,$mail,$url,$time,$pwd,$pwdh,$exid,$invz;
+	global $name,$com,$sub,$parent,$picfile,$img_w,$img_h,$mail,$url,$time,$pwd,$pwdh,$exid,$invz;
 	global $badstring,$badip;
 	global $req_method;
 	global $badstr_A,$badstr_B,$badname;
 	global $smarty;
 	$userip = get_uip();
 
-	$ptime = ( isset( $_POST["ptime"] )  === true ) ? newstring(trim($_POST["ptime"]))  : "";
-	$img_w = ( isset( $_POST["img_w"] )  === true ) ? newstring(trim($_POST["img_w"]))  : "";
-	$img_h = ( isset( $_POST["img_h"] )  === true ) ? newstring(trim($_POST["img_h"]))  : "";
-	$secptime = isset($_POST["secptime"]);
+	$ptime = newstring(trim(filter_input(INPUT_POST, 'ptime')));
+	$secptime = newstring(filter_input(INPUT_POST, 'secptime'));
 
 	if($req_method !== "POST") {error(MSG006);exit;}
 
@@ -456,7 +454,7 @@ function regist() {
 				$db = $db->exec($sqldel);
 			} elseif(empty($_POST["modid"])!=true && strpos($mail,'sage')!==false ) {
 				//レスの場合でメール欄にsageが含まれる
-				$tid = $_POST["modid"];
+				$tid = newstring(filter_input(INPUT_POST, 'modid'));
 				//id生成
 				$id = substr(crypt(md5($host.ID_SEED.date("Ymd", $utime)),'id'),-8);
 				if ($age <= LOG_MAX_R) {
@@ -499,7 +497,7 @@ function regist() {
 				}
 			} else {
 				//レスの場合でメール欄にsageが含まれない
-				$tid = $_POST["modid"];
+				$tid = newstring(filter_input(INPUT_POST, 'modid'));
 				//id生成
 				$id = substr(crypt(md5($host.ID_SEED.date("Ymd", $utime)),'id'),-8);
 				$nage = $age +1;
@@ -708,15 +706,12 @@ function def() {
 
 //そうだね
 function sodane(){
-	global $resto;
-	global $smarty;
-	$resto = $_GET["resto"];
+	$resto = newstring(filter_input(INPUT_GET, 'resto'));
 	try {
 		$db = new PDO("sqlite:noe.db");
 		$sql = "UPDATE tablelog set exid = exid+1 where tid = '$resto'";
 		$db = $db->exec($sql);
 		$db = null;
-		//$smarty->assign('message','そうだね。');
 	} catch (PDOException $e) {
 		echo "DB接続エラー:" .$e->getMessage();
 	}
@@ -726,15 +721,12 @@ function sodane(){
 
 //レスそうだね
 function rsodane(){
-	global $resto;
-	global $smarty;
-	$resto = $_GET["resto"];
+	$resto = newstring(filter_input(INPUT_GET, 'resto'));
 	try {
 		$db = new PDO("sqlite:noe.db");
 		$sql = "UPDATE tabletree set exid = exid+1 where iid = '$resto'";
 		$db = $db->exec($sql);
 		$db = null;
-		//$smarty->assign('message','そうだね。');
 	} catch (PDOException $e) {
 		echo "DB接続エラー:" .$e->getMessage();
 	}
@@ -745,9 +737,10 @@ function rsodane(){
 //レス画面
 
 function res(){
-	global $resno;
+	//global $resno;
 	global $smarty;
-	$resno = $_GET["res"];
+	//$resno = $_GET["res"];
+	$resno = newstring(filter_input(INPUT_GET, 'res'));
 	$smarty->assign('resno',$resno);
 	try {
 		$db = new PDO("sqlite:noe.db");
@@ -943,7 +936,7 @@ function openpch($pch,$sp="") {
 	global $smarty;
 	$message = "";
 
-	$pch = $_GET["pch"];
+	$pch = newstring(filter_input(INPUT_GET, 'pch'));
 	$pchh = str_replace( strrchr($pch,"."), "", $pch); //拡張子除去
 	$extn = substr($pch, strrpos($pch, '.') + 1); //拡張子取得
 
@@ -1171,8 +1164,10 @@ function incontinue($no) {
 function delmode(){
 	global $admin_pass;
 	global $smarty;
-	$delno = $_POST["delno"];
-	$delt = $_POST["delt"]; //0親1レス削除
+	$delno = newstring(filter_input(INPUT_POST, 'delno'));
+	$delt = newstring(filter_input(INPUT_POST, 'delt')); //0親1レス削除
+
+	$ppwd = newstring(filter_input(INPUT_POST, 'pwd'));
 
 	if ($delt == 0) {
 		$deltable = 'tablelog';
@@ -1213,7 +1208,7 @@ function delmode(){
 			$admindelmode = 0;
 		}
 
-		if (password_verify($_POST["pwd"],$msg['pwd']) === true) {
+		if (password_verify($ppwd,$msg['pwd']) === true) {
 			//画像とかファイル削除
 			if (file_exists(IMG_DIR.$msgpic)) {
 				$msgdat = str_replace( strrchr($msgpic,"."), "", $msgpic); //拡張子除去
@@ -1238,7 +1233,7 @@ function delmode(){
 			$sql = "DELETE FROM $deltable WHERE $idk=$delno";
 			$db = $db->exec($sql);
 			$smarty->assign('message','削除しました。');
-		} elseif ($admin_pass == $_POST["pwd"] && $admindelmode == 1) {
+		} elseif ($admin_pass == $ppwd && $admindelmode == 1) {
 			//画像とかファイル削除
 			if (file_exists(IMG_DIR.$msgpic)) {
 				$msgdat = str_replace( strrchr($msgpic,"."), "", $msgpic); //拡張子除去
@@ -1263,7 +1258,7 @@ function delmode(){
 			$sql = "DELETE FROM $deltable WHERE $idk=$delno";
 			$db = $db->exec($sql);
 			$smarty->assign('message','削除しました。');
-		} elseif ($admin_pass == $_POST["pwd"] && $admindelmode != 1) {
+		} elseif ($admin_pass == $ppwd && $admindelmode != 1) {
 			//管理モード以外での管理者削除は
 			//データベースから削除はせずに非表示
 			$sql = "UPDATE $deltable SET invz=1 WHERE $idk=$delno";
@@ -1425,11 +1420,11 @@ function editform() {
 	global $admin_pass;
 	global $smarty;
 
-	$editno = $_POST["delno"];
+	$editno = newstring(filter_input(INPUT_POST, 'delno'));
 	if ($editno == "") {
 		error('記事番号を入力してください');exit;
 	}
-	$editt = $_POST["delt"]; //0親1レス
+	$editt = newstring(filter_input(INPUT_POST, 'delt')); //0親1レス
 	if ($editt == 0) {
 		$edittable = 'tablelog';
 		$idk = "tid";
@@ -1450,11 +1445,7 @@ function editform() {
 		if (empty($msg)) {
 			error('そんな記事ないです。');exit;
 		}
-		if ($_POST["pwd"] == null) {
-			$postpwd = "";
-		} else {
-			$postpwd = $_POST["pwd"];
-		}
+		$postpwd = newstring(filter_input(INPUT_POST, 'pwd'));
 		if (password_verify($postpwd,$msg['pwd']) === true) {
 			//パスワードがあってたら
 			$sqli ="SELECT * FROM $edittable WHERE $idk = $editno";
@@ -1496,22 +1487,15 @@ function editform() {
 
 //編集モードくん本体
 function editexec(){
-	global $smarty;
+	global $name,$com,$sub,$picfile,$mail,$url,$pwd,$pwdh,$exid;
 	global $badstring,$badip;
 	global $req_method;
 	global $badstr_A,$badstr_B,$badname;
+	global $smarty;
 	$userip = get_uip();
 
-	$sub = ( isset( $_POST["sub"] ) === true ) ? newstring($_POST["sub"]): "";
-	$name = ( isset( $_POST["name"] ) === true ) ? newstring($_POST["name"]): "";
-	$url = ( isset( $_POST["url"] )  === true ) ? newstring(trim($_POST["url"]))  : "";
-	$mail = ( isset( $_POST["mail"] )  === true ) ? newstring(trim($_POST["mail"]))  : "";
-	$com = ( isset( $_POST["com"] )  === true ) ? newstring(trim($_POST["com"]))  : "";
-	$pwd = ( isset( $_POST["pwd"] )  === true ) ? newstring(trim($_POST["pwd"]))  : "";
-	$pwdh = password_hash($pwd,PASSWORD_DEFAULT);
-	$exid = ( isset( $_POST["exid"] )  === true ) ? newstring(trim($_POST["exid"]))  : "";
-	$resedit = ( isset( $_POST["resedit"] )  === true ) ? newstring(trim($_POST["resedit"]))  : "";
-	$e_no = ( isset( $_POST["e_no"] )  === true ) ? newstring(trim($_POST["e_no"]))  : "";
+	$resedit = newstring(trim(filter_input(INPUT_POST, 'resedit')));
+	$e_no = newstring(trim(filter_input(INPUT_POST, 'e_no')));
 
 	if($req_method !== "POST") {error(MSG006);exit;}
 
@@ -1673,7 +1657,7 @@ function admin() {
 	try {
 		$db = new PDO("sqlite:noe.db");
 		//読み込み
-		$adminpass = ( isset( $_POST["adminpass"] ) === true ) ? newstring($_POST["adminpass"]): "";
+		$adminpass = newstring(filter_input(INPUT_POST, 'adminpass'));
 		if ($adminpass == $admin_pass) {
 			$sql = "SELECT * FROM tablelog ORDER BY age DESC,tree DESC";
 			$oya = array();
