@@ -108,7 +108,8 @@
 				<div>
 					{foreach from=$oya item=bbsline}{if isset($bbsline.com)}
 					<section>
-						<h3 class="oekaki">このスレにレス</h1>
+						<h3 class="oekaki">このスレにレス</h3>
+						{if $elapsed_time == 0 || $nowtime - $bbsline.utime < $elapsed_time}
 						<p>
 							<button class="copy_button" onclick="c();">投稿者名をコピー</button>
 							（レスの投稿者名をクリップボードにコピーできます）
@@ -161,6 +162,9 @@
 								</tr>
 							</table>
 						</form>
+						{else}
+						<p>このスレは古いので返信できません</p>
+						{/if}
 					</section>
 					{/if}{/foreach}
 				</div>

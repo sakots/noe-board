@@ -43,6 +43,7 @@
 			<div>
 				{foreach from=$oya item=bbsline}{if isset($bbsline.com)}
 				<section>
+					{if $elapsed_time == 0 || $nowtime - $bbsline.utime < $elapsed_time}
 					<form action="{$self}?mode=regist" method="post" class="postform">
 						<table>
 							<tr>
@@ -88,6 +89,9 @@
 							</tr>
 						</table>
 					</form>
+					{else}
+					<p>このスレは古いので返信できません。</p>
+					{/if}
 				</section>
 				{/if}{/foreach}
 			</div>
