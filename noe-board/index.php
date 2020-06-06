@@ -5,7 +5,7 @@
 //--------------------------------------------------
 
 //スクリプトのバージョン
-define('NOE_VER','v0.24.3'); //lot.200606.4
+define('NOE_VER','v0.25.0'); //lot.200606.5
 
 //smarty-3.1.34
 require_once(__DIR__.'/libs/Smarty.class.php');
@@ -737,11 +737,17 @@ function rsodane(){
 //レス画面
 
 function res(){
-	//global $resno;
 	global $smarty;
-	//$resno = $_GET["res"];
 	$resno = newstring(filter_input(INPUT_GET, 'res'));
 	$smarty->assign('resno',$resno);
+
+	//古いスレのレスフォームを表示しない
+	$elapsed_time = ELAPSED_DAYS * 86400; //デフォルトの1年だと31536000
+	$nowtime = time(); //いまのunixタイムスタンプを取得
+	//あとはテーマ側で計算する
+	$smarty->assign('elapsed_time',$elapsed_time);
+	$smarty->assign('nowtime',$nowtime);
+
 	try {
 		$db = new PDO("sqlite:noe.db");
 		$sql = "SELECT * FROM tablelog WHERE tid=".$resno." ORDER BY tree DESC";
