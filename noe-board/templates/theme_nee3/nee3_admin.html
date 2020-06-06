@@ -43,24 +43,6 @@
 						</p>
 					</form>
 				</section>
-				<hr>
-				<section class="paging">
-						<p>
-							{if $back == 0}
-							<span class="se">START</span>
-							{else}
-							<span class="button"><a href="{$self}?page={$back}">BACK</a></span> 
-							{/if}
-							{foreach from=$paging item=pp}
-							{if $pp.p == $nowpage}<em class="thispage">{else}<a href="{$self}?page={$pp.p}">[{/if}{$pp.p}{if $pp.p == $nowpage}</em>{else}]</a>{/if}
-							{/foreach}
-							{if $next == ($max_page + 1)}
-							<span class="se">END</span>
-							{else}
-							<span class="button"><a href="{$self}?page={$next}">NEXT</a></span> 
-							{/if}
-						</p>
-					</section>
 			</div>
 			<hr>
 		</header>
@@ -85,7 +67,7 @@
 							<td>{$bbsline.name}</td>
 							<td>{$bbsline.modified}</td>
 							<td>{$bbsline.sub|truncate:6}</td>
-							<td>{if $bbsline.picfile == true}<a href="{$path}{$bbsline.picfile}">{$bbsline.picfile}</a>{/if}</td>
+							<td>{if $bbsline.picfile == true}<a href="{$path}{$bbsline.picfile}" target="_brank">{$bbsline.picfile}</a>{/if}</td>
 							<td>{$bbsline.com|truncate:10}</td>
 							<td>{$bbsline.host}</td>
 							<td>{if $bbsline.invz == 1}invz{/if}</td>
