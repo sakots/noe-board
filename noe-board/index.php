@@ -5,7 +5,7 @@
 //--------------------------------------------------
 
 //スクリプトのバージョン
-define('NOE_VER','v0.25.0'); //lot.200606.5
+define('NOE_VER','v0.26.0'); //lot.200606.6
 
 //smarty-3.1.34
 require_once(__DIR__.'/libs/Smarty.class.php');
@@ -152,6 +152,9 @@ if(filter_input(INPUT_GET, 'mode')==="edit"){
 }
 if(filter_input(INPUT_GET, 'mode')==="editexec"){
 	$mode = "editexec";
+}
+if(filter_input(INPUT_GET, 'mode')==="catalog"){
+	$mode = "catalog";
 }
 
 $message ="";
@@ -698,6 +701,85 @@ function def() {
 
 		//$smarty->debugging = true;
 		$smarty->display(THEMEDIR.MAINFILE);
+		$db = null; //db切断
+	} catch (PDOException $e) {
+		echo "DB接続エラー:" .$e->getMessage();
+	}
+}
+
+//カタログモード
+function catalog() {
+	global $smarty;
+	$page_def = CATALOG_N;
+
+	//ページング
+	try {
+		$db = new PDO("sqlite:noe.db");
+		if (isset($_GET['page']) && is_numeric($_GET['page'])) {
+			$page = $_GET['page'];
+			$page = max($page,1);
+		} else {
+			$page = 1;
+		}
+		$start = $page_def * ($page - 1);
+
+		//最大何ページあるのか
+		$sql = "SELECT COUNT(*) as cnt FROM tablelog WHERE invz=0";
+		$counts = $db->query("$sql");
+		$count = $counts->fetch(); //スレ数取得できた
+		$max_page = floor($count["cnt"] / $page_def) + 1;
+		//最後にスレ数0のページができたら表示しない処理
+		if(($count["cnt"] % $page_def) == 0){
+			$max_page = $max_page - 1;
+			//ただしそれが1ページ目なら困るから表示
+			$max_page = max($max_page,1);
+		}
+		$smarty->assign('max_page',$max_page);
+
+		//リンク作成用
+		$smarty->assign('nowpage',$page);
+		$p = 1;
+		$pp = array();
+		$paging = array();
+		while ($p <= $max_page) {
+			$paging[($p)] = compact('p');
+			$pp[] = $paging;
+			$p++;
+		}
+		$smarty->assign('paging',$paging);
+		$smarty->assign('pp',$pp);
+
+		$smarty->assign('back',$page - 1);
+
+		$smarty->assign('next',$page + 1);
+
+		$db = null; //db切断
+	} catch (PDOException $e) {
+		echo "DB接続エラー:" .$e->getMessage();
+	}
+	//読み込み
+	
+	try {
+		$db = new PDO("sqlite:noe.db");
+		//1ページの全スレッド取得
+		$sql = "SELECT tid, created, modified, name, mail, sub, com, url, host, exid, id, pwd, utime, picfile, pchfile, img_w, img_h, time, tree, parent, age, utime FROM tablelog WHERE invz=0 ORDER BY age DESC, tree DESC LIMIT $start,$page_def"; 
+		$posts = $db->query($sql);
+
+		$oya = array();
+
+		$i = 0;
+		while ( $i < CATALOG_N) {
+			$bbsline = $posts->fetch();
+			if(empty($bbsline)){break;} //スレがなくなったら抜ける
+			$oya[] = $bbsline;
+			$i++;
+		}
+
+		$smarty->assign('oya',$oya);
+		$smarty->assign('path',IMG_DIR);
+
+		//$smarty->debugging = true;
+		$smarty->display(THEMEDIR.CATALOGFILE);
 		$db = null; //db切断
 	} catch (PDOException $e) {
 		echo "DB接続エラー:" .$e->getMessage();
@@ -1861,6 +1943,9 @@ switch($mode){
 		break;
 	case 'picrep':
 		picreplace($no,$pwd,$stime);
+	break;
+	case 'catalog':
+		catalog();
 	break;
 	case 'edit':
 		editform();
