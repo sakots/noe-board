@@ -27,6 +27,9 @@ define('ANIMEFILE', "nee3_anime.html");
 //投稿時のテンプレートファイル
 define('PICFILE', "nee3_picpost.html");
 
+//カタログモードのテンプレートファイル
+define('CATALOGFILE', "nee3_catalog.html");
+
 //管理モードのテンプレートファイル
 define('ADMINFILE', "nee3_admin.html");
 

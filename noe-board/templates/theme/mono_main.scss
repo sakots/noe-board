@@ -235,6 +235,23 @@ button {
 	}
 } 
 
+#catalog {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	div {
+		width: $cat_img_size + 16px;
+		text-align: center;
+		overflow: hidden;
+	}
+	p {
+		margin: 0.5ex auto;
+	}
+	img {
+		width: $cat_img_size;
+	}
+}
+
 .delfo {
 	font-size: smaller;
 	th, td {

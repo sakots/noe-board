@@ -27,6 +27,9 @@ define('ANIMEFILE', "mono_anime.html");
 //投稿時のテンプレートファイル
 define('PICFILE', "mono_picpost.html");
 
+//カタログモードのテンプレートファイル
+define('CATALOGFILE', "mono_catalog.html");
+
 //管理モードのテンプレートファイル
 define('ADMINFILE', "mono_admin.html");
 
