@@ -5,7 +5,7 @@
 //--------------------------------------------------
 
 //スクリプトのバージョン
-define('NOE_VER','v0.24.0'); //lot.200606.1
+define('NOE_VER','v0.24.1'); //lot.200606.2
 
 //smarty-3.1.34
 require_once(__DIR__.'/libs/Smarty.class.php');
@@ -1681,56 +1681,25 @@ function admin() {
 
 	$smarty->assign('path',IMG_DIR);
 
-	//ページング
-	if (isset($_GET['page']) && is_numeric($_GET['page'])) {
-		$page = $_GET['page'];
-		$page = max($page,1);
-	} else {
-		$page = 1;
-	}
-	$page10 = PAGE_DEF * 10;
-	$start = $page10 * ($page - 1);
-
 	//最大何ページあるのか
 	//記事呼び出しから
 	try {
 		$db = new PDO("sqlite:noe.db");
-		$sql = "SELECT COUNT(*) as cnt FROM tablelog WHERE invz=0";
-		$counts = $db->query("$sql");
-		$count = $counts->fetch();
-		$max_page = floor($count["cnt"] / $page10) + 1;
-		$smarty->assign('max_page',$max_page);
-
-		//リンク作成用
-		$smarty->assign('nowpage',$page);
-		$p = 1;
-		$pp = array();
-		$paging = array();
-		while ($p <= $max_page) {
-			$paging[($p)] = compact('p');
-			$pp[] = $paging;
-			$p++;
-		}
-		$smarty->assign('paging',$paging);
-		$smarty->assign('pp',$pp);
-
-		$smarty->assign('back',$page - 1);
-
-		$smarty->assign('next',$page + 1);
-
 		//読み込み
 		$adminpass = ( isset( $_POST["adminpass"] ) === true ) ? newstring($_POST["adminpass"]): "";
 		if ($adminpass == $admin_pass) {
-			$sql = "SELECT * FROM tablelog ORDER BY tree DESC LIMIT ".$start.",".$page10;
+			$sql = "SELECT * FROM tablelog ORDER BY age DESC,tree DESC";
 			$oya = array();
 			$posts = $db->query($sql);
 			while ($bbsline = $posts->fetch() ) {
+				if(empty($bbsline)){break;} //スレがなくなったら抜ける
+				$oid = $bbsline["tid"]; //スレのtid(親番号)を取得
 				$oya[] = $bbsline;
 			} 
 			$smarty->assign('oya',$oya);
 
 			//スレッドの記事を取得
-			$sqli = "SELECT * FROM tabletree WHERE invz=0 ORDER BY tree DESC";
+			$sqli = "SELECT * FROM tabletree ORDER BY tree DESC";
 			$ko = array();
 			$postsi = $db->query($sqli);
 			while ($res = $postsi->fetch()){
@@ -1739,7 +1708,9 @@ function admin() {
 			$smarty->assign('ko',$ko);
 			$smarty->display( THEMEDIR.ADMINFILE );
 		} else {
-			echo "管理パスを入力してください";
+			$db = null; //db切断
+			error('管理パスを入力してください');
+			exit;
 		}
 		$db = null; //db切断
 	} catch (PDOException $e) {

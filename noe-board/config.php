@@ -17,12 +17,11 @@ $admin_pass = 'kanripass';
 define('LOG_MAX_T', '200');
 
 //テーマ(テンプレート)のディレクトリ。'/'まで
-//themeディレクトリに使いたいtemplateをいれて使ってください。(推奨)
 //別のディレクトリにしたい場合は設定してください。
 //例えばおまけのnee3を使いたい場合はtheme_nee3/とすることができます。初期値は theme/ です。
 define('THEMEDIR', 'theme/');
 
-//設置URL phpのあるフォルダの'/'まで
+//設置URL phpのあるディレクトリの'/'まで
 //シェアボタンなどで使用
 define('BASE', 'https://localhost/dev/noedev/');
 
@@ -96,7 +95,7 @@ $badstr_B = array("シャネル","シュプリーム","バレンシアガ","ブ�
 define('USE_JAPANESEFILTER', '1');
 
 //本文へのURLの書き込みを禁止する する:1 しない:0
-define('DENY_COMMENTS_URL', '1');
+define('DENY_COMMENTS_URL', '0');
 
 //指定した日数を過ぎたレスボタンを閉じる
 //define('ELAPSED_DAYS','0');
@@ -185,17 +184,17 @@ define('UNDO_IN_MG', '45');
 //　セキュリティ関連－URLとクリック数かタイマーのどちらかが設定されていれば有効
 //※アプレットのreadmeを参照し、十分テストした上で設定して下さい
 //セキュリティクリック数。設定しないなら''で
-define('SECURITY_CLICK', '1');
+define('SECURITY_CLICK', '');
 //セキュリティタイマー(単位:秒)。設定しないなら''で
-define('SECURITY_TIMER', '1');
+define('SECURITY_TIMER', '');
 //セキュリティにヒットした場合の飛び先
 define('SECURITY_URL', './security_c.html');
 
 //続きを描くときのセキュリティ。利用しないなら両方''で
 //続きを描くときのセキュリティクリック数。設定しないなら''で
-define('C_SECURITY_CLICK', '1');
+define('C_SECURITY_CLICK', '');
 //続きを描くときのセキュリティタイマー(単位:秒)。設定しないなら''で
-define('C_SECURITY_TIMER', '1');
+define('C_SECURITY_TIMER', '');
 
 //そろそろ消える表示のボーダー。最大ログ数からみたパーセンテージ
 define('LOG_LIMIT', '92');
@@ -243,6 +242,9 @@ define('PAGE_DEF', '10');
 //レスがこの値より多いと省略されます
 //返信画面で全件表示されます
 define('DSP_RES', '7');
+
+//カタログモードで表示する記事の数
+define('CATALOG_N', '30');
 
 //クッキー保存日数
 define('SAVE_COOKIE', '7');
