@@ -43,6 +43,7 @@
 				<hr>
 				{if $catalogmode == catalog}<p>CATALOG MODE</p>{/if}
 				{if $catalogmode == search}<p>SEARCH MODE -「{$author}」の作品 - {$s_result}件</p>{/if}
+				{if $catalogmode == hashsearch}<p>HASHTAG SEARCH -「{$tag}」- {$s_result}件</p>{/if}
 				<hr>
 				<p>作者名検索</p>
 				<section>
@@ -60,7 +61,15 @@
 						{/if}
 					</form>
 				</section>
-				<hr>
+				<p>本文検索(親記事のみ)</p>
+				<section>
+					<form class="hashsearch" method="GET" action="{$self}">
+						<input type="hidden" name="mode" value="hashsearch">
+						<input type="text" name="tag" placeholder="#ハッシュタグ" size="20">
+						<input type="submit" value=" 検索 ">
+					</form>
+					<hr>
+				</section>
 				<section class="delf">
 					<form action="{$self}" method="post">
 						<p>

@@ -47,6 +47,7 @@
 				<hr>
 				{if $catalogmode == catalog}<p>カタログモード</p>{/if}
 				{if $catalogmode == search}<p>検索モード -「{$author}」の作品 - {$s_result}件</p>{/if}
+				{if $catalogmode == hashsearch}<p>ハッシュタグ検索 -「{$tag}」- {$s_result}件</p>{/if}
 				{if $catalogmode == catalog}
 				<hr>
 				<section class="paging">
@@ -92,21 +93,6 @@
 			</div>
 			<div>
 				<section class="thread">
-					<p>作者名検索</p>
-					<form class="search" method="GET" action="{$self}">
-						<input type="hidden" name="mode" value="search">
-						<label><input type="radio" name="bubun" value="bubun">部分一致</label>
-						<label><input type="radio" name="bubun" value="kanzen">完全一致</label>
-						<br>
-						{if $catalogmode == search}
-						<input type="text" name="author" placeholder="検索" value="{$author}" size="24">
-						<input type="submit" value=" 検索 ">
-						{else}
-						<input type="text" name="author" placeholder="検索" size="24">
-						<input type="submit" value=" 検索 ">
-						{/if}
-					</form>
-					<hr>
 					{if $catalogmode == catalog}
 					<section class="paging">
 						<p>
@@ -125,7 +111,28 @@
 							{/if}
 						</p>
 					</section>
+					<hr>
 					{/if}
+					<p>作者名検索</p>
+					<form class="search" method="GET" action="{$self}">
+						<input type="hidden" name="mode" value="search">
+						<label><input type="radio" name="bubun" value="bubun">部分一致</label>
+						<label><input type="radio" name="bubun" value="kanzen">完全一致</label>
+						<br>
+						{if $catalogmode == search}
+						<input type="text" name="author" placeholder="検索" value="{$author}" size="24">
+						<input type="submit" value=" 検索 ">
+						{else}
+						<input type="text" name="author" placeholder="検索" size="20">
+						<input type="submit" value=" 検索 ">
+						{/if}
+					</form>
+					<p>本文検索(親記事のみ)</p>
+					<form class="hashsearch" method="GET" action="{$self}">
+						<input type="hidden" name="mode" value="hashsearch">
+						<input type="text" name="tag" placeholder="#ハッシュタグ" size="20">
+						<input type="submit" value=" 検索 ">
+					</form>
 					<form class="delf" action="{$self}" method="post">
 						<p>
 							<select name="delt">
