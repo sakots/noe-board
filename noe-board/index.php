@@ -5,7 +5,7 @@
 //--------------------------------------------------
 
 //スクリプトのバージョン
-define('NOE_VER','v0.29.1'); //lot.200608.2
+define('NOE_VER','v0.29.2'); //lot.200608.3
 
 //smarty-3.1.34
 require_once(__DIR__.'/libs/Smarty.class.php');
@@ -817,8 +817,8 @@ function search() {
 		$db = new PDO("sqlite:noe.db");
 		//1ページの全スレッド取得
 		//まずtagがあれば本文検索
-		if ($tag != false) {
-			$sql = "SELECT tid, created, modified, name, mail, sub, com, url, host, exid, id, pwd, utime, picfile, pchfile, img_w, img_h, time, tree, parent, age, utime FROM tablelog WHERE com LIKE '%$tag%' AND invz=0 ORDER BY age DESC, tree DESC"; 
+		if ($tag === 'tag') {
+			$sql = "SELECT tid, created, modified, name, mail, sub, com, url, host, exid, id, pwd, utime, picfile, pchfile, img_w, img_h, time, tree, parent, age, utime FROM tablelog WHERE com LIKE '%$search%' AND invz=0 ORDER BY age DESC, tree DESC"; 
 			$smarty->assign('catalogmode','hashsearch');
 			$smarty->assign('tag',$search);
 		} else {
