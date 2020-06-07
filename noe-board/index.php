@@ -5,7 +5,7 @@
 //--------------------------------------------------
 
 //スクリプトのバージョン
-define('NOE_VER','v0.29.0'); //lot.200608.1
+define('NOE_VER','v0.29.1'); //lot.200608.2
 
 //smarty-3.1.34
 require_once(__DIR__.'/libs/Smarty.class.php');
@@ -102,7 +102,6 @@ function auto_link($proto){
 /* ハッシュタグリンク */
 function hashtag_link($hashtag) {
 	$self = PHP_SELF;
-	$self = str_replace("/","",$self);
 	$hashtag = preg_replace("/(?:^|[^ｦ-ﾟー゛゜々ヾヽぁ-ヶ一-龠ａ-ｚＡ-Ｚ０-９a-zA-Z0-9&_\/]+)[#＃]([ｦ-ﾟー゛゜々ヾヽぁ-ヶ一-龠ａ-ｚＡ-Ｚ０-９a-zA-Z0-9_]*[ｦ-ﾟー゛゜々ヾヽぁ-ヶ一-龠ａ-ｚＡ-Ｚ０-９a-zA-Z]+[ｦ-ﾟー゛゜々ヾヽぁ-ヶ一-龠ａ-ｚＡ-Ｚ０-９a-zA-Z0-9_]*)/u", " <a href=\"{$self}?mode=search&amp;tag=tag&amp;search=\\1\">#\\1</a>", $hashtag);
 	return $hashtag;
 }
@@ -402,6 +401,7 @@ function regist() {
 			if(AUTOLINK) $com = auto_link($com);
 			//ハッシュタグ
 			if(USE_HASHTAG) $com = hashtag_link($com);
+
 			// '>'色設定
 			$com = preg_replace("/(^|>)((&gt;|＞)[^<]*)/i", "\\1".RE_START."\\2".RE_END, $com);
 
