@@ -146,16 +146,6 @@
 			</div>
 			<div>
 				<section class="thread">
-					<p>作者名検索</p>
-					<form class="search" method="GET" action="{$self}">
-						<input type="hidden" name="mode" value="search">
-						<label><input type="radio" name="bubun" value="bubun">部分一致</label>
-						<label><input type="radio" name="bubun" value="kanzen" checked>完全一致</label>
-						<br>
-						<input type="text" name="author" placeholder="検索" size="24">
-						<input type="submit" value=" 検索 ">
-					</form>
-					<hr>
 					<section class="paging">
 						<p>
 							{if $back == 0}
@@ -173,6 +163,16 @@
 							{/if}
 						</p>
 					</section>
+					<hr>
+					<p>作者名検索</p>
+					<form class="search" method="GET" action="{$self}">
+						<input type="hidden" name="mode" value="search">
+						<label><input type="radio" name="bubun" value="bubun">部分一致</label>
+						<label><input type="radio" name="bubun" value="kanzen" checked>完全一致</label>
+						<br>
+						<input type="text" name="author" placeholder="検索" size="24">
+						<input type="submit" value=" 検索 ">
+					</form>
 					<form class="delf" action="{$self}" method="post">
 						<p>
 							<select name="delt">
