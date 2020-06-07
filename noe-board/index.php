@@ -5,7 +5,7 @@
 //--------------------------------------------------
 
 //スクリプトのバージョン
-define('NOE_VER','v0.27.1'); //lot.200607.1
+define('NOE_VER','v0.28.0'); //lot.200608.0
 
 //smarty-3.1.34
 require_once(__DIR__.'/libs/Smarty.class.php');
@@ -66,9 +66,12 @@ if(!defined('SEC_PAINTTIME')){
 if(!defined('PTIME_SEC')){
 	define('PTIME_SEC', '秘密'); //configで未定義なら「秘密」
 }
+if(!defined('USE_HASHTAG')){
+	define('USE_HASHTAG', '1'); //configで未定義なら使う
+}
 
 $smarty->assign('sptime',SEC_PAINTTIME);
-
+$smarty->assign('use_hashtag',USE_HASHTAG);
 
 //ペイント画面の$pwdの暗号化
 if(!defined('CRYPT_PASS')){//config.phpで未定義なら初期値が入る
@@ -94,6 +97,14 @@ function auto_link($proto){
 	}else{
 	return $proto;
 	}
+}
+
+/* ハッシュタグリンク */
+function hashtag_link($hashtag) {
+	$self = PHP_SELF;
+	$self = str_replace("/","",$self);
+	$hashtag = preg_replace("/(?:^|[^ｦ-ﾟー゛゜々ヾヽぁ-ヶ一-龠ａ-ｚＡ-Ｚ０-９a-zA-Z0-9&_\/]+)[#＃]([ｦ-ﾟー゛゜々ヾヽぁ-ヶ一-龠ａ-ｚＡ-Ｚ０-９a-zA-Z0-9_]*[ｦ-ﾟー゛゜々ヾヽぁ-ヶ一-龠ａ-ｚＡ-Ｚ０-９a-zA-Z]+[ｦ-ﾟー゛゜々ヾヽぁ-ヶ一-龠ａ-ｚＡ-Ｚ０-９a-zA-Z0-9_]*)/u", " <a href=\"{$self}?mode=hashsearch&amp;tag=\\1\">#\\1</a>", $hashtag);
+	return $hashtag;
 }
 
 $mode = newstring(filter_input(INPUT_POST, 'mode'));
@@ -157,6 +168,9 @@ if(filter_input(INPUT_GET, 'mode')==="catalog"){
 }
 if(filter_input(INPUT_GET, 'mode')==="search"){
 	$mode = "search";
+}
+if(filter_input(INPUT_GET, 'mode')==="hashsearch"){
+	$mode = "hashsearch";
 }
 
 $message ="";
@@ -389,6 +403,8 @@ function regist() {
 
 			// URLとメールにリンク
 			if(AUTOLINK) $com = auto_link($com);
+			//ハッシュタグ
+			if(USE_HASHTAG) $com = hashtag_link($com);
 			// '>'色設定
 			$com = preg_replace("/(^|>)((&gt;|＞)[^<]*)/i", "\\1".RE_START."\\2".RE_END, $com);
 
@@ -401,7 +417,7 @@ function regist() {
 			} else {
 				//<br>に
 				$com = nl2br($com, false);
-			}		
+			}	
 
 			//age_sageカウント 兼 レス数カウント
 			$sql = "SELECT COUNT(*) as cnt FROM tabletree WHERE invz=0";
@@ -824,6 +840,42 @@ function search() {
 		//$smarty->debugging = true;
 		$smarty->assign('catalogmode','search');
 		$smarty->assign('author',$author);
+		$smarty->assign('s_result',$i);
+		$smarty->display(THEMEDIR.CATALOGFILE);
+		$db = null; //db切断
+	} catch (PDOException $e) {
+		echo "DB接続エラー:" .$e->getMessage();
+	}
+}
+
+//ハッシュタグ検索モード 現在全件表示のみ対応
+//なんか本文全部検索できる
+function hashsearch() {
+	global $smarty;
+
+	$tag = filter_input(INPUT_GET, 'tag');
+
+	//読み込み
+	try {
+		$db = new PDO("sqlite:noe.db");
+		$sql = "SELECT tid, created, modified, name, mail, sub, com, url, host, exid, id, pwd, utime, picfile, pchfile, img_w, img_h, time, tree, parent, age, utime FROM tablelog WHERE com LIKE '%$tag%' AND invz=0 ORDER BY age DESC, tree DESC"; 
+		
+		$posts = $db->query($sql);
+
+		$oya = array();
+
+		$i = 0;
+		while ($bbsline = $posts->fetch()) {
+			$oya[] = $bbsline;
+			$i++;
+		}
+
+		$smarty->assign('oya',$oya);
+		$smarty->assign('path',IMG_DIR);
+
+		//$smarty->debugging = true;
+		$smarty->assign('catalogmode','hashsearch');
+		$smarty->assign('tag',$tag);
 		$smarty->assign('s_result',$i);
 		$smarty->display(THEMEDIR.CATALOGFILE);
 		$db = null; //db切断
@@ -1995,6 +2047,9 @@ switch($mode){
 	break;
 	case 'search':
 		search();
+	break;
+	case 'hashsearch':
+		hashsearch();
 	break;
 	case 'edit':
 		editform();
