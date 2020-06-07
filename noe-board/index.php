@@ -5,7 +5,7 @@
 //--------------------------------------------------
 
 //スクリプトのバージョン
-define('NOE_VER','v0.27.1'); //lot.200607.1
+define('NOE_VER','v0.27.2'); //lot.200608.0
 
 //smarty-3.1.34
 require_once(__DIR__.'/libs/Smarty.class.php');
@@ -78,10 +78,10 @@ define('CRYPT_METHOD','aes-128-cbc');
 define('CRYPT_IV','T3pkYxNyjN7Wz3pu');//半角英数16文字
 	
 
-//スパム無効化関数
+//スパム無効化関数というかsql文の「'」エスケープ
 function newstring($string) {
 	$string = htmlspecialchars($string,ENT_QUOTES,'utf-8');
-	$string = str_replace(",","，",$string);
+	$string = str_replace("'","''",$string);
 	return $string;
 }
 //無効化ここまで
