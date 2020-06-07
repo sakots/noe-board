@@ -13,7 +13,7 @@
 		<meta property="og:url" content="{$base}{$self}?mode=res&amp;{$resno}">
 		{if isset($bbsline.picfile)}<meta property="og:image" content="{$base}{$bbsline.picfile}">{/if}
 		<meta property="og:site_name"  content="">
-		<meta property="og:description" content="{$bbsline.com}">
+		<meta property="og:description" content="{$bbsline.com|strip_tags:false}">
 		{/foreach}
 		<script src="./templates/{$skindir}getresname.js"></script>
 	</head>
