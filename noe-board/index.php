@@ -5,7 +5,7 @@
 //--------------------------------------------------
 
 //スクリプトのバージョン
-define('NOE_VER','v0.27.0'); //lot.200607.0
+define('NOE_VER','v0.27.1'); //lot.200607.1
 
 //smarty-3.1.34
 require_once(__DIR__.'/libs/Smarty.class.php');
@@ -813,8 +813,6 @@ function search() {
 
 		$i = 0;
 		while ($bbsline = $posts->fetch()) {
-			$bbsline = $posts->fetch();
-			if(empty($bbsline)){break;} //スレがなくなったら抜ける
 			$oya[] = $bbsline;
 			$i++;
 		}
