@@ -5,7 +5,7 @@
 //--------------------------------------------------
 
 //スクリプトのバージョン
-define('NOE_VER','v0.26.0'); //lot.200606.6
+define('NOE_VER','v0.27.0'); //lot.200607.0
 
 //smarty-3.1.34
 require_once(__DIR__.'/libs/Smarty.class.php');
@@ -101,7 +101,6 @@ $mode = newstring(filter_input(INPUT_POST, 'mode'));
 //var_dump($_GET);
 if(filter_input(INPUT_GET, 'mode')==="anime"){
 	$pch = newstring(filter_input(INPUT_GET, 'pch'));
-	//$shi = filter_input(INPUT_GET, 'shi',FILTER_VALIDATE_INT);
 	$mode = "anime";
 }
 if(filter_input(INPUT_GET, 'mode')==="continue"){
@@ -155,6 +154,9 @@ if(filter_input(INPUT_GET, 'mode')==="editexec"){
 }
 if(filter_input(INPUT_GET, 'mode')==="catalog"){
 	$mode = "catalog";
+}
+if(filter_input(INPUT_GET, 'mode')==="search"){
+	$mode = "search";
 }
 
 $message ="";
@@ -779,6 +781,52 @@ function catalog() {
 		$smarty->assign('path',IMG_DIR);
 
 		//$smarty->debugging = true;
+		$smarty->assign('catalogmode','catalog');
+		$smarty->display(THEMEDIR.CATALOGFILE);
+		$db = null; //db切断
+	} catch (PDOException $e) {
+		echo "DB接続エラー:" .$e->getMessage();
+	}
+}
+
+//作者名検索モード 現在全件表示のみ対応
+function search() {
+	global $smarty;
+
+	$author = filter_input(INPUT_GET, 'author');
+	//部分一致検索
+	$bubun =  filter_input(INPUT_GET, 'bubun');
+
+	//読み込み
+	try {
+		$db = new PDO("sqlite:noe.db");
+		//1ページの全スレッド取得
+		if($bubun === "bubun"){
+			$sql = "SELECT tid, created, modified, name, mail, sub, com, url, host, exid, id, pwd, utime, picfile, pchfile, img_w, img_h, time, tree, parent, age, utime FROM tablelog WHERE name LIKE '%$author%' AND invz=0 ORDER BY age DESC, tree DESC"; 
+		} else {
+			$sql = "SELECT tid, created, modified, name, mail, sub, com, url, host, exid, id, pwd, utime, picfile, pchfile, img_w, img_h, time, tree, parent, age, utime FROM tablelog WHERE name LIKE '$author' AND invz=0 ORDER BY age DESC, tree DESC"; 
+		}
+		
+		$posts = $db->query($sql);
+
+		$oya = array();
+
+		$i = 0;
+		while ($bbsline = $posts->fetch()) {
+			$bbsline = $posts->fetch();
+			if(empty($bbsline)){break;} //スレがなくなったら抜ける
+			$oya[] = $bbsline;
+			$i++;
+		}
+
+
+		$smarty->assign('oya',$oya);
+		$smarty->assign('path',IMG_DIR);
+
+		//$smarty->debugging = true;
+		$smarty->assign('catalogmode','search');
+		$smarty->assign('author',$author);
+		$smarty->assign('s_result',$i);
 		$smarty->display(THEMEDIR.CATALOGFILE);
 		$db = null; //db切断
 	} catch (PDOException $e) {
@@ -1946,6 +1994,9 @@ switch($mode){
 	break;
 	case 'catalog':
 		catalog();
+	break;
+	case 'search':
+		search();
 	break;
 	case 'edit':
 		editform();
