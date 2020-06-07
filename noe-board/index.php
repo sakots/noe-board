@@ -5,7 +5,7 @@
 //--------------------------------------------------
 
 //スクリプトのバージョン
-define('NOE_VER','v0.28.0'); //lot.200608.0
+define('NOE_VER','v0.29.0'); //lot.200608.1
 
 //smarty-3.1.34
 require_once(__DIR__.'/libs/Smarty.class.php');
@@ -103,7 +103,7 @@ function auto_link($proto){
 function hashtag_link($hashtag) {
 	$self = PHP_SELF;
 	$self = str_replace("/","",$self);
-	$hashtag = preg_replace("/(?:^|[^ｦ-ﾟー゛゜々ヾヽぁ-ヶ一-龠ａ-ｚＡ-Ｚ０-９a-zA-Z0-9&_\/]+)[#＃]([ｦ-ﾟー゛゜々ヾヽぁ-ヶ一-龠ａ-ｚＡ-Ｚ０-９a-zA-Z0-9_]*[ｦ-ﾟー゛゜々ヾヽぁ-ヶ一-龠ａ-ｚＡ-Ｚ０-９a-zA-Z]+[ｦ-ﾟー゛゜々ヾヽぁ-ヶ一-龠ａ-ｚＡ-Ｚ０-９a-zA-Z0-9_]*)/u", " <a href=\"{$self}?mode=hashsearch&amp;tag=\\1\">#\\1</a>", $hashtag);
+	$hashtag = preg_replace("/(?:^|[^ｦ-ﾟー゛゜々ヾヽぁ-ヶ一-龠ａ-ｚＡ-Ｚ０-９a-zA-Z0-9&_\/]+)[#＃]([ｦ-ﾟー゛゜々ヾヽぁ-ヶ一-龠ａ-ｚＡ-Ｚ０-９a-zA-Z0-9_]*[ｦ-ﾟー゛゜々ヾヽぁ-ヶ一-龠ａ-ｚＡ-Ｚ０-９a-zA-Z]+[ｦ-ﾟー゛゜々ヾヽぁ-ヶ一-龠ａ-ｚＡ-Ｚ０-９a-zA-Z0-9_]*)/u", " <a href=\"{$self}?mode=search&amp;tag=tag&amp;search=\\1\">#\\1</a>", $hashtag);
 	return $hashtag;
 }
 
@@ -168,9 +168,6 @@ if(filter_input(INPUT_GET, 'mode')==="catalog"){
 }
 if(filter_input(INPUT_GET, 'mode')==="search"){
 	$mode = "search";
-}
-if(filter_input(INPUT_GET, 'mode')==="hashsearch"){
-	$mode = "hashsearch";
 }
 
 $message ="";
@@ -805,60 +802,35 @@ function catalog() {
 	}
 }
 
-//作者名検索モード 現在全件表示のみ対応
+//検索モード 現在全件表示のみ対応
 function search() {
 	global $smarty;
 
-	$author = filter_input(INPUT_GET, 'author');
+	$search = filter_input(INPUT_GET, 'search');
 	//部分一致検索
 	$bubun =  filter_input(INPUT_GET, 'bubun');
-
-	//読み込み
-	try {
-		$db = new PDO("sqlite:noe.db");
-		//1ページの全スレッド取得
-		if($bubun === "bubun"){
-			$sql = "SELECT tid, created, modified, name, mail, sub, com, url, host, exid, id, pwd, utime, picfile, pchfile, img_w, img_h, time, tree, parent, age, utime FROM tablelog WHERE name LIKE '%$author%' AND invz=0 ORDER BY age DESC, tree DESC"; 
-		} else {
-			$sql = "SELECT tid, created, modified, name, mail, sub, com, url, host, exid, id, pwd, utime, picfile, pchfile, img_w, img_h, time, tree, parent, age, utime FROM tablelog WHERE name LIKE '$author' AND invz=0 ORDER BY age DESC, tree DESC"; 
-		}
-		
-		$posts = $db->query($sql);
-
-		$oya = array();
-
-		$i = 0;
-		while ($bbsline = $posts->fetch()) {
-			$oya[] = $bbsline;
-			$i++;
-		}
-
-
-		$smarty->assign('oya',$oya);
-		$smarty->assign('path',IMG_DIR);
-
-		//$smarty->debugging = true;
-		$smarty->assign('catalogmode','search');
-		$smarty->assign('author',$author);
-		$smarty->assign('s_result',$i);
-		$smarty->display(THEMEDIR.CATALOGFILE);
-		$db = null; //db切断
-	} catch (PDOException $e) {
-		echo "DB接続エラー:" .$e->getMessage();
-	}
-}
-
-//ハッシュタグ検索モード 現在全件表示のみ対応
-//なんか本文全部検索できる
-function hashsearch() {
-	global $smarty;
-
+	//本文検索
 	$tag = filter_input(INPUT_GET, 'tag');
 
 	//読み込み
 	try {
 		$db = new PDO("sqlite:noe.db");
-		$sql = "SELECT tid, created, modified, name, mail, sub, com, url, host, exid, id, pwd, utime, picfile, pchfile, img_w, img_h, time, tree, parent, age, utime FROM tablelog WHERE com LIKE '%$tag%' AND invz=0 ORDER BY age DESC, tree DESC"; 
+		//1ページの全スレッド取得
+		//まずtagがあれば本文検索
+		if ($tag != false) {
+			$sql = "SELECT tid, created, modified, name, mail, sub, com, url, host, exid, id, pwd, utime, picfile, pchfile, img_w, img_h, time, tree, parent, age, utime FROM tablelog WHERE com LIKE '%$tag%' AND invz=0 ORDER BY age DESC, tree DESC"; 
+			$smarty->assign('catalogmode','hashsearch');
+			$smarty->assign('tag',$search);
+		} else {
+			//tagがなければ作者名検索
+			if($bubun === "bubun"){
+				$sql = "SELECT tid, created, modified, name, mail, sub, com, url, host, exid, id, pwd, utime, picfile, pchfile, img_w, img_h, time, tree, parent, age, utime FROM tablelog WHERE name LIKE '%$search%' AND invz=0 ORDER BY age DESC, tree DESC"; 
+			} else {
+				$sql = "SELECT tid, created, modified, name, mail, sub, com, url, host, exid, id, pwd, utime, picfile, pchfile, img_w, img_h, time, tree, parent, age, utime FROM tablelog WHERE name LIKE '$search' AND invz=0 ORDER BY age DESC, tree DESC"; 
+			}
+			$smarty->assign('catalogmode','search');
+			$smarty->assign('author',$search);
+		}
 		
 		$posts = $db->query($sql);
 
@@ -874,8 +846,6 @@ function hashsearch() {
 		$smarty->assign('path',IMG_DIR);
 
 		//$smarty->debugging = true;
-		$smarty->assign('catalogmode','hashsearch');
-		$smarty->assign('tag',$tag);
 		$smarty->assign('s_result',$i);
 		$smarty->display(THEMEDIR.CATALOGFILE);
 		$db = null; //db切断
@@ -2047,9 +2017,6 @@ switch($mode){
 	break;
 	case 'search':
 		search();
-	break;
-	case 'hashsearch':
-		hashsearch();
 	break;
 	case 'edit':
 		editform();

@@ -59,19 +59,14 @@
 					</form>
 				</section>
 				<hr>
-				<p>作者名検索</p>
+				<p>作者名/本文(ハッシュタグ)検索</p>
 				<form class="search" method="GET" action="{$self}">
 					<input type="hidden" name="mode" value="search">
 					<label><input type="radio" name="bubun" value="bubun">部分一致</label>
-					<label><input type="radio" name="bubun" value="kanzen" checked>完全一致</label>
+					<label><input type="radio" name="bubun" value="kanzen">完全一致</label>
+					<label><input type="radio" name="tag" value="tag">本文(ハッシュタグ)</label>
 					<br>
-					<input type="text" name="author" placeholder="検索" size="20">
-					<input type="submit" value=" 検索 ">
-				</form>
-				<p>本文検索(親記事のみ)</p>
-				<form class="hashsearch" method="GET" action="{$self}">
-					<input type="hidden" name="mode" value="hashsearch">
-					<input type="text" name="tag" placeholder="#ハッシュタグ" size="20">
+					<input type="text" name="search" placeholder="検索" size="20">
 					<input type="submit" value=" 検索 ">
 				</form>
 				<hr>

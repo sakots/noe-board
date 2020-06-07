@@ -43,33 +43,19 @@
 				<hr>
 				{if $catalogmode == catalog}<p>CATALOG MODE</p>{/if}
 				{if $catalogmode == search}<p>SEARCH MODE -「{$author}」の作品 - {$s_result}件</p>{/if}
-				{if $catalogmode == hashsearch}<p>HASHTAG SEARCH -「{$tag}」- {$s_result}件</p>{/if}
+				{if $catalogmode == hashsearch}<p>SEARCH -「{$tag}」- {$s_result}件</p>{/if}
 				<hr>
-				<p>作者名検索</p>
-				<section>
-					<form class="search" method="GET" action="{$self}">
-						<input type="hidden" name="mode" value="search">
-						<label><input type="radio" name="bubun" value="bubun">部分一致</label>
-						<label><input type="radio" name="bubun" value="kanzen">完全一致</label>
-						<br>
-						{if $catalogmode == search}
-						<input type="text" name="author" placeholder="検索" value="{$author}" size="24">
-						<input type="submit" value=" 検索 ">
-						{else}
-						<input type="text" name="author" placeholder="検索" size="24">
-						<input type="submit" value=" 検索 ">
-						{/if}
-					</form>
-				</section>
-				<p>本文検索(親記事のみ)</p>
-				<section>
-					<form class="hashsearch" method="GET" action="{$self}">
-						<input type="hidden" name="mode" value="hashsearch">
-						<input type="text" name="tag" placeholder="#ハッシュタグ" size="20">
-						<input type="submit" value=" 検索 ">
-					</form>
-					<hr>
-				</section>
+				<p>作者名/本文(ハッシュタグ)検索</p>
+				<form class="search" method="GET" action="{$self}">
+					<input type="hidden" name="mode" value="search">
+					<label><input type="radio" name="bubun" value="bubun">部分一致</label>
+					<label><input type="radio" name="bubun" value="kanzen">完全一致</label>
+					<label><input type="radio" name="tag" value="tag">本文(ハッシュタグ)</label>
+					<br>
+					<input type="text" name="search" placeholder="検索" size="20">
+					<input type="submit" value=" 検索 ">
+				</form>
+				<hr>
 				<section class="delf">
 					<form action="{$self}" method="post">
 						<p>
