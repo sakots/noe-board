@@ -5,7 +5,7 @@
 //--------------------------------------------------
 
 //スクリプトのバージョン
-define('NOE_VER','v0.29.2'); //lot.200608.3
+define('NOE_VER','v0.29.3'); //lot.200608.4
 
 //smarty-3.1.34
 require_once(__DIR__.'/libs/Smarty.class.php');
@@ -1041,20 +1041,7 @@ function paintform(){
 	}
 	$smarty->assign('security_url',SECURITY_URL);
 
-	//if($pwd){
-	//	$pwd=openssl_encrypt ($pwd,CRYPT_METHOD, CRYPT_PASS, true, CRYPT_IV);//暗号化
-	//	$pwd=bin2hex($pwd);//16進数に
-	//}
-
 	if($ctype=='pch'){
-		//if(is_file(__DIR__.'/'.IMG_DIR.$pch.'.pch')){
-		//	$datpch = './'.IMG_DIR.$pch.'.pch';
-		//	$smarty->assign('pchfile',$datpch);
-		//} 
-		//elseif(is_file(__DIR__.'/'.IMG_DIR.$pch.'.spch')){
-		//	$datpch = './'.IMG_DIR.$pch.'.spch';
-		//	$smarty->assign('pchfile',$datpch);
-		//}
 		$pchfile = filter_input(INPUT_POST, 'pch');
 		$smarty->assign('pchfile',IMG_DIR.$pchfile);
 	}
@@ -1743,6 +1730,8 @@ function editexec(){
 
 	// URLとメールにリンク
 	if(AUTOLINK) $com = auto_link($com);
+	//ハッシュタグ
+	if(USE_HASHTAG) $com = hashtag_link($com);
 	// '>'色設定
 	$com = preg_replace("/(^|>)((&gt;|＞)[^<]*)/i", "\\1".RE_START."\\2".RE_END, $com);
 
