@@ -1,8 +1,10 @@
 <?php
 // noe-boardの最新画像をサイトの入り口のHTMLファイルに呼び出すphp
-// noe_newimg.php(c)さこつ 2020 lot.200604a
+// noe_newimg.php(c)さこつ 2020 lot.200607
 // https://sakots.red/
-//フリーウェアですが著作権は放棄しません。
+// さとぴあさんの https://github.com/satopian/potiboard_plugin
+// を参考に作りました。
+// フリーウェアですが著作権は放棄しません。
 
 // 使い方
 //noeのindex.phpと同じディレクトリにアップロードして
@@ -37,9 +39,9 @@ if (!is_file("noe.db")) {
         //db接続
         $db = new PDO("sqlite:noe.db"); 
         //modifiedが一番大きい=最新 の画像ファイル名を取り出す
-        //ORDER BY modified で modified（最終更新）の順、DESCで大きい順を指定
+        //ORDER BY picfile で picfile名（画像の最終更新）の順、DESCで大きい順を指定
         //LIMIT 1 で1行だけ取り出すので最新のものだけになる
-        $sql ="SELECT picfile FROM tablelog ORDER BY modified DESC LIMIT 1";
+        $sql ="SELECT picfile FROM tablelog ORDER BY picfile DESC LIMIT 1";
         $msgs = $db->prepare($sql);
         $msgs->execute();
         $msg = $msgs->fetch(); //取り出せた
