@@ -113,9 +113,9 @@
 							<span class="sodane"><a href="{$self}?mode=sodane&amp;resto={$bbsline.tid}">そうだねx{$bbsline.exid}</a></span>
 						</h4>
 						{if $bbsline.picfile == true}
+						{if $dptime == 1}{if $bbsline.time != null}<h5>描画時間：{$bbsline.time}</h5>{/if}{/if}
 						<figure>
-							<figcaption><a href="{$path}{$bbsline.picfile}" target="_blank" data-title="{$bbsline.picfile}">{$bbsline.picfile}</a><br>
-							{if $dptime == 1}{if $bbsline.time != null}描画時間：{$bbsline.time}｜{/if}{/if}
+							<figcaption><a href="{$path}{$bbsline.picfile}" target="_blank" data-title="{$bbsline.picfile}">{$bbsline.picfile}</a>
 							{if $bbsline.pchfile != null}<a href="{$self}?mode=anime&amp;pch={$bbsline.pchfile}">●動画</a>{/if}
 							{if $use_continue == 1} <a href="{$self}?mode=continue&amp;no={$bbsline.picfile}">●続きを描く</a>{/if}</figcaption>
 							<a href="{$path}{$bbsline.picfile}" target="_blank"data-lightbox="b{$bbsline.picfile}" data-title="{$bbsline.picfile}"><img src="{$path}{$bbsline.picfile}" alt="{$bbsline.picfile}"></a>
@@ -140,9 +140,9 @@
 									<span class="sodane"><a href="{$self}?mode=rsodane&amp;resto={$res.iid}">そうだねx{$res.exid}</a></span>
 								</h4>
 								{if $res.picfile == true}
+								{if $dptime == 1}{if $res.time != null}<h5>描画時間：{$res.time}</h5>{/if}{/if}
 								<figure>
-									<figcaption><a href="{$path}{$res.picfile}" target="_blank" title="{$res.picfile}">{$res.picfile}</a><br>
-									{if $dptime == 1}{if $res.time != null}描画時間：{$res.time}｜{/if}{/if}
+									<figcaption><a href="{$path}{$res.picfile}" target="_blank" title="{$res.picfile}">{$res.picfile}</a>
 									{if $res.pchfile != null}｜<a href="{$self}?mode=anime&amp;pch={$res.pchfile}">●動画</a>{/if}
 									</figcaption>
 									<a href="{$path}{$res.picfile}" target="_blank"data-lightbox="b{$res.picfile}" data-title="{$res.picfile}"><img src="{$path}{$res.picfile}" alt="{$res.picfile}"></a>

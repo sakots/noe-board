@@ -121,8 +121,6 @@ em.thispage {
 
 figure {
   float: left;
-  display: table;
-  width: 300px;
   padding-right: 8px;
   background-color: #EEE;
   margin-bottom: 1ex;
@@ -173,6 +171,10 @@ p.oya {
 .limit {
   margin-top: 1em;
   background-color: #FCC;
+}
+
+h5 {
+  font-weight: normal;
 }
 
 .resma {

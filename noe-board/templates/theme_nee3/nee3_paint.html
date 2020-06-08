@@ -6,9 +6,9 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 		<link rel="stylesheet" href="./templates/{$skindir}nee3_main.css" type="text/css">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
-		<link rel="stylesheet" href="neo.css" type="text/css">
 		{if $useneo == true}
-		<script src="neo.js" charset="utf-8"></script>
+		<link rel="stylesheet" href="neo.css?{$smarty.now}" type="text/css">
+		<script src="neo.js?{$smarty.now}" charset="utf-8"></script>
 		{else}
 		<!-- Javaが使えるかどうか判定 使えなければcheerpJをロード -->
 		<script>
@@ -386,13 +386,14 @@
 						<param name="thumbnail_height" value="100%">
 						<param name="tool_advance" value="true">
 						{if $anime == true}<param name="thumbnail_type" value="animation">{/if}
-						{if $security == true}
+						{if isset($security)}
 						{if isset($security_click)}<param name="security_click" value="{$security_click}">{/if}
 						{if isset($security_timer)}<param name="security_timer" value="{$security_timer}">{/if}
 						<param name="security_url" value="{$security_url}">
 						<param name="security_post" value="false">
 						{/if}
 					{if $useneo == true}
+						<param name="neo_confirm_unload" value="true">
 					</applet-dummy>
 					{else}
 					</applet>
