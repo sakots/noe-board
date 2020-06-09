@@ -89,7 +89,25 @@
                         </p>
                     </div>
 				</div>
-                {/foreach}{/if}
+				{/foreach}{/if}
+				{if $catalogmode == hashsearch}{if isset($ko)}{foreach from=$ko item=res}
+				<div>
+                    <div>
+                        {if $res.picfile == true}
+                        <p>
+                            <a href="{$self}?mode=res&amp;res={$res.tid}" title="{$res.sub} (by {$res.name})"><img src="{$path}{$res.picfile}" alt="{$res.sub} (by {$res.name})"></a>
+                        </p>
+                        {else}
+                        <p>
+                            <a href="{$self}?mode=res&amp;res={$res.tid}" title="{$res.sub} (by {$res.name})">{$res.com|strip_tags|truncate:30} </a>
+                        </p>
+                        {/if}
+                        <p>
+                            [{$res.tid}]({$res.iid})
+                        </p>
+                    </div>
+				</div>
+				{/foreach}{/if}{/if}
 			</div>
 			<div>
 				<section class="thread">
@@ -127,6 +145,7 @@
 						<p>
 							<select name="delt">
 								<option value="0">親</option>
+								{if $catalogmode == hashsearch}<option value="1">レス</option>{/if}
 							</select>
 							No <input class="form" type="number" min="1" name="delno" value="" autocomplete="off">
 							Pass <input class="form" type="password" name="pwd" value="" autocomplete="current-password">

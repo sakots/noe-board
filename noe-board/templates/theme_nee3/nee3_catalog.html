@@ -115,6 +115,24 @@
                     </div>
 				</div>
 				{/foreach}{/if}
+				{if $catalogmode == hashsearch}{if isset($ko)}{foreach from=$ko item=res}
+				<div>
+                    <div>
+                        {if $res.picfile == true}
+                        <p>
+                            <a href="{$self}?mode=res&amp;res={$res.tid}" title="{$res.sub} (by {$res.name})"><img src="{$path}{$res.picfile}" alt="{$res.sub} (by {$res.name})"></a>
+                        </p>
+                        {else}
+                        <p>
+                            <a href="{$self}?mode=res&amp;res={$res.tid}" title="{$res.sub} (by {$res.name})">{$res.com|strip_tags|truncate:30} </a>
+                        </p>
+                        {/if}
+                        <p>
+                            [{$res.tid}]({$res.iid})
+                        </p>
+                    </div>
+				</div>
+				{/foreach}{/if}{/if}
 			</div>
 			<script src="loadcookie.js"></script>
 			<script>

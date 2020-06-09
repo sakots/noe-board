@@ -65,7 +65,7 @@
 							<td>{$bbsline.modified}</td>
 							<td>{$bbsline.sub|truncate:6}</td>
 							<td>{if $bbsline.picfile == true}<a href="{$path}{$bbsline.picfile}" target="_brank">{$bbsline.picfile}</a>{/if}</td>
-							<td>{$bbsline.com|truncate:10}</td>
+							<td>{$bbsline.com|strip_tags|truncate:10}</td>
 							<td>{$bbsline.host}</td>
 							<td>{if $bbsline.invz == 1}invz{/if}</td>
 						</tr>
@@ -76,7 +76,7 @@
 							<td>{$res.modified}</td>
 							<td>{$res.sub|truncate:6}</td>
 							<td>{$res.picfile}</td>
-							<td>{$res.com|truncate:10}</td>
+							<td>{$res.com|strip_tags|truncate:10}</td>
 							<td>{$res.host}</td>
 							<td>{if $res.invz == 1}invz{/if}</td>
 						</tr>
