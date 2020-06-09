@@ -5,7 +5,7 @@
 //--------------------------------------------------
 
 //スクリプトのバージョン
-define('NOE_VER','v0.29.3'); //lot.200608.4
+define('NOE_VER','v0.30.0'); //lot.200609.0
 
 //smarty-3.1.34
 require_once(__DIR__.'/libs/Smarty.class.php');
@@ -815,10 +815,12 @@ function search() {
 	//読み込み
 	try {
 		$db = new PDO("sqlite:noe.db");
-		//1ページの全スレッド取得
+		//全スレッド取得
 		//まずtagがあれば本文検索
 		if ($tag === 'tag') {
-			$sql = "SELECT tid, created, modified, name, mail, sub, com, url, host, exid, id, pwd, utime, picfile, pchfile, img_w, img_h, time, tree, parent, age, utime FROM tablelog WHERE com LIKE '%$search%' AND invz=0 ORDER BY age DESC, tree DESC"; 
+			$sql = "SELECT tid, created, modified, name, mail, sub, com, url, host, exid, id, pwd, utime, picfile, pchfile, img_w, img_h, time, tree, parent, age, utime FROM tablelog WHERE com LIKE '%$search%' AND invz=0 ORDER BY age DESC, tree DESC";
+			//レスも
+			$sqli = "SELECT iid, tid, created, modified, name, mail, sub, com, url, host, exid, id, pwd, utime, picfile, pchfile, img_w, img_h, time, tree, parent FROM tabletree WHERE com LIKE '%$search%' and invz=0 ORDER BY tree DESC";
 			$smarty->assign('catalogmode','hashsearch');
 			$smarty->assign('tag',$search);
 		} else {
@@ -840,6 +842,16 @@ function search() {
 		while ($bbsline = $posts->fetch()) {
 			$oya[] = $bbsline;
 			$i++;
+		}
+		//tagがあればレスも検索
+		if ($tag === 'tag') {
+			$ko = array();
+			$postsi = $db->query($sqli);
+			while ($res = $postsi->fetch()) {
+				$ko[] = $res;
+				$i++;
+			}
+			$smarty->assign('ko',$ko);
 		}
 
 		$smarty->assign('oya',$oya);
@@ -1068,7 +1080,6 @@ function paintform(){
 		$datusercode = $usercode.'&amp;repcode='.$repcode;
 		$smarty->assign('usercode',$datusercode);
 	}
-
 	//出力
 	$smarty->display( THEMEDIR.PAINTFILE );
 }
