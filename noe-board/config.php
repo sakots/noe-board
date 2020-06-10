@@ -250,20 +250,16 @@ define('CATALOG_N', '30');
 define('SAVE_COOKIE', '7');
 
 //連続投稿秒数
-//未実装
-define('RENZOKU', '10');
+//実装しない
+//define('RENZOKU', '10');
 
 //画像連続投稿秒数
-//未実装
-define('RENZOKU2', '20');
+//実装しない
+//define('RENZOKU2', '20');
 
 //強制sageレス数( 0 ですべてsage)
 //実装できないかも
 define('MAX_RES', '20');
-
-//proxyの書込みを制限する y:1 n:0
-//未実装
-define('PROXY_CHECK', '0');
 
 //ID生成の種
 define('ID_SEED', 'IDの種');
