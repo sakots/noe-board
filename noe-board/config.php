@@ -258,7 +258,6 @@ define('SAVE_COOKIE', '7');
 //define('RENZOKU2', '20');
 
 //強制sageレス数( 0 ですべてsage)
-//実装できないかも
 define('MAX_RES', '20');
 
 //ID生成の種

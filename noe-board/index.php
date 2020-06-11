@@ -5,7 +5,7 @@
 //--------------------------------------------------
 
 //スクリプトのバージョン
-define('NOE_VER','v0.30.0'); //lot.200609.0
+define('NOE_VER','v0.30.1'); //lot.200611.0
 
 //smarty-3.1.34
 require_once(__DIR__.'/libs/Smarty.class.php');
@@ -518,9 +518,20 @@ function regist() {
 				$tid = newstring(filter_input(INPUT_POST, 'modid'));
 				//id生成
 				$id = substr(crypt(md5($host.ID_SEED.date("Ymd", $utime)),'id'),-8);
-				$nage = $age +1;
+				//age処理するかどうか
+				//スレのレス数を数える
+				$sqlr = "SELECT COUNT(*) as cntres FROM tabletree WHERE tid =  '$tid' AND invz=0";
+				$countsr = $db->query("$sqlr");
+				$countr = $countsr->fetch();
+				$resn = $countr["cntres"]; //スレのレス数取得できた
+
 				if ($age <= LOG_MAX_R) {
-					$sql = "INSERT INTO tabletree (created, modified, tid, name, sub, com, mail, url, picfile, pchfile, img_w, img_h, utime, parent, time, pwd, id, exid, tree, invz, host) VALUES (datetime('now', 'localtime') , datetime('now', 'localtime') , '$tid', '$name', '$sub', '$com', '$mail', '$url', '$picfile', '$pchfile', '$img_w', '$img_h', '$utime', '$parent', '$time', '$pwdh', '$id', '$exid', '$tree', '$invz', '$host'); UPDATE tablelog set age = '$nage' where tid = '$tid'";
+					if($resn < MAX_RES){ //レス数が指定値より少ないならage
+						$nage = $age +1;
+						$sql = "INSERT INTO tabletree (created, modified, tid, name, sub, com, mail, url, picfile, pchfile, img_w, img_h, utime, parent, time, pwd, id, exid, tree, invz, host) VALUES (datetime('now', 'localtime') , datetime('now', 'localtime') , '$tid', '$name', '$sub', '$com', '$mail', '$url', '$picfile', '$pchfile', '$img_w', '$img_h', '$utime', '$parent', '$time', '$pwdh', '$id', '$exid', '$tree', '$invz', '$host'); UPDATE tablelog set age = '$nage' where tid = '$tid'";
+					} else {
+						$sql = "INSERT INTO tabletree (created, modified, tid, name, sub, com, mail, url, picfile, pchfile, img_w, img_h, utime, parent, time, pwd, id, exid, tree, invz, host) VALUES (datetime('now', 'localtime') , datetime('now', 'localtime') , '$tid', '$name', '$sub', '$com', '$mail', '$url', '$picfile', '$pchfile', '$img_w', '$img_h', '$utime', '$parent', '$time', '$pwdh', '$id', '$exid', '$tree', '$invz', '$host')";
+					}
 					$db = $db->exec($sql);
 				} else {
 					//ログ行数オーバーの場合
