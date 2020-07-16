@@ -133,6 +133,27 @@ p.oya {
 	font-weight: normal;
 	text-decoration: none;
 }
+
+.oyaname {
+	line-height: 1em;
+    border: solid 1px $button;
+    border-radius: 5px;
+	display: inline-block;
+    a {
+		text-decoration: none;
+        display: block;
+		padding: 5px;
+		color: inherit;
+    }
+}
+.oyaname:hover {
+    background-color: $ushiro;
+}
+
+h4#oya {
+	margin-top: 1ex;
+}
+
 .res {
 	border-top: dashed 1px $border;
 	margin-top: 1em;
@@ -141,7 +162,11 @@ p.oya {
 		display: inline-block;
 		max-width: 100%;
 	}
-	h3, h4 {
+	h3 {
+		font-size: 100%;
+		margin-bottom: 0ex;
+	}
+	h4 {
 		font-size: 100%;
 		margin-bottom: 1ex;
 	}

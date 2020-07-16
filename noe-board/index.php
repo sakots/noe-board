@@ -5,7 +5,7 @@
 //--------------------------------------------------
 
 //スクリプトのバージョン
-define('NOE_VER','v0.30.2'); //lot.200611.0
+define('NOE_VER','v0.31.0'); //lot.200716.0
 
 //smarty-3.1.34
 require_once(__DIR__.'/libs/Smarty.class.php');

@@ -103,8 +103,8 @@
 				<section class="thread">
 					<h3><span class="oyano">{$bbsline.tid}</span>{$bbsline.sub}</h3>
 					<section>
-						<h4>
-							名前：<span class="oyaname">{$bbsline.name}</span>：
+						<h4 id="oya">
+							<span class="oyaname"><a href="{$self}?mode=search&bubun=kanzen&search={$bbsline.name}">{$bbsline.name}</a></span>
 							{if $bbsline.modified == $bbsline.created }{$bbsline.modified|date_format:"%y/%m/%d (%a) %H:%M"}{else}{$bbsline.created|date_format:"%y/%m/%d (%a) %H:%M"} {$updatemark} {$bbsline.modified|date_format:"%y/%m/%d (%a) %H:%M"}{/if}
 							{if $bbsline.mail == true }<span class="button"><a href="mailto:{$bbsline.mail}"><i class="fas fa-at"></i> mail</a></span>{/if}
 							{if $bbsline.url == true} <span class="button"><a href="{$bbsline.url}" target="_blank" rel="nofollow noopener noreferrer"><i class="fas fa-flag-checkered"></i> URL</a></span>{/if}

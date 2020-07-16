@@ -148,6 +148,28 @@ p.oya {
   text-decoration: none;
 }
 
+.oyaname {
+  line-height: 1em;
+  border: solid 1px #369;
+  border-radius: 5px;
+  display: inline-block;
+}
+
+.oyaname a {
+  text-decoration: none;
+  display: block;
+  padding: 5px;
+  color: inherit;
+}
+
+.oyaname:hover {
+  background-color: #CCC;
+}
+
+h4#oya {
+  margin-top: 1ex;
+}
+
 .res {
   border-top: dashed 1px #036;
   margin-top: 1em;
@@ -159,7 +181,12 @@ p.oya {
   max-width: 100%;
 }
 
-.res h3, .res h4 {
+.res h3 {
+  font-size: 100%;
+  margin-bottom: 0ex;
+}
+
+.res h4 {
   font-size: 100%;
   margin-bottom: 1ex;
 }
