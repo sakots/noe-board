@@ -9,7 +9,7 @@
 		<meta name="twitter:card" content="summary">
 		<meta property="og:title" content="[{$bbsline.tid}] {$bbsline.sub} by {$bbsline.name} - {$btitle}">
 		<meta property="og:type" content="article">
-		<meta property="og:url" content="{$base}{$self}?mode=res&amp;{$resno}">
+		<meta property="og:url" content="{$base}{$self}?mode=res&amp;={$resno}">
 		{if isset($bbsline.picfile)}<meta property="og:image" content="{$base}{$path}{$bbsline.picfile}">{/if}
 		<meta property="og:site_name"  content="">
 		<meta property="og:description" content="{$bbsline.com|strip_tags:false}">
@@ -92,7 +92,7 @@
 						(function(){ //byさとぴあさん
 							var url = encodeURIComponent('{$base}{$self}?mode=res&amp;{$resno}'); //ページURL
 							var title = encodeURIComponent('[{$bbsline.tid}] {$bbsline.sub} by {$bbsline.name} - {$btitle}'); //ページタイトル
-							document.write( '<span class="button"><a target="_blank" href="https://twitter.com/intent/tweet?&amp;text=' + title + '&amp;url=' + url + '"><img src="./templates/{$skindir}icons/twitter.svg" width="16" height="16"> tweet</a></a></span> <span class="button"><a target="_blank" class="fb btn" href="http://www.facebook.com/share.php?u=' + url + '"><img src="./templates/{$skindir}icons/facebook.svg" width="16" height="16"> share</a></span>' );}
+							document.write( '<span class="button"><a target="_blank" href="https://twitter.com/intent/tweet?&amp;text=' + title + '&amp;url=' + url + '"><img src="./templates/{$skindir}icons/twitter.svg" width="16" height="16"> tweet</a></span> <span class="button"><a target="_blank" class="fb btn" href="http://www.facebook.com/share.php?u=' + url + '"><img src="./templates/{$skindir}icons/facebook.svg" width="16" height="16"> share</a></span>' );}
 						)();
 					</script>
 				</div>
