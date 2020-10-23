@@ -213,9 +213,8 @@ $smarty->assign('usercode',$usercode);
 /* 記事書き込み */
 function regist() {
 	global $name,$com,$sub,$parent,$picfile,$img_w,$img_h,$mail,$url,$time,$pwd,$pwdh,$exid,$invz;
-	global $badstring,$badip;
+	global $badip;
 	global $req_method;
-	global $badstr_A,$badstr_B,$badname;
 	global $smarty;
 	$userip = get_uip();
 
@@ -224,74 +223,9 @@ function regist() {
 
 	if($req_method !== "POST") {error(MSG006);exit;}
 
-	//チェックする項目から改行・スペース・タブを消す
-	$chk_com  = preg_replace("/\s/u", "", $com );
-	$chk_name = preg_replace("/\s/u", "", $name );
-	$chk_sub = preg_replace("/\s/u", "", $sub );
-	$chk_mail = preg_replace("/\s/u", "", $mail );
+	//NGワードがあれば拒絶
+	Reject_if_NGword_exists_in_the_post($com,$name,$mail,$url,$sub);
 
-	//本文に日本語がなければ拒絶
-	if (USE_JAPANESEFILTER) {
-		mb_regex_encoding("UTF-8");
-		if (strlen($com) > 0 && !preg_match("/[ぁ-んァ-ヶー一-龠]+/u",$chk_com)) {
-			error(MSG035);
-			exit;
-		}
-	}
-
-	//本文へのURLの書き込みを禁止
-	if(DENY_COMMENTS_URL && preg_match('/:\/\/|\.co|\.ly|\.gl|\.net|\.org|\.cc|\.ru|\.su|\.ua|\.gd/i', $com)) {error(MSG036); exit;}
-
-	foreach($badstring as $value){//拒絶する文字列
-		if($value===''){
-		break;
-		}
-		if(preg_match("/$value/ui",$chk_com)||preg_match("/$value/ui",$chk_sub)||preg_match("/$value/ui",$chk_name)||preg_match("/$value/ui",$chk_mail)){
-			error(MSG032);
-			exit;
-		}
-	}
-	unset($value);	
-	if(isset($badname)){//使えない名前
-		foreach($badname as $value){
-			if($value===''){
-			break;
-			}
-			if(preg_match("/$value/ui",$chk_name)){
-				error(MSG037);
-				exit;
-			}
-		}
-		unset($value);	
-	}
-
-	$bstr_A_find=false;
-	$bstr_B_find=false;
-
-	foreach($badstr_A as $value){//指定文字列が2つあると拒絶
-		if($value===''){
-		break;
-		}
-		if(preg_match("/$value/ui",$chk_com)||preg_match("/$value/ui",$chk_sub)||preg_match("/$value/ui",$chk_name)||preg_match("/$value/ui",$chk_mail)){
-			$bstr_A_find=true;
-		break;
-		}
-	}
-	unset($value);
-	foreach($badstr_B as $value){
-		if($value===''){
-			break;
-		}
-		if(preg_match("/$value/ui",$chk_com)||preg_match("/$value/ui",$chk_sub)||preg_match("/$value/ui",$chk_name)||preg_match("/$value/ui",$chk_mail)){
-			$bstr_B_find=true;
-		break;
-		}
-	}
-	unset($value);
-	if($bstr_A_find && $bstr_B_find){
-		error(MSG032);
-		exit;
-	}
 
 	if(USE_NAME&&!$name) {error(MSG009);exit;}
 	if(USE_COM&&!$com) {error(MSG008);exit;}
@@ -1170,32 +1104,10 @@ function paintcom(){
 	$smarty->assign('usercode',$usercode);
 
 	//----------
-	$time = time();
 
 	//描画時間
 	if($stime){
-		$ptime = '';
-		if($stime){
-			$psec = $time-$stime;
-			if($psec >= 86400){
-				$D=($psec - ($psec % 86400)) / 86400;
-				$ptime .= $D.PTIME_D;
-				$psec -= $D*86400;
-			}
-			if($psec >= 3600){
-				$H=($psec - ($psec % 3600)) / 3600;
-				$ptime .= $H.PTIME_H;
-				$psec -= $H*3600;
-			}
-			if($psec >= 60){
-				$M=($psec - ($psec % 60)) / 60;
-				$ptime .= $M.PTIME_M;
-				$psec -= $M*60;
-			}
-			if($psec){
-				$ptime .= $psec.PTIME_S;
-			}
-		}
+		$ptime = calcPtime($stime);
 	}
 
 	$smarty->assign('ptime',$ptime);
@@ -1484,33 +1396,9 @@ function picreplace($no,$pwdf,$stime){
 		exit;
 	}
 
-	// 時間
-	$time = time();
-
 	//描画時間
 	if($stime){
-		$ptime = '';
-		if($stime){
-			$psec = $time-$stime;
-			if($psec >= 86400){
-				$D=($psec - ($psec % 86400)) / 86400;
-				$ptime .= $D.PTIME_D;
-				$psec -= $D*86400;
-			}
-			if($psec >= 3600){
-				$H=($psec - ($psec % 3600)) / 3600;
-				$ptime .= $H.PTIME_H;
-				$psec -= $H*3600;
-			}
-			if($psec >= 60){
-				$M=($psec - ($psec % 60)) / 60;
-				$ptime .= $M.PTIME_M;
-				$psec -= $M*60;
-			}
-			if($psec){
-				$ptime .= $psec.PTIME_S;
-			}
-		}
+		$ptime = calcPtime($stime);
 	}
 
 	// ログ読み込み
@@ -1653,9 +1541,8 @@ function editform() {
 //編集モードくん本体
 function editexec(){
 	global $name,$com,$sub,$picfile,$mail,$url,$pwd,$pwdh,$exid;
-	global $badstring,$badip;
+	global $badip;
 	global $req_method;
-	global $badstr_A,$badstr_B,$badname;
 	global $smarty;
 	$userip = get_uip();
 
@@ -1664,74 +1551,8 @@ function editexec(){
 
 	if($req_method !== "POST") {error(MSG006);exit;}
 
-	//チェックする項目から改行・スペース・タブを消す
-	$chk_com  = preg_replace("/\s/u", "", $com );
-	$chk_name = preg_replace("/\s/u", "", $name );
-	$chk_sub = preg_replace("/\s/u", "", $sub );
-	$chk_mail = preg_replace("/\s/u", "", $mail );
-
-	//本文に日本語がなければ拒絶
-	if (USE_JAPANESEFILTER) {
-		mb_regex_encoding("UTF-8");
-		if (strlen($com) > 0 && !preg_match("/[ぁ-んァ-ヶー一-龠]+/u",$chk_com)) {
-			error(MSG035);
-			exit;
-		}
-	}
-
-	//本文へのURLの書き込みを禁止
-	if(DENY_COMMENTS_URL && preg_match('/:\/\/|\.co|\.ly|\.gl|\.net|\.org|\.cc|\.ru|\.su|\.ua|\.gd/i', $com)) {error(MSG036); exit;}
-
-	foreach($badstring as $value){//拒絶する文字列
-		if($value===''){
-		break;
-		}
-		if(preg_match("/$value/ui",$chk_com)||preg_match("/$value/ui",$chk_sub)||preg_match("/$value/ui",$chk_name)||preg_match("/$value/ui",$chk_mail)){
-			error(MSG032);
-			exit;
-		}
-	}
-	unset($value);	
-	if(isset($badname)){//使えない名前
-		foreach($badname as $value){
-			if($value===''){
-			break;
-			}
-			if(preg_match("/$value/ui",$chk_name)){
-				error(MSG037);
-				exit;
-			}
-		}
-		unset($value);	
-	}
-
-	$bstr_A_find=false;
-	$bstr_B_find=false;
-
-	foreach($badstr_A as $value){//指定文字列が2つあると拒絶
-		if($value===''){
-		break;
-		}
-		if(preg_match("/$value/ui",$chk_com)||preg_match("/$value/ui",$chk_sub)||preg_match("/$value/ui",$chk_name)||preg_match("/$value/ui",$chk_mail)){
-			$bstr_A_find=true;
-		break;
-		}
-	}
-	unset($value);
-	foreach($badstr_B as $value){
-		if($value===''){
-			break;
-		}
-		if(preg_match("/$value/ui",$chk_com)||preg_match("/$value/ui",$chk_sub)||preg_match("/$value/ui",$chk_name)||preg_match("/$value/ui",$chk_mail)){
-			$bstr_B_find=true;
-		break;
-		}
-	}
-	unset($value);
-	if($bstr_A_find && $bstr_B_find){
-		error(MSG032);
-		exit;
-	}
+	//NGワードがあれば拒絶
+	Reject_if_NGword_exists_in_the_post($com,$name,$mail,$url,$sub);
 
 	if(USE_NAME&&!$name) {error(MSG009);exit;}
 	if(USE_COM&&!$com) {error(MSG008);exit;}
@@ -1983,6 +1804,105 @@ if(!$usercode){//falseなら発行
 	$usercode = strtr($usercode,"!\"#$%&'()+,/:;<=>?@[\\]^`/{|}~","ABCDEFGHIJKLMNOabcdefghijklmn");
 }
 setcookie("usercode", $usercode, time()+86400*365);//1年間
+
+/* NGワードがあれば拒絶 */
+
+function Reject_if_NGword_exists_in_the_post($com,$name,$mail,$url,$sub){
+	
+	global $badstring,$badstr_A,$badstr_B,$badname;
+
+	//チェックする項目から改行・スペース・タブを消す
+	$chk_com  = preg_replace("/\s/u", "", $com );
+	$chk_name = preg_replace("/\s/u", "", $name );
+	$chk_sub = preg_replace("/\s/u", "", $sub );
+	$chk_mail = preg_replace("/\s/u", "", $mail );
+
+	//本文に日本語がなければ拒絶
+	if (USE_JAPANESEFILTER) {
+		mb_regex_encoding("UTF-8");
+		if (strlen($com) > 0 && !preg_match("/[ぁ-んァ-ヶー一-龠]+/u",$chk_com)) {
+			error(MSG035);
+			exit;
+		}
+	}
+
+	//本文へのURLの書き込みを禁止
+	if(DENY_COMMENTS_URL && preg_match('/:\/\/|\.co|\.ly|\.gl|\.net|\.org|\.cc|\.ru|\.su|\.ua|\.gd/i', $com)) {error(MSG036); exit;}
+
+	foreach($badstring as $value){//拒絶する文字列
+		if($value===''){
+		break;
+		}
+		if(preg_match("/$value/ui",$chk_com)||preg_match("/$value/ui",$chk_sub)||preg_match("/$value/ui",$chk_name)||preg_match("/$value/ui",$chk_mail)){
+			error(MSG032);
+			exit;
+		}
+	}
+	unset($value);	
+	if(isset($badname)){//使えない名前
+		foreach($badname as $value){
+			if($value===''){
+			break;
+			}
+			if(preg_match("/$value/ui",$chk_name)){
+				error(MSG037);
+				exit;
+			}
+		}
+		unset($value);	
+	}
+
+	$bstr_A_find=false;
+	$bstr_B_find=false;
+
+	foreach($badstr_A as $value){//指定文字列が2つあると拒絶
+		if($value===''){
+		break;
+		}
+		if(preg_match("/$value/ui",$chk_com)||preg_match("/$value/ui",$chk_sub)||preg_match("/$value/ui",$chk_name)||preg_match("/$value/ui",$chk_mail)){
+			$bstr_A_find=true;
+		break;
+		}
+	}
+	unset($value);
+	foreach($badstr_B as $value){
+		if($value===''){
+			break;
+		}
+		if(preg_match("/$value/ui",$chk_com)||preg_match("/$value/ui",$chk_sub)||preg_match("/$value/ui",$chk_name)||preg_match("/$value/ui",$chk_mail)){
+			$bstr_B_find=true;
+		break;
+		}
+	}
+	unset($value);
+	if($bstr_A_find && $bstr_B_find){
+		error(MSG032);
+		exit;
+	}
+
+}
+
+/**
+ * 描画時間を計算
+ * @param $starttime
+ * @return string
+ */
+function calcPtime ($starttime,$postedtime='') {
+
+	$postedtime = $postedtime ? $postedtime : time();
+	$psec = $postedtime - $starttime;
+
+	$D = floor($psec / 86400);
+	$H = floor($psec % 86400 / 3600);
+	$M = floor($psec % 3600 / 60);
+	$S = $psec % 60;
+
+	return
+		($D ? $D . PTIME_D : '')
+		. ($H ? $H . PTIME_H : '')
+		. ($M ? $M . PTIME_M : '')
+		. ($S ? $S . PTIME_S : '');
+}
 
 /*-----------mode-------------*/
 
