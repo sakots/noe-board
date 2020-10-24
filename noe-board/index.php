@@ -1106,6 +1106,7 @@ function paintcom(){
 	//----------
 
 	//描画時間
+	$ptime='';
 	if($stime){
 		$ptime = calcPtime($stime);
 	}
@@ -1397,6 +1398,7 @@ function picreplace($no,$pwdf,$stime){
 	}
 
 	//描画時間
+	$ptime='';
 	if($stime){
 		$ptime = calcPtime($stime);
 	}
