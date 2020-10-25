@@ -89,6 +89,7 @@ function newstring($string) {
 }
 //無効化ここまで
 
+
 /* オートリンク */
 function auto_link($proto){
 	if(!(stripos($proto,"script")!==false)){//scriptがなければ続行
@@ -225,9 +226,9 @@ function regist() {
 
 	//NGワードがあれば拒絶
 	Reject_if_NGword_exists_in_the_post($com,$name,$mail,$url,$sub);
-
-
 	if(USE_NAME&&!$name) {error(MSG009);exit;}
+	//レスの時は本文必須
+	if(filter_input(INPUT_POST, 'modid')&&!$com) {error(MSG008);exit;}
 	if(USE_COM&&!$com) {error(MSG008);exit;}
 	if(USE_SUB&&!$sub) {error(MSG010);exit;}
 
@@ -285,7 +286,7 @@ function regist() {
 				$msgwcom = $msgwc["com"]; //最新コメント取得できた
 				$msgwhost = $msgwc["host"]; //最新ホスト取得できた
 				//どれも一致すれば二重投稿だと思う
-				if($com == $msgwcom && $host == $msgwhost && $sub == $msgsub ){
+				if($com != DEF_COM && $com == $msgwcom && $host == $msgwhost && $sub == $msgsub ){
 					$msgs = null;
 					$msgw = null;
 					$db = null; //db切断
