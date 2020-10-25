@@ -304,17 +304,16 @@ function regist() {
 
 			//画像ファイルとか処理
 			if ( $picfile == true ) {
-				$imagesize = getimagesize(TEMP_DIR.$picfile);
-				$img_w = $imagesize[0];
-				$img_h = $imagesize[1];
+				list($img_w,$img_h)=getimagesize(TEMP_DIR.$picfile);
 				rename( TEMP_DIR.$picfile , IMG_DIR.$picfile );
 				chmod( IMG_DIR.$picfile , 0606);
-				$picdat = strtr($picfile , 'png', 'dat');
+				$path_filename=pathinfo($picfile, PATHINFO_FILENAME );//拡張子除去
+				$picdat = $path_filename.'.dat';
 				rename( TEMP_DIR.$picdat, IMG_DIR.$picdat );
 				chmod( IMG_DIR.$picdat , 0606);
 
-				$spchfile = str_replace('png','spch', $picfile);
-				$pchfile = strtr($picfile , 'png', 'pch');
+				$spchfile = $path_filename.'.spch';
+				$pchfile = $path_filename.'.pch';
 				
 				if ( file_exists(TEMP_DIR.$pchfile) == TRUE ) {
 					rename( TEMP_DIR.$pchfile, IMG_DIR.$pchfile );
@@ -384,7 +383,7 @@ function regist() {
 				$msgpic = $msg["picfile"]; //画像の名前取得できた
 				//画像とかの削除処理
 				if (file_exists(IMG_DIR.$msgpic)) {
-					$msgdat = str_replace( strrchr($msgpic,"."), "", $msgpic); //拡張子除去
+					$msgdat =pathinfo($msgpic, PATHINFO_FILENAME );//拡張子除去
 					if (file_exists(IMG_DIR.$msgdat.'.png')) {
 						unlink(IMG_DIR.$msgdat.'.png');
 					}
@@ -426,7 +425,8 @@ function regist() {
 					$msgpic = $msg["picfile"]; //画像の名前取得できた
 					//画像とかの削除処理
 					if (file_exists(IMG_DIR.$msgpic)) {
-						$msgdat = str_replace( strrchr($msgpic,"."), "", $msgpic); //拡張子除去
+						$msgdat =pathinfo($msgpic, PATHINFO_FILENAME );//拡張子除去
+
 						if (file_exists(IMG_DIR.$msgdat.'.png')) {
 						unlink(IMG_DIR.$msgdat.'.png');
 						}
