@@ -244,15 +244,17 @@ function regist() {
 		if(preg_match("/$value$/i",$host)) {error(MSG016);exit;}
 	}
 	//↑セキュリティ関連ここまで
-	$path_filename=pathinfo($picfile, PATHINFO_FILENAME );//拡張子除去
-	$fp = fopen($temppath.$path_filename.".dat", "r");
-	$userdata = fread($fp, 1024);
-	fclose($fp);
-	list($uip,$uhost,,,$ucode,,$starttime,$postedtime) = explode("\t", rtrim($userdata));
 	$ptime='';
-	//描画時間を$userdataをもとに計算
-	if($starttime && DSP_PAINTTIME){
-		$ptime = calcPtime($starttime,$postedtime);
+	if($picfile){
+		$path_filename=pathinfo($picfile, PATHINFO_FILENAME );//拡張子除去
+		$fp = fopen($temppath.$path_filename.".dat", "r");
+		$userdata = fread($fp, 1024);
+		fclose($fp);
+		list($uip,$uhost,,,$ucode,,$starttime,$postedtime) = explode("\t", rtrim($userdata));
+		//描画時間を$userdataをもとに計算
+		if($starttime && DSP_PAINTTIME){
+			$ptime = calcPtime($starttime,$postedtime);
+		}
 	}
 
 
@@ -326,10 +328,10 @@ function regist() {
 				$spchfile = $path_filename.'.spch';
 				$pchfile = $path_filename.'.pch';
 				
-				if ( file_exists(TEMP_DIR.$pchfile) == TRUE ) {
+				if ( is_file(TEMP_DIR.$pchfile) == TRUE ) {
 					rename( TEMP_DIR.$pchfile, IMG_DIR.$pchfile );
 					chmod( IMG_DIR.$pchfile , 0606);
-				} elseif( file_exists(TEMP_DIR.$spchfile) == TRUE ) {
+				} elseif( is_file(TEMP_DIR.$spchfile) == TRUE ) {
 					rename( TEMP_DIR.$spchfile, IMG_DIR.$spchfile );
 					chmod( IMG_DIR.$spchfile , 0606);
 					$pchfile = $spchfile;
@@ -393,21 +395,21 @@ function regist() {
 				$msg = $msgs->fetch();
 				$msgpic = $msg["picfile"]; //画像の名前取得できた
 				//画像とかの削除処理
-				if (file_exists(IMG_DIR.$msgpic)) {
+				if (is_file(IMG_DIR.$msgpic)) {
 					$msgdat =pathinfo($msgpic, PATHINFO_FILENAME );//拡張子除去
-					if (file_exists(IMG_DIR.$msgdat.'.png')) {
+					if (is_file(IMG_DIR.$msgdat.'.png')) {
 						unlink(IMG_DIR.$msgdat.'.png');
 					}
-					if (file_exists(IMG_DIR.$msgdat.'.jpg')) {
+					if (is_file(IMG_DIR.$msgdat.'.jpg')) {
 						unlink(IMG_DIR.$msgdat.'.jpg'); //一応jpgも
 					}
-					if (file_exists(IMG_DIR.$msgdat.'.pch')) {
+					if (is_file(IMG_DIR.$msgdat.'.pch')) {
 						unlink(IMG_DIR.$msgdat.'.pch'); 
 					}
-					if (file_exists(IMG_DIR.$msgdat.'.spch')) {
+					if (is_file(IMG_DIR.$msgdat.'.spch')) {
 						unlink(IMG_DIR.$msgdat.'.spch'); 
 					}
-					if (file_exists(IMG_DIR.$msgdat.'.dat')) {
+					if (is_file(IMG_DIR.$msgdat.'.dat')) {
 						unlink(IMG_DIR.$msgdat.'.dat'); 
 					}
 				}
@@ -435,22 +437,22 @@ function regist() {
 					$msg = $msgs->fetch();
 					$msgpic = $msg["picfile"]; //画像の名前取得できた
 					//画像とかの削除処理
-					if (file_exists(IMG_DIR.$msgpic)) {
+					if (is_file(IMG_DIR.$msgpic)) {
 						$msgdat =pathinfo($msgpic, PATHINFO_FILENAME );//拡張子除去
 
-						if (file_exists(IMG_DIR.$msgdat.'.png')) {
+						if (is_file(IMG_DIR.$msgdat.'.png')) {
 						unlink(IMG_DIR.$msgdat.'.png');
 						}
-						if (file_exists(IMG_DIR.$msgdat.'.jpg')) {
+						if (is_file(IMG_DIR.$msgdat.'.jpg')) {
 							unlink(IMG_DIR.$msgdat.'.jpg'); //一応jpgも
 						}
-						if (file_exists(IMG_DIR.$msgdat.'.pch')) {
+						if (is_file(IMG_DIR.$msgdat.'.pch')) {
 							unlink(IMG_DIR.$msgdat.'.pch'); 
 						}
-						if (file_exists(IMG_DIR.$msgdat.'.spch')) {
+						if (is_file(IMG_DIR.$msgdat.'.spch')) {
 							unlink(IMG_DIR.$msgdat.'.spch'); 
 						}
-						if (file_exists(IMG_DIR.$msgdat.'.dat')) {
+						if (is_file(IMG_DIR.$msgdat.'.dat')) {
 							unlink(IMG_DIR.$msgdat.'.dat'); 
 						}
 					}
@@ -491,21 +493,21 @@ function regist() {
 					$msg = $msgs->fetch();
 					$msgpic = $msg["picfile"]; //画像の名前取得できた
 					//画像とかの削除処理
-					if (file_exists(IMG_DIR.$msgpic)) {
+					if (is_file(IMG_DIR.$msgpic)) {
 						$msgdat = str_replace( strrchr($msgpic,"."), "", $msgpic); //拡張子除去
-						if (file_exists(IMG_DIR.$msgdat.'.png')) {
+						if (is_file(IMG_DIR.$msgdat.'.png')) {
 						unlink(IMG_DIR.$msgdat.'.png');
 						}
-						if (file_exists(IMG_DIR.$msgdat.'.jpg')) {
+						if (is_file(IMG_DIR.$msgdat.'.jpg')) {
 							unlink(IMG_DIR.$msgdat.'.jpg'); //一応jpgも
 						}
-						if (file_exists(IMG_DIR.$msgdat.'.pch')) {
+						if (is_file(IMG_DIR.$msgdat.'.pch')) {
 							unlink(IMG_DIR.$msgdat.'.pch'); 
 						}
-						if (file_exists(IMG_DIR.$msgdat.'.spch')) {
+						if (is_file(IMG_DIR.$msgdat.'.spch')) {
 							unlink(IMG_DIR.$msgdat.'.spch'); 
 						}
-						if (file_exists(IMG_DIR.$msgdat.'.dat')) {
+						if (is_file(IMG_DIR.$msgdat.'.dat')) {
 							unlink(IMG_DIR.$msgdat.'.dat'); 
 						}
 					}
@@ -1143,7 +1145,7 @@ function paintcom(){
 			fclose($fp);
 			list($uip,$uhost,$uagent,$imgext,$ucode,) = explode("\t", rtrim($userdata));
 			$file_name = preg_replace("/\.(dat)$/i","",$file);
-			if(file_exists(TEMP_DIR.$file_name.$imgext)) //画像があればリストに追加
+			if(is_file(TEMP_DIR.$file_name.$imgext)) //画像があればリストに追加
 				$tmplist[] = $ucode."\t".$uip."\t".$file_name.$imgext;
 		}
 	}
@@ -1304,21 +1306,21 @@ function delmode(){
 
 		if (password_verify($ppwd,$msg['pwd']) === true) {
 			//画像とかファイル削除
-			if (file_exists(IMG_DIR.$msgpic)) {
+			if (is_file(IMG_DIR.$msgpic)) {
 				$msgdat = str_replace( strrchr($msgpic,"."), "", $msgpic); //拡張子除去
-				if (file_exists(IMG_DIR.$msgdat.'.png')) {
+				if (is_file(IMG_DIR.$msgdat.'.png')) {
 					unlink(IMG_DIR.$msgdat.'.png');
 				}
-				if (file_exists(IMG_DIR.$msgdat.'.jpg')) {
+				if (is_file(IMG_DIR.$msgdat.'.jpg')) {
 					unlink(IMG_DIR.$msgdat.'.jpg'); //一応jpgも
 				}
-				if (file_exists(IMG_DIR.$msgdat.'.pch')) {
+				if (is_file(IMG_DIR.$msgdat.'.pch')) {
 					unlink(IMG_DIR.$msgdat.'.pch'); 
 				}
-				if (file_exists(IMG_DIR.$msgdat.'.spch')) {
+				if (is_file(IMG_DIR.$msgdat.'.spch')) {
 					unlink(IMG_DIR.$msgdat.'.spch'); 
 				}
-				if (file_exists(IMG_DIR.$msgdat.'.dat')) {
+				if (is_file(IMG_DIR.$msgdat.'.dat')) {
 					unlink(IMG_DIR.$msgdat.'.dat'); 
 				}
 			}
@@ -1329,21 +1331,21 @@ function delmode(){
 			$smarty->assign('message','削除しました。');
 		} elseif ($admin_pass == $ppwd && $admindelmode == 1) {
 			//画像とかファイル削除
-			if (file_exists(IMG_DIR.$msgpic)) {
+			if (is_file(IMG_DIR.$msgpic)) {
 				$msgdat = str_replace( strrchr($msgpic,"."), "", $msgpic); //拡張子除去
-				if (file_exists(IMG_DIR.$msgdat.'.png')) {
+				if (is_file(IMG_DIR.$msgdat.'.png')) {
 					unlink(IMG_DIR.$msgdat.'.png');
 				}
-				if (file_exists(IMG_DIR.$msgdat.'.jpg')) {
+				if (is_file(IMG_DIR.$msgdat.'.jpg')) {
 					unlink(IMG_DIR.$msgdat.'.jpg'); //一応jpgも
 				}
-				if (file_exists(IMG_DIR.$msgdat.'.pch')) {
+				if (is_file(IMG_DIR.$msgdat.'.pch')) {
 					unlink(IMG_DIR.$msgdat.'.pch'); 
 				}
-				if (file_exists(IMG_DIR.$msgdat.'.spch')) {
+				if (is_file(IMG_DIR.$msgdat.'.spch')) {
 					unlink(IMG_DIR.$msgdat.'.spch'); 
 				}
-				if (file_exists(IMG_DIR.$msgdat.'.dat')) {
+				if (is_file(IMG_DIR.$msgdat.'.dat')) {
 					unlink(IMG_DIR.$msgdat.'.dat'); 
 				}
 			}
@@ -1399,7 +1401,7 @@ function picreplace($no,$pwdf){
 			$userdata = fread($fp, 1024);
 			fclose($fp);
 			list($uip,$uhost,$uagent,$imgext,$ucode,$urepcode,$starttime,$postedtime) = explode("\t", rtrim($userdata)."\t");//区切りの"\t"を行末に190610
-			$file_name = preg_replace("/\.(dat)$/i","",$file);
+			$file_name = pathinfo($file, PATHINFO_FILENAME );//拡張子除去
 			//画像があり、認識コードがhitすれば抜ける 
 			if($file_name && is_file(TEMP_DIR.$file_name.$imgext) && $urepcode === $repcode){
 				$find=true;
@@ -1415,7 +1417,7 @@ function picreplace($no,$pwdf){
 
 	//描画時間
 	$ptime='';
-	if($starttime){
+	if($starttime && DSP_PAINTTIME){
 		$ptime = calcPtime($starttime,$postedtime);
 	}
 
@@ -1444,10 +1446,10 @@ function picreplace($no,$pwdf){
 				$pchfile = $file_name.'.pch';
 				$spchfile = $file_name.'.spch';
 				
-				if ( file_exists(TEMP_DIR.$pchfile) == TRUE ) {
+				if ( is_file(TEMP_DIR.$pchfile) == TRUE ) {
 					rename( TEMP_DIR.$pchfile, IMG_DIR.$pchfile );
 					chmod( IMG_DIR.$pchfile , 0606);
-				} elseif( file_exists(TEMP_DIR.$spchfile) == TRUE ) {
+				} elseif( is_file(TEMP_DIR.$spchfile) == TRUE ) {
 					rename( TEMP_DIR.$spchfile, IMG_DIR.$spchfile );
 					chmod( IMG_DIR.$spchfile , 0606);
 					$pchfile = $spchfile;
@@ -1759,7 +1761,7 @@ function error2() {
 
 function init(){
 	try {
-		if (!file_exists('noe.db')) {
+		if (!is_file('noe.db')) {
 			// はじめての実行なら、テーブルを作成
 			$db = new PDO("sqlite:noe.db");
 			$db->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);  
