@@ -267,6 +267,8 @@ function regist() {
 		$db = new PDO("sqlite:noe.db");
 		if (isset($_POST["send"] ) ===  true) {
 
+			$strlen_com=strlen($com);
+
 			if ( $name   === "" ) $name = DEF_NAME;
 			if ( $com  === "" ) $com  = DEF_COM;
 			if ( $sub  === "" ) $sub  = DEF_SUB;
@@ -297,7 +299,7 @@ function regist() {
 				$msgwcom = $msgwc["com"]; //最新コメント取得できた
 				$msgwhost = $msgwc["host"]; //最新ホスト取得できた
 				//どれも一致すれば二重投稿だと思う
-				if($com != DEF_COM && $com == $msgwcom && $host == $msgwhost && $sub == $msgsub ){
+				if($strlen_com > 0 && $com == $msgwcom && $host == $msgwhost && $sub == $msgsub ){
 					$msgs = null;
 					$msgw = null;
 					$db = null; //db切断
