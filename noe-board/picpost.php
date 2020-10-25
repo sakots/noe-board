@@ -1,6 +1,6 @@
 <?php
 //----------------------------------------------------------------------
-// picpost.php lot.200302  by SakaQ >> http://www.punyu.net/php/
+// picpost.php lot.200828  by SakaQ >> http://www.punyu.net/php/
 // & sakots >> https://poti-k.info/
 //
 // しぃからPOSTされたお絵かき画像をTEMPに保存
@@ -8,6 +8,8 @@
 // このスクリプトはPaintBBS（藍珠CGI）のPNG保存ルーチンを参考に
 // PHP用に作成したものです。
 //----------------------------------------------------------------------
+// 2020/08/28 描画時間の記録に対応
+// 2020/05/25 投稿容量制限の設定項目を追加 従来はconfigのMAX_KB
 // 2020/02/25 flock()修正タイムゾーンを'Asia/Tokyo'に
 // 2020/01/25 REMOTE_ADDRが取得できないサーバに対応
 // 2019/12/03 軽微なエラー修正。datファイルのパーミッションを600に
@@ -31,6 +33,8 @@ include(__DIR__.'/config.php');
 date_default_timezone_set('Asia/Tokyo');
 //容量違反チェックをする する:1 しない:0
 define('SIZE_CHECK', '1');
+//投稿容量制限 KB
+define('PICPOST_MAX_KB', '3072');//3MBまで
 
 $time = time();
 $imgfile = $time.substr(microtime(),2,3);	//画像ファイル名
@@ -95,7 +99,7 @@ $headerLength = substr($buffer, 1, 8);
 // 画像ファイルの長さを取り出す
 $imgLength = substr($buffer, 1 + 8 + $headerLength, 8);
 // 投稿容量制限を超えていたら保存しない
-if(SIZE_CHECK && ($imgLength > MAX_KB * 1024)){
+if(SIZE_CHECK && ($imgLength > PICPOST_MAX_KB * 1024)){
 	error("規定容量オーバー。お絵かき画像は保存されません。");
 	exit;
 }
@@ -198,8 +202,9 @@ if($sendheader){
 		list($name,$value) = explode("=", $query_s);
 		$$name = $value;
 	}
-	//usercodeと差し換え認識コード追加
-	$userdata .= "\t$usercode\t$repcode";
+	//usercode 差し換え認識コード 描画開始 完了時間 を追加
+	$userdata .= "\t$usercode\t$repcode\t$stime\t$time";
+
 }
 $userdata .= "\n";
 if(is_file(TEMP_DIR.$imgfile.".dat")){
