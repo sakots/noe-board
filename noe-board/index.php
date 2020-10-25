@@ -215,12 +215,11 @@ $smarty->assign('usercode',$usercode);
 function regist() {
 	global $name,$com,$sub,$parent,$picfile,$img_w,$img_h,$mail,$url,$time,$pwd,$pwdh,$exid,$invz;
 	global $badip;
-	global $req_method,$temppath;
+	global $req_method;
 	global $smarty;
 	$userip = get_uip();
 
-	// $ptime = newstring(trim(filter_input(INPUT_POST, 'ptime')));
-	$secptime = newstring(filter_input(INPUT_POST, 'secptime'));
+	$secptime = filter_input(INPUT_POST, 'secptime' ,FILTER_VALIDATE_BOOLEAN);
 
 	if($req_method !== "POST") {error(MSG006);exit;}
 
@@ -247,7 +246,7 @@ function regist() {
 	$ptime='';
 	if($picfile){
 		$path_filename=pathinfo($picfile, PATHINFO_FILENAME );//拡張子除去
-		$fp = fopen($temppath.$path_filename.".dat", "r");
+		$fp = fopen(TEMP_DIR.$path_filename.".dat", "r");
 		$userdata = fread($fp, 1024);
 		fclose($fp);
 		list($uip,$uhost,,,$ucode,,$starttime,$postedtime) = explode("\t", rtrim($userdata));
@@ -256,7 +255,6 @@ function regist() {
 			$ptime = calcPtime($starttime,$postedtime);
 		}
 	}
-
 
 	//投稿時間を隠す設定
 	if($secptime == true) {
@@ -973,8 +971,6 @@ function paintform(){
 
 	$smarty->assign('path',IMG_DIR);
 
-	// $smarty->assign('usercode',$usercode);
-
 	$smarty->assign('stime',time());
 	
 	$userip = get_uip();
@@ -1023,7 +1019,7 @@ function paintform(){
 		$imgfile = filter_input(INPUT_POST, 'img');
 		$smarty->assign('imgfile',IMG_DIR.$imgfile);
 	}
-	$usercode.='&amp;stime='.time();
+	$usercode.='&amp;stime='.time();//拡張ヘッダに描画開始時間をセット
 	//差し換え時の認識コード追加
 	if($type==='rep'){
 		$no = filter_input(INPUT_POST, 'no',FILTER_VALIDATE_INT);
@@ -1037,11 +1033,9 @@ function paintform(){
 		$pwdf = bin2hex($pwdf);//16進数に
 		$datmode = 'picrep&amp;no='.$no.'&amp;pwd='.$pwdf.'&amp;repcode='.$repcode;
 		$smarty->assign('mode',$datmode);
-		// $datusercode = $usercode.'&amp;repcode='.$repcode;
 		$usercode.='&amp;repcode='.$repcode;
-		// $smarty->assign('usercode',$datusercode);
 	}
-		$smarty->assign('usercode',$usercode);
+		$smarty->assign('usercode',$usercode);//usercodeにいろいろくっついたものをまとめて出力
 
 	//出力
 	$smarty->display( THEMEDIR.PAINTFILE );
