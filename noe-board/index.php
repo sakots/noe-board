@@ -1420,12 +1420,15 @@ function picreplace($no,$pwdf,$stime){
 			if ( $picfile == true ) {
 				rename( TEMP_DIR.$picfile , IMG_DIR.$picfile );
 				chmod( IMG_DIR.$picfile , 0606);
-				$picdat = strtr($picfile , 'png', 'dat');
+				// $picdat = strtr($picfile , 'png', 'dat');
+				$picdat = $file_name.'.dat';
 				rename( TEMP_DIR.$picdat, IMG_DIR.$picdat );
 				chmod( IMG_DIR.$picdat , 0606);
 
-				$spchfile = str_replace('png','spch', $picfile);
-				$pchfile = strtr($picfile , 'png', 'pch');
+				// $spchfile = str_replace('png','spch', $picfile);
+				// $pchfile = strtr($picfile , 'png', 'pch');
+				$pchfile = $file_name.'.pch';
+				$spchfile = $file_name.'.spch';
 				
 				if ( file_exists(TEMP_DIR.$pchfile) == TRUE ) {
 					rename( TEMP_DIR.$pchfile, IMG_DIR.$pchfile );
@@ -1443,7 +1446,8 @@ function picreplace($no,$pwdf,$stime){
 			//旧ファイル削除
 			if(is_file($path.$msg_d["picfile"])) unlink($path.$msg_d["picfile"]);
 			if(is_file($path.$msg_d["pchfile"])) unlink($path.$msg_d["pchfile"]);
-			$msgedat = str_replace( strrchr($msg_d["picfile"],"."), "", $msg_d["picfile"]); //拡張子除去
+			// $msgedat = str_replace( strrchr($msg_d["picfile"],"."), "", $msg_d["picfile"]); //拡張子除去
+			$msgedat = pathinfo($msg_d["picfile"], PATHINFO_FILENAME );//拡張子除去
 			$msgedat = $msgedat.'.dat';
 			if(is_file($path.$msgedat)) unlink($path.$msgedat);
 			//描画時間追加
