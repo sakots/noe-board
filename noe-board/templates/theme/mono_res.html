@@ -9,7 +9,7 @@
 		<meta name="twitter:card" content="summary">
 		<meta property="og:title" content="[{$bbsline.tid}] {$bbsline.sub} by {$bbsline.name} - {$btitle}">
 		<meta property="og:type" content="article">
-		<meta property="og:url" content="{$base}{$self}?mode=res&amp;={$resno}">
+		<meta property="og:url" content="{$base}{$self}?mode=res&amp;res={$resno}">
 		{if isset($bbsline.picfile)}<meta property="og:image" content="{$base}{$path}{$bbsline.picfile}">{/if}
 		<meta property="og:site_name"  content="">
 		<meta property="og:description" content="{$bbsline.com|strip_tags:false}">
