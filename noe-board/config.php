@@ -1,6 +1,6 @@
 <?php
 /*
-  * noe-board v0.23.0～
+  * noe-board v0.33.0～
   * by sakots >> https://sakots.red/
   *
   * noe-boardの設定ファイルです。
