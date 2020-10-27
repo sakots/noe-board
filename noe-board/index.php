@@ -1130,7 +1130,7 @@ function paintcom(){
 	//----------
 
 	//var_dump($_POST);
-
+	$userip = get_uip();
 	//テンポラリ画像リスト作成
 	$tmplist = array();
 	$handle = opendir(TEMP_DIR);
@@ -1148,29 +1148,18 @@ function paintcom(){
 	closedir($handle);
 	$tmp = array();
 	if(count($tmplist)!=0){
-		//user-codeでチェック
+		//user-codeとipアドレスでチェック
 		foreach($tmplist as $tmpimg){
 			list($ucode,$uip,$ufilename) = explode("\t", $tmpimg);
-			if($ucode == $usercode){
+			if($ucode == $usercode||$uip == $userip){
 				$tmp[] = $ufilename;
-			}
-		}
-		//user-codeでhitしなければIPで再チェック
-		if(count($tmp)==0){
-			$userip = getenv("HTTP_CLIENT_IP");
-			if(!$userip) $userip = getenv("HTTP_X_FORWARDED_FOR");
-			if(!$userip) $userip = getenv("REMOTE_ADDR");
-			foreach($tmplist as $tmpimg){
-				list($ucode,$uip,$ufilename) = explode("\t", $tmpimg);
-				if(!IP_CHECK || $uip == $userip)
-					$tmp[] = $ufilename;
 			}
 		}
 	}
 
 	$post_mode = true;
 	$regist = true;
-	if(IP_CHECK) $ipcheck = true;
+	$ipcheck = true;
 	if(count($tmp)==0){
 		$notmp = true;
 		$pictmp = 1;
