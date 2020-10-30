@@ -14,7 +14,6 @@
 		<meta property="og:site_name"  content="">
 		<meta property="og:description" content="{$bbsline.com|strip_tags:false}">
 		{/foreach}
-		<script src="./templates/{$skindir}getresname.js"></script>
 	</head>
 	<body>
 		<header id="header">
@@ -101,9 +100,14 @@
 					{foreach from=$oya item=bbsline}{if isset($bbsline.com)}
 					<section>
 						<h3 class="oekaki">このスレにレス</h3>
+						<script>function add_to_com(){
+							document.getElementById("p_input_com").value += "{$resname}さん";
+						}
+						</script>
+	
 						{if $elapsed_time == 0 || $nowtime - $bbsline.utime < $elapsed_time}
 						<p>
-							<button class="copy_button" onclick="c();">投稿者名をコピー</button>
+							<button class="copy_button" onclick="add_to_com()">投稿者名をコピー</button>
 							（レスの投稿者名をクリップボードにコピーできます）
 						</p>
 						<form action="{$self}?mode=regist" method="post" class="postform">
@@ -142,7 +146,7 @@
 								<tr>
 									<td>comment{if $use_com == 1} *{/if}</td>
 									<td>
-										<textarea name="com" rows="4" cols="48"></textarea>
+										<textarea name="com" rows="4" cols="48" id="p_input_com"></textarea>
 									</td>
 								</tr>
 								<tr>

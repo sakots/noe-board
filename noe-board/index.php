@@ -880,11 +880,22 @@ function res(){
 			$sqli = "SELECT * FROM tabletree WHERE (invz=0 AND tid=".$resno.") ORDER BY tree DESC";
 			$postsi = $db->query($sqli);
 			$ko = array();
+			$rresname = array();
 			while ($res = $postsi->fetch()){
 				$ko[] = $res;
+				if (!in_array($res['name'], $rresname)) {//重複除外
+					$rresname[] = $res['name'];//投稿者名を配列に入れる
+				}
+		
 				$smarty->assign('ko',$ko);
 			}
 			$oya[] = $bbsline;
+			if (!in_array($bbsline['name'], $rresname)) {
+				$rresname[] = $bbsline['name'];
+			}
+			$resname=implode('さん ',$rresname);
+			$smarty->assign('resname',$resname);
+
 			$smarty->assign('oya',$oya);
 		}
 		//そろそろ消える用
