@@ -252,7 +252,7 @@ function regist() {
 		list($uip,$uhost,,,$ucode,,$starttime,$postedtime) = explode("\t", rtrim($userdata));
 		//描画時間を$userdataをもとに計算
 		if($starttime && DSP_PAINTTIME){
-			$ptime = calcPtime($starttime,$postedtime);
+			$ptime = $postedtime-$starttime;
 		}
 	}
 
@@ -648,6 +648,7 @@ function def() {
 			$j = 0;
 			$flag = true;
 			while ( $flag == true) {
+				$bbsline['time']=is_numeric($bbsline['time']) ? calcPtime($bbsline['time']) : $bbsline['time'];
 				$res = $postsi->fetch();
 				if(empty($res)){ //レスがなくなったら
 					$bbsline['ressu'] = $j; //スレのレス数
@@ -876,6 +877,7 @@ function res(){
 	
 		$oya = array();
 		while ($bbsline = $posts->fetch() ) {
+			$bbsline['time']=is_numeric($bbsline['time']) ? calcPtime($bbsline['time']) : $bbsline['time'];
 			//スレッドの記事を取得
 			$sqli = "SELECT * FROM tabletree WHERE (invz=0 AND tid=".$resno.") ORDER BY tree DESC";
 			$postsi = $db->query($sqli);
@@ -1133,7 +1135,7 @@ function paintcom(){
 	//描画時間
 	$ptime='';
 	if($stime){
-		$ptime = calcPtime($stime);
+		$ptime = calcPtime(time()-$stime);
 	}
 
 	$smarty->assign('ptime',$ptime);
@@ -1220,6 +1222,7 @@ function incontinue($no) {
 
 		$oya = array();
 		while ($bbsline = $posts->fetch() ) {
+			$bbsline['time']=is_numeric($bbsline['time']) ? calcPtime($bbsline['time']) : $bbsline['time'];
 			$oya[] = $bbsline;
 			$smarty->assign('oya',$oya); //配列に格納
 		}
@@ -1412,10 +1415,12 @@ function picreplace($no,$pwdf){
 	}
 
 	//描画時間
-	$ptime='';
-	if($starttime && DSP_PAINTTIME){
-		$ptime = calcPtime($starttime,$postedtime);
+	$psec='';
+	$_ptime = '';
+	if($psec=$postedtime-$starttime){
+		$_ptime = calcPtime($psec);
 	}
+
 
 	// ログ読み込み
 	try {
@@ -1469,7 +1474,7 @@ function picreplace($no,$pwdf){
 			if($msg_d["time"] == PTIME_SEC) {
 				$time = PTIME_SEC;
 			} elseif($msg_d["time"]) {
-				$time = $msg_d["time"].'+'.$ptime;
+				$time = is_numeric($msg_d["time"]) ? ($msg_d["time"]+$psec) : $msg_d["time"].'+'.$_ptime;
 			}
 			//id生成
 			$utime = time();
@@ -1909,10 +1914,7 @@ function Reject_if_NGword_exists_in_the_post($com,$name,$mail,$url,$sub){
  * @param $starttime
  * @return string
  */
-function calcPtime ($starttime,$postedtime='') {
-
-	$postedtime = $postedtime ? $postedtime : time();
-	$psec = $postedtime - $starttime;
+function calcPtime ($psec) {
 
 	$D = floor($psec / 86400);
 	$H = floor($psec % 86400 / 3600);
