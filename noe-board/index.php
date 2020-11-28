@@ -1473,7 +1473,7 @@ function picreplace($no,$pwdf){
 			//秘密の時は秘密
 			if($msg_d["time"] == PTIME_SEC) {
 				$time = PTIME_SEC;
-			} elseif($msg_d["time"]) {
+			} elseif($msg_d["time"] && $_ptime) {
 				$time = is_numeric($msg_d["time"]) ? ($msg_d["time"]+$psec) : $msg_d["time"].'+'.$_ptime;
 			}
 			//id生成
