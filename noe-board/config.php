@@ -96,6 +96,7 @@ define('USE_JAPANESEFILTER', '1');
 
 //本文へのURLの書き込みを禁止する する:1 しない:0
 define('DENY_COMMENTS_URL', '0');
+//管理者は設定に関わらず書き込み可
 
 //指定した日数を過ぎたレスボタンを閉じる
 //define('ELAPSED_DAYS','0');
