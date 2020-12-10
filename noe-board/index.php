@@ -221,26 +221,26 @@ function regist() {
 
 	$secptime = filter_input(INPUT_POST, 'secptime' ,FILTER_VALIDATE_BOOLEAN);
 
-	if($req_method !== "POST") {error(MSG006);exit;}
+	if($req_method !== "POST") {error(MSG006);}
 
 	//NGワードがあれば拒絶
 	Reject_if_NGword_exists_in_the_post($com,$name,$mail,$url,$sub);
-	if(USE_NAME&&!$name) {error(MSG009);exit;}
+	if(USE_NAME&&!$name) {error(MSG009);}
 	//レスの時は本文必須
-	if(filter_input(INPUT_POST, 'modid')&&!$com) {error(MSG008);exit;}
-	if(USE_COM&&!$com) {error(MSG008);exit;}
-	if(USE_SUB&&!$sub) {error(MSG010);exit;}
+	if(filter_input(INPUT_POST, 'modid')&&!$com) {error(MSG008);}
+	if(USE_COM&&!$com) {error(MSG008);}
+	if(USE_SUB&&!$sub) {error(MSG010);}
 
-	if(strlen($com) > MAX_COM) {error(MSG011);exit;}
-	if(strlen($name) > MAX_NAME) {error(MSG012);exit;}
-	if(strlen($mail) > MAX_EMAIL) {error(MSG013);exit;}
-	if(strlen($sub) > MAX_SUB) {error(MSG014);exit;}
+	if(strlen($com) > MAX_COM) {error(MSG011);}
+	if(strlen($name) > MAX_NAME) {error(MSG012);}
+	if(strlen($mail) > MAX_EMAIL) {error(MSG013);}
+	if(strlen($sub) > MAX_SUB) {error(MSG014);}
 
 	//ホスト取得
 	$host = gethostbyaddr($userip);
 
 	foreach($badip as $value){ //拒絶host
-		if(preg_match("/$value$/i",$host)) {error(MSG016);exit;}
+		if(preg_match("/$value$/i",$host)) {error(MSG016);}
 	}
 	//↑セキュリティ関連ここまで
 	$ptime='';
@@ -1279,12 +1279,12 @@ function delmode(){
 		$sql ="SELECT pwd FROM $deltable WHERE $idk = $delno";
 		$msgs = $db->prepare($sql);
 		if ($msgs == false) {
-			error('そんな記事ない気がします。');exit;
+			error('そんな記事ない気がします。');
 		}
 		$msgs->execute();
 		$msg = $msgs->fetch();
 		if (empty($msg)) {
-			error('そんな記事ない気がします。');exit;
+			error('そんな記事ない気がします。');
 		}
 
 		//削除記事の画像を取り出す
@@ -1293,7 +1293,7 @@ function delmode(){
 		$msgsp->execute();
 		$msgp = $msgsp->fetch();
 		if (empty($msgp)) {
-			error('画像が見当たりません。');exit;
+			error('画像が見当たりません。');
 		}
 		$msgpic = $msgp['picfile']; //画像の名前取得できた
 
@@ -1361,7 +1361,6 @@ function delmode(){
 			$smarty->assign('message','削除しました。');
 		} else {
 			error('パスワードまたは記事番号が違います。');
-			exit;
 		}
 		$db = null; 
 		$msgp = null;
@@ -1411,7 +1410,7 @@ function picreplace($no,$pwdf){
 	closedir($handle);
 	if(!$find){
 		error2();
-		exit;
+		
 	}
 
 	//描画時間
@@ -1483,7 +1482,7 @@ function picreplace($no,$pwdf){
 			$sqlrep = "UPDATE tablelog set modified = datetime('now', 'localtime'), picfile = '$picfile', pchfile = '$pchfile', host = '$host', id = '$id', time = '$time' where tid = $no";
 			$db = $db->exec($sqlrep);
 		} else {
-			error(MSG028);exit;
+			error(MSG028);
 		}
 		$db = null; //db切断
 	} catch (PDOException $e) {
@@ -1500,7 +1499,7 @@ function editform() {
 
 	$editno = newstring(filter_input(INPUT_POST, 'delno'));
 	if ($editno == "") {
-		error('記事番号を入力してください');exit;
+		error('記事番号を入力してください');
 	}
 	$editt = newstring(filter_input(INPUT_POST, 'delt')); //0親1レス
 	if ($editt == 0) {
@@ -1521,7 +1520,7 @@ function editform() {
 		$msgs->execute();
 		$msg = $msgs->fetch();
 		if (empty($msg)) {
-			error('そんな記事ないです。');exit;
+			error('そんな記事ないです。');
 		}
 		$postpwd = newstring(filter_input(INPUT_POST, 'pwd'));
 		if (password_verify($postpwd,$msg['pwd']) === true) {
@@ -1549,7 +1548,6 @@ function editform() {
 			$msgs = null;
 			$msg = null;//db切断 
 			error('パスワードまたは記事番号が違います。');
-			exit;
 		}
 		$db = null; 
 		$msgs = null;
@@ -1574,27 +1572,27 @@ function editexec(){
 	$resedit = newstring(trim(filter_input(INPUT_POST, 'resedit')));
 	$e_no = newstring(trim(filter_input(INPUT_POST, 'e_no')));
 
-	if($req_method !== "POST") {error(MSG006);exit;}
+	if($req_method !== "POST") {error(MSG006);}
 
 	//NGワードがあれば拒絶
 	Reject_if_NGword_exists_in_the_post($com,$name,$mail,$url,$sub);
 
-	if(USE_NAME&&!$name) {error(MSG009);exit;}
+	if(USE_NAME&&!$name) {error(MSG009);}
 	//レスの時は本文必須
-	if(filter_input(INPUT_POST, 'modid')&&!$com) {error(MSG008);exit;}
-	if(USE_COM&&!$com) {error(MSG008);exit;}
-	if(USE_SUB&&!$sub) {error(MSG010);exit;}
+	if(filter_input(INPUT_POST, 'modid')&&!$com) {error(MSG008);}
+	if(USE_COM&&!$com) {error(MSG008);}
+	if(USE_SUB&&!$sub) {error(MSG010);}
 
-	if(strlen($com) > MAX_COM) {error(MSG011);exit;}
-	if(strlen($name) > MAX_NAME) {error(MSG012);exit;}
-	if(strlen($mail) > MAX_EMAIL) {error(MSG013);exit;}
-	if(strlen($sub) > MAX_SUB) {error(MSG014);exit;}
+	if(strlen($com) > MAX_COM) {error(MSG011);}
+	if(strlen($name) > MAX_NAME) {error(MSG012);}
+	if(strlen($mail) > MAX_EMAIL) {error(MSG013);}
+	if(strlen($sub) > MAX_SUB) {error(MSG014);}
 
 	//ホスト取得
 	$host = gethostbyaddr($userip);
 
 	foreach($badip as $value){ //拒絶host
-		if(preg_match("/$value$/i",$host)) {error(MSG016);exit;}
+		if(preg_match("/$value$/i",$host)) {error(MSG016);}
 	}
 	//↑セキュリティ関連ここまで
 
@@ -1696,7 +1694,6 @@ function admin() {
 		} else {
 			$db = null; //db切断
 			error('管理パスを入力してください');
-			exit;
 		}
 		$db = null; //db切断
 	} catch (PDOException $e) {
@@ -1727,7 +1724,6 @@ function usrchk(){
 	}
 	if(!$flag) {
 		error(MSG028);
-		exit;
 	}
 }
 
@@ -1747,6 +1743,7 @@ function error($mes) {
 	$smarty->assign('errmes',$mes);
 	$smarty->assign('othermode','err');
 	$smarty->display( THEMEDIR.OTHERFILE );
+	exit;
 }
 
 //画像差し替え失敗
@@ -1756,6 +1753,7 @@ function error2() {
 	$db = null; //db切断
 	$smarty->assign('othermode','err2');
 	$smarty->display( THEMEDIR.OTHERFILE );
+	exit;
 }
 
 //初期設定
@@ -1833,80 +1831,64 @@ if(!$usercode){//falseなら発行
 setcookie("usercode", $usercode, time()+86400*365);//1年間
 
 /* NGワードがあれば拒絶 */
-
-function Reject_if_NGword_exists_in_the_post($com,$name,$mail,$url,$sub){
-	
-	global $badstring,$badstr_A,$badstr_B,$badname;
-
+function Reject_if_NGword_exists_in_the_post($com,$name,$email,$url,$sub){
+	global $badstring,$badname,$badstr_A,$badstr_B,$pwd,$admin_pass;
 	//チェックする項目から改行・スペース・タブを消す
 	$chk_com  = preg_replace("/\s/u", "", $com );
 	$chk_name = preg_replace("/\s/u", "", $name );
+	$chk_email = preg_replace("/\s/u", "", $email );
 	$chk_sub = preg_replace("/\s/u", "", $sub );
-	$chk_mail = preg_replace("/\s/u", "", $mail );
 
 	//本文に日本語がなければ拒絶
 	if (USE_JAPANESEFILTER) {
 		mb_regex_encoding("UTF-8");
-		if (strlen($com) > 0 && !preg_match("/[ぁ-んァ-ヶー一-龠]+/u",$chk_com)) {
-			error(MSG035);
-			exit;
-		}
+		if (strlen($com) > 0 && !preg_match("/[ぁ-んァ-ヶー一-龠]+/u",$chk_com)) error(MSG035);
 	}
 
 	//本文へのURLの書き込みを禁止
-	if(DENY_COMMENTS_URL && preg_match('/:\/\/|\.co|\.ly|\.gl|\.net|\.org|\.cc|\.ru|\.su|\.ua|\.gd/i', $com)) {error(MSG036); exit;}
-
-	foreach($badstring as $value){//拒絶する文字列
-		if($value===''){
-		break;
-		}
-		if(preg_match("/$value/ui",$chk_com)||preg_match("/$value/ui",$chk_sub)||preg_match("/$value/ui",$chk_name)||preg_match("/$value/ui",$chk_mail)){
-			error(MSG032);
-			exit;
-		}
-	}
-	unset($value);	
-	if(isset($badname)){//使えない名前
-		foreach($badname as $value){
-			if($value===''){
-			break;
-			}
-			if(preg_match("/$value/ui",$chk_name)){
-				error(MSG037);
-				exit;
-			}
-		}
-		unset($value);	
+	if(!($pwd===$admin_pass)){//どちらも一致しなければ
+		if(DENY_COMMENTS_URL && preg_match('/:\/\/|\.co|\.ly|\.gl|\.net|\.org|\.cc|\.ru|\.su|\.ua|\.gd/i', $com)) error(MSG036);
 	}
 
-	$bstr_A_find=false;
-	$bstr_B_find=false;
+	// 使えない文字チェック
+	if (is_ngword($badstring, [$chk_com, $chk_sub, $chk_name, $chk_email])) {
+		error(MSG032);
+	}
 
-	foreach($badstr_A as $value){//指定文字列が2つあると拒絶
-		if($value===''){
-		break;
-		}
-		if(preg_match("/$value/ui",$chk_com)||preg_match("/$value/ui",$chk_sub)||preg_match("/$value/ui",$chk_name)||preg_match("/$value/ui",$chk_mail)){
-			$bstr_A_find=true;
-		break;
-		}
+	// 使えない名前チェック
+	if (is_ngword($badname, $chk_name)) {
+		error(MSG037);
 	}
-	unset($value);
-	foreach($badstr_B as $value){
-		if($value===''){
-			break;
-		}
-		if(preg_match("/$value/ui",$chk_com)||preg_match("/$value/ui",$chk_sub)||preg_match("/$value/ui",$chk_name)||preg_match("/$value/ui",$chk_mail)){
-			$bstr_B_find=true;
-		break;
-		}
-	}
-	unset($value);
+
+	//指定文字列が2つあると拒絶
+	$bstr_A_find = is_ngword($badstr_A, [$chk_com, $chk_sub, $chk_name, $chk_email]);
+	$bstr_B_find = is_ngword($badstr_B, [$chk_com, $chk_sub, $chk_name, $chk_email]);
 	if($bstr_A_find && $bstr_B_find){
 		error(MSG032);
-		exit;
 	}
+}
 
+/**
+ * NGワードチェック
+ * @param $ngwords
+ * @param string|array $strs
+ * @return bool
+ */
+function is_ngword ($ngwords, $strs) {
+	if (empty($ngwords)) {
+		return false;
+	}
+	if (!is_array($strs)) {
+		$strs = [$strs];
+	}
+	foreach ($strs as $str) {
+		foreach($ngwords as $ngword){//拒絶する文字列
+			if ($ngword !== '' && preg_match("/{$ngword}/ui", $str)){
+				return true;
+			}
+		}
+	}
+	return false;
 }
 
 /**
