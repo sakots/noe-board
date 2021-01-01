@@ -1,6 +1,6 @@
 <?php
 //----------------------------------------------------------------------
-// picpost.php lot.201026  by SakaQ >> http://www.punyu.net/php/
+// picpost.php lot.201220  by SakaQ >> http://www.punyu.net/php/
 // & sakots >> https://poti-k.info/
 //
 // しぃからPOSTされたお絵かき画像をTEMPに保存
@@ -8,7 +8,10 @@
 // このスクリプトはPaintBBS（藍珠CGI）のPNG保存ルーチンを参考に
 // PHP用に作成したものです。
 //----------------------------------------------------------------------
-// 2020/10/26 noe0.32用に改良
+// 2020/12/20 config.phpでパーミッションを設定できるようにした。
+// 2020/12/18 php8対応。画像から続きを描くと投稿できなくなる問題を修正。
+// 2020/11/16 lot.201110の投稿完了時間が記録されないバグを修正。
+// 2020/11/10 レス先の記録に対応。拡張ヘッダの値の取得を可変変数から連想配列に変更。
 // 2020/08/28 描画時間の記録に対応
 // 2020/05/25 投稿容量制限の設定項目を追加 従来はconfigのMAX_KB
 // 2020/02/25 flock()修正タイムゾーンを'Asia/Tokyo'に
@@ -25,13 +28,22 @@
 // 2003/09/10 IPアドレス取得方法変更
 // 2003/09/09 PCHファイルに対応.投稿者情報の記録機能追加
 // 2003/09/01 PHP風(?)に整理
-// 2003/08/28 perl -> php 移植  by TakeponG >> http://www.chomkoubou.com/
+// 2003/08/28 perl -> php 移植  by TakeponG >> https://chomstudio.com/
 // 2003/07/11 perl版初公開
 
 //設定
 include(__DIR__.'/config.php');
+
+if(!defined('PERMISSION_FOR_LOG')){//config.phpで未定義なら0600
+	define('PERMISSION_FOR_LOG', 0600);
+}
+
 //タイムゾーン
-date_default_timezone_set('Asia/Tokyo');
+if(!defined('DEFAULT_TIMEZONE')){//config.phpで未定義ならAsia/Tokyo
+	define('DEFAULT_TIMEZONE','Asia/Tokyo');
+}
+date_default_timezone_set(DEFAULT_TIMEZONE);
+
 //容量違反チェックをする する:1 しない:0
 define('SIZE_CHECK', '1');
 //投稿容量制限 KB
@@ -171,7 +183,7 @@ if($h=='S'){
 	$ext = '.pch';
 }
 
-if($pchLength!=0){
+if($pchLength){
 	// PCHイメージを取り出す
 	$PCHdata = substr($buffer, 1 + 8 + $headerLength + 8 + 2 + $imgLength + 8, $pchLength);
 	// 同名のファイルが存在しないかチェック
@@ -201,11 +213,14 @@ if($sendheader){
 	$query_str = explode("&", $sendheader);
 	foreach($query_str as $query_s){
 		list($name,$value) = explode("=", $query_s);
-		$$name = $value;
+		$u[$name] = $value;
 	}
-	//usercode 差し換え認識コード 描画開始 完了時間 を追加
-	$userdata .= "\t$usercode\t$repcode\t$stime\t$time";
-
+	$usercode = isset($u['usercode']) ? $u['usercode'] : '';
+	$repcode = isset($u['repcode']) ? $u['repcode'] : '';
+	$stime = isset($u['stime']) ? $u['stime'] : '';
+	$resto = isset($u['resto']) ? $u['resto'] : '';
+	//usercode 差し換え認識コード 描画開始 完了時間 レス先 を追加
+	$userdata .= "\t$usercode\t$repcode\t$stime\t$time\t$resto";
 }
 $userdata .= "\n";
 if(is_file(TEMP_DIR.$imgfile.".dat")){
@@ -222,8 +237,9 @@ if(!$fp){
 	fflush($fp);
 	flock($fp, LOCK_UN);
 	fclose($fp);
-	chmod(TEMP_DIR.$imgfile.'.dat',0600);
+	chmod(TEMP_DIR.$imgfile.'.dat',PERMISSION_FOR_LOG);
 }
 
 die("ok");
-?>
+
+
