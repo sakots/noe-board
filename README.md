@@ -36,7 +36,7 @@ POTI-board改で使用しているテンプレートエンジン「htmltemplate.
 
 ## サンプルとサポート
 
-[このお絵かき掲示板はSQLiteを（以下略](https://sakots.red/noe/)
+[このお絵かき掲示板はSQLiteを（以下略](https://dev.oekakibbs.net/bbs/noe/)
 
 ## 履歴
 
