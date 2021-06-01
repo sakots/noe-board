@@ -319,5 +319,3 @@ $syslogmax = '100';
 
 $path = realpath("./").'/'.IMG_DIR;
 $temppath = realpath("./").'/'.TEMP_DIR;
-
-?>

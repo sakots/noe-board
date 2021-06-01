@@ -100,5 +100,3 @@ define('MSG037', "予備");
 define('MSG038', "予備");
 define('MSG039', "予備");
 define('MSG040', "予備");
-
-?>

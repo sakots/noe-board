@@ -1973,5 +1973,3 @@ switch($mode){
 	default:
 		def();
 }
-
-?>
