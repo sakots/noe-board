@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<title>{$btitle}</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link rel="stylesheet" href="./templates/{$skindir}mono_main.css" type="text/css">
+		<link rel="stylesheet" href="./templates/{$themedir}css/mono_main.css" type="text/css">
 		{foreach from=$oya item=bbsline}
 		<meta name="twitter:card" content="summary">
 		<meta property="og:title" content="[{$bbsline.tid}] {$bbsline.sub} by {$bbsline.name} - {$btitle}">
@@ -91,7 +91,7 @@
 						(function(){ //byさとぴあさん
 							var url = encodeURIComponent('{$base}{$self}?mode=res&amp;{$resno}'); //ページURL
 							var title = encodeURIComponent('[{$bbsline.tid}] {$bbsline.sub} by {$bbsline.name} - {$btitle}'); //ページタイトル
-							document.write( '<span class="button"><a target="_blank" href="https://twitter.com/intent/tweet?&amp;text=' + title + '&amp;url=' + url + '"><img src="./templates/{$skindir}icons/twitter.svg" width="16" height="16"> tweet</a></span> <span class="button"><a target="_blank" class="fb btn" href="http://www.facebook.com/share.php?u=' + url + '"><img src="./templates/{$skindir}icons/facebook.svg" width="16" height="16"> share</a></span>' );}
+							document.write( '<span class="button"><a target="_blank" href="https://twitter.com/intent/tweet?&amp;text=' + title + '&amp;url=' + url + '"><img src="./templates/{$themedir}icons/twitter.svg" width="16" height="16"> tweet</a></span> <span class="button"><a target="_blank" class="fb btn" href="http://www.facebook.com/share.php?u=' + url + '"><img src="./templates/{$themedir}icons/facebook.svg" width="16" height="16"> share</a></span>' );}
 						)();
 					</script>
 				</div>
@@ -178,16 +178,16 @@
 			<div class="copy">
 				<!-- 著作権表示 -->
 				<p>
-					<a href="https://sakots.red/" target="_top">noe-board {$ver}</a>
-					Web Style by <a href="https://sakots.red/" target="_top" title="MONO {$tver} (by 赤原文庫)">MONO</a>
+					<a href="https://dev.oekakibbs.net/" target="_top">noe-board {$ver}</a>
+					Web Style by <a href="https://dev.oekakibbs.net/" target="_top" title="MONO {$tver} (by OekakiBBS reDev.Team)">MONO</a>
 				</p>
 				<p>
-					OekakiApplet - <a href="http://hp.vector.co.jp/authors/VA016309/" target="_blank" rel="noopener noreferrer" title="by しぃちゃん">Shi-Painter</a>
+					OekakiApplet - <a href="http://hp.vector.co.jp/authors/VA016309/" target="_blank" rel="noopener noreferrer" title="by しぃちゃん">Shi-Painter</a>,
+					<a href="https://github.com/funige/neo/">PaintBBS NEO</a>
 				</p>
 				<p>
 					UseFunction -
-					<a href="https://github.com/funige/neo/">PaintBBS NEO</a>
-					DynamicPalette <!-- http://wondercatstudio.com/ -->
+					DynamicPalette <!-- http://wondercatstudio.com/ -->,
 					<a href="https://www.smarty.net/">Smarty</a>
 				</p>
 			</div>
