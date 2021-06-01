@@ -1,0 +1,324 @@
+@charset "UTF-8";
+/*! =====このcssファイルはsassから生成されています。===== */
+
+//設定ファイルの読み込み
+@import "mono_conf";
+
+//リセット
+* {
+	margin: 0px;
+	padding: 0px;
+}
+
+//iOS対策
+
+label {  
+	cursor: pointer;
+}  
+
+//全体的指定
+body {
+	background-color: $ushiro;
+	color: $moji;
+	font-family: sans-serif;
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+}
+a:link {
+	color: $link;
+}
+a:visited {
+	color: $link_visited;
+}
+a:active {
+	color: $link_active;
+}
+a:hover {
+	color: $link_hover;
+}
+a i {
+	color: $moji;
+}
+hr {
+	border-style: dashed;
+	border-width: 1px;
+	border-color: $border;
+	margin: 1ex auto;
+	clear: left;
+}
+//----------
+header, .thread, footer {
+	background-color: $haikei;
+	padding: 8px;
+	margin-left: auto;
+	margin-right: auto;
+	width: 70%;
+}
+header {
+	margin-top: 12px;
+	margin-bottom: 12px;
+	border-width: 1px;
+	border-style: solid;
+	border-color: $border;
+}
+main {
+	display: block;
+}
+.thread {
+	display: block;
+	border-width: 1px;
+	border-style: solid;
+	border-color: $border;
+	margin-top: 12px;
+	margin-bottom: 12px;
+}
+.delf {
+	text-align: right;
+}
+footer {
+	@extend .thread;
+	text-align: right;
+}
+input, textarea {
+	border-style: solid;
+	border-color: $b_border_u $b_border $b_border $b_border_u;
+	border-width: 1px;
+	padding: 2px;
+	color: $form_txt;
+	background-color: $form_txt_bk;
+}
+select {
+	@extend input;
+	padding: 2px;
+	vertical-align: middle;
+}
+input[name="picw"], input[name="pich"], input[name="delno"] {
+	width: 3em;
+}
+input[name="pwd"] {
+	width: 6em;
+}
+input[type="submit"] {
+	background-color: $button;
+	border-color: $b_border $b_border_u $b_border_u $b_border;
+	color: $button_moji;
+}
+input[name="upfile"] {
+	width: 10em;
+}
+em.thispage {
+	font-style: normal;
+	font-weight: bold;
+}
+figure {
+	float: left;
+	padding-right: 8px;
+	background-color: $haikei;
+	margin-bottom: 1ex;
+	img {
+		max-width: 100%;
+	}
+}
+figcaption {
+	font-size: smaller;
+}
+ul {
+	font-size: smaller;
+	margin-left: 1.5em;
+}
+p.oya {
+	margin-top: 1em;
+}
+.sodane a {
+	font-weight: normal;
+	text-decoration: none;
+}
+
+.oyaname {
+	line-height: 1em;
+    border: solid 1px $button;
+    border-radius: 5px;
+	display: inline-block;
+    a {
+		text-decoration: none;
+        display: block;
+		padding: 5px;
+		color: inherit;
+    }
+}
+.oyaname:hover {
+    background-color: $ushiro;
+}
+
+h4#oya {
+	margin-top: 1ex;
+}
+
+.res {
+	border-top: dashed 1px $border;
+	margin-top: 1em;
+	section {
+		margin-top: 1em;
+		display: inline-block;
+		max-width: 100%;
+	}
+	h3 {
+		font-size: 100%;
+		margin-bottom: 0ex;
+	}
+	h4 {
+		font-size: 100%;
+		margin-bottom: 1ex;
+	}
+	figure {
+		float: none;
+	}
+}
+.limit {
+	margin-top: 1em;
+	background-color: $limit;
+}
+
+h5 {
+	font-weight: normal;
+}
+
+.resma {
+	color: $resmoji;
+}
+.thfoot {
+	clear: left;
+	text-align: right;
+}
+.button {
+	@extend button;
+	@extend input[type="submit"];
+	border-width: 1px;
+	border-style: solid;
+	padding-left: 1ex;
+	padding-right: 1ex;
+	display: inline-block;
+	a {
+		text-decoration: none;
+		color: $button_moji;
+		i {
+			color: $button_moji;
+		}
+	}
+}
+button {
+	@extend input[type="submit"];
+	border-style: solid;
+	padding: 2px;
+	background-color: $button;
+	color: $button_moji;
+}
+.oyat {
+	border-left: solid 1ex $border;
+	background-color: $th_bg;
+	padding: 0.2em;
+}
+.oekaki {
+	font-size: smaller;
+}
+#appstage {
+	display: block;
+	text-align: center;
+	> * {
+		display: inline-block;
+		vertical-align: middle;
+	}
+}
+.NEO {
+	.color_bk { color: $bk; }
+	.color_bk2 { color: $bk2; }
+	.color_tool_icon { color: $tool_icon; }
+	.color_icon { color: $icon; }
+	.color_iconselect { color: $iconselect; }
+	.color_text { color: $text; }
+	.color_bar { color: $bar; }
+	.tool_color_button { color: $tool_button; }
+	.tool_color_button2 { color: $tool_button2; }
+	.tool_color_text { color: $tool_text; }
+	.tool_color_bar { color: $tool_bar; }
+	.tool_color_frame { color: $tool_frame; }
+}
+.palette {
+	width: 180px;
+	fieldset {
+		text-align: center;
+	}
+}
+.c {
+	text-align: center;
+}
+
+.siihelp{
+	h2 {
+		@extend .oyat
+	}
+	dt {
+		font-weight: bold;
+	}
+} 
+
+#catalog {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	div {
+		width: $cat_img_size + 16px;
+		text-align: center;
+		overflow: hidden;
+	}
+	p {
+		margin: 0.5ex auto;
+	}
+	img {
+		width: $cat_img_size;
+	}
+}
+
+.delfo {
+	font-size: smaller;
+	th, td {
+		border: 1px solid $ushiro;
+	}
+}
+.ppost {
+	clear: left;
+}
+
+//以下レスポンシブ対応
+@media screen and (max-width: 1024px) {
+	.res {
+		clear: left;
+	}
+}
+@media screen and (max-width: 768px) {
+	header, .thread, footer {
+		width: 90%;
+	}
+	main {
+		display: block;
+	}
+	#paintmode {
+		main {
+			display: block;
+		}
+		footer {
+			text-align: right;
+		}
+	}
+}
+@media screen and (max-width: 450px) {
+	footer {
+		text-align: right;
+	}
+	figure {
+		float: none;
+	}
+	#appstage {
+		display: block;
+	}
+}
