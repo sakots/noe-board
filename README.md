@@ -14,6 +14,8 @@ POTI-board改で使用しているテンプレートエンジン「htmltemplate.
 [Skinny](http://skinny.sx68.net/)
 ↓  
 [smarty](https://www.smarty.net/)
+↓
+重いからTwigにしたい…（今後）
 
 見つけました！これにPOTI-boardを移植…  
 できねえ〜〜〜〜〜〜〜〜！！！！！！！！しるか〜〜〜〜〜〜〜〜！！！  
@@ -39,6 +41,12 @@ POTI-board改で使用しているテンプレートエンジン「htmltemplate.
 [このお絵かき掲示板はSQLiteを（以下略](https://dev.oekakibbs.net/bbs/noe/)
 
 ## 履歴
+
+### [2021/06/01] v0.35.0
+
+- 同梱のneoをv1.5.11に。
+- `config.php`のデフォルト値（テンプレートフォルダ名）変更。（thmeme_monoがmonoになってます）
+- monoの横幅をちょっと狭くした。
 
 ### [2021/01/01] v0.34.0
 
