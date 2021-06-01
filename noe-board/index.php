@@ -30,7 +30,7 @@ $smarty->assign('pdefw',PDEF_W);
 $smarty->assign('pdefh',PDEF_H);
 $smarty->assign('pmaxw',PMAX_W);
 $smarty->assign('pmaxh',PMAX_H);
-$smarty->assign('skindir',THEMEDIR);
+$smarty->assign('themedir',THEMEDIR);
 $smarty->assign('tver',TEMPLATE_VER);
 
 $smarty->assign('dispid',DISP_ID);
@@ -952,7 +952,7 @@ function paintform(){
 	$smarty->assign('message',$message);
 	$smarty->assign('pdefw',PDEF_W);
 	$smarty->assign('pdefh',PDEF_H);
-	$smarty->assign('skindir',THEMEDIR);
+	$smarty->assign('themedir',THEMEDIR);
 	$smarty->assign('tver',TEMPLATE_VER);
 
 	$picw = filter_input(INPUT_POST, 'picw',FILTER_VALIDATE_INT);
@@ -1094,7 +1094,7 @@ function openpch($pch,$sp="") {
 	$smarty->assign('message',$message);
 	$smarty->assign('pdefw',PDEF_W);
 	$smarty->assign('pdefh',PDEF_H);
-	$smarty->assign('skindir',THEMEDIR);
+	$smarty->assign('themedir',THEMEDIR);
 	$smarty->assign('tver',TEMPLATE_VER);
 
 	$smarty->assign('picw',$picw);
@@ -1123,7 +1123,7 @@ function paintcom(){
 	$smarty->assign('message',$message);
 	$smarty->assign('pdefw',PDEF_W);
 	$smarty->assign('pdefh',PDEF_H);
-	$smarty->assign('skindir',THEMEDIR);
+	$smarty->assign('themedir',THEMEDIR);
 	$smarty->assign('tver',TEMPLATE_VER);
 
 	$smarty->assign('parent',$_SERVER['REQUEST_TIME']);
@@ -1657,7 +1657,7 @@ function admin() {
 	$smarty->assign('message',$message);
 	$smarty->assign('pdefw',PDEF_W);
 	$smarty->assign('pdefh',PDEF_H);
-	$smarty->assign('skindir',THEMEDIR);
+	$smarty->assign('themedir',THEMEDIR);
 	$smarty->assign('tver',TEMPLATE_VER);
 
 	$smarty->assign('useanime',USE_ANIME);
