@@ -8,20 +8,27 @@
 	</head>
 	<body>
 		<header id="header">
-			<h1>{$btitle}</h1>
+			<h1><a href="{$self}">{$btitle}</a></h1>
+			<div>
+				<a href="{$home}" target="_top">[ホーム]</a>
+				<a href="{$self}?mode=admin_in">[管理モード]</a>
+			</div>
 			<hr>
 			<div>
 				<section>
 					<p class="top menu">
-						<a href="{$home}">[ホーム]</a>
+						<a href="{$self}">[トップ]</a>
+						<a href="{$self}?mode=catalog">[カタログ]</a>
 						<a href="{$self}">[通常モード]</a>
-						<a href="#footer">[↓]</i></a>
+						<a href="{$self}?mode=piccom">[投稿途中の絵]</a>
+						<a href="#footer">[↓]</a>
 					</p>
 				</section>
 				<section>
 					<p class="sysmsg">{$message}</p>
 				</section>
 			</div>
+			<hr>
 			<div>
 				<section class="epost">
 					<p>ADMIN MODE</p>

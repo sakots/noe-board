@@ -8,15 +8,17 @@
 	</head>
 	<body>
 		<header id="header">
-			<h1>{$btitle}</h1>
+			<h1><a href="{$self}">{$btitle}</a></h1>
+			<div>
+				<a href="{$home}" target="_top">[ホーム]</a>
+				<a href="{$self}?mode=admin_in">[管理モード]</a>
+			</div>
 			<hr>
 			<div>
 				<section>
 					<p class="top menu">
-						<a href="{$home}">[ホーム]</a>
 						<a href="{$self}">[通常モード]</a>
 						<a href="{$self}?mode=piccom">[投稿途中の絵]</a>
-						<a href="{$self}?mode=admin_in">[管理モード]</a>
 						<a href="#footer">[↓]</a>
 					</p>
 				</section>
@@ -24,12 +26,13 @@
 					<p class="sysmsg">{$message}</p>
 				</section>
 			</div>
+			<hr>
 			<div>
 				<section class="epost">
 					<form action="{$self}" method="post" enctype="multipart/form-data">
 						<p>
-							<label>幅：<input class="form" type="text" name="picw" value="{$pdefw}"></label>
-							<label>高さ：<input class="form" type="text" name="pich" value="{$pdefh}"></label>
+							<label>幅：<input class="form" type="number" min="{$pdefw}" name="picw" value="{$pdefw}"></label>
+							<label>高さ：<input class="form" type="number" min="{$pdefh}" name="pich" value="{$pdefh}"></label>
 							<input type="hidden" name="mode" value="paint">
 							<input class="button" type="submit" value="お絵かき">
 							{if $useanime == 1}<label><input type="checkbox" value="true" name="anime" title="動画記録"{if $defanime == 1} checked{/if}>アニメーション記録</label>{/if}

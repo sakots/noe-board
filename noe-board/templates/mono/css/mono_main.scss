@@ -36,7 +36,7 @@ a:active {
 a:hover {
 	color: $link_hover;
 }
-a i {
+a {
 	color: $moji;
 }
 hr {
@@ -60,6 +60,17 @@ header {
 	border-width: 1px;
 	border-style: solid;
 	border-color: $border;
+}
+h1 {
+	a {
+		text-decoration: none;
+		&:visited {
+			color: $moji;
+		}
+	}
+	+ div {
+		text-align: right;
+	}
 }
 main {
 	display: block;
@@ -102,9 +113,23 @@ input[type="submit"] {
 	background-color: $button;
 	border-color: $b_border $b_border_u $b_border_u $b_border;
 	color: $button_moji;
+	padding-left: 4px;
+	padding-right: 4px;
 }
 input[name="upfile"] {
 	width: 10em;
+}
+//スポンボタン（上下の矢印ボタン）を非表示にする
+input[type="number"] { 
+	-moz-appearance: textfield;
+	&::-webkit-outer-spin-button {
+		-webkit-appearance: none; 
+		margin: 0; 
+	}
+	&::-webkit-inner-spin-button {
+		-webkit-appearance: none; 
+		margin: 0; 
+	}
 }
 em.thispage {
 	font-style: normal;
@@ -184,34 +209,32 @@ h5 {
 }
 
 .resma {
+	display: block;
 	color: $resmoji;
+	background-color: $ushiro;
 }
 .thfoot {
 	clear: left;
 	text-align: right;
 }
+button {
+	@extend input[type="submit"];
+	border-style: solid;
+	padding-left: 4px;
+	padding-right: 4px;
+	background-color: $button;
+	color: $button_moji;
+}
 .button {
 	@extend button;
-	@extend input[type="submit"];
 	border-width: 1px;
 	border-style: solid;
-	padding-left: 1ex;
-	padding-right: 1ex;
+	padding: 2px 6px;
 	display: inline-block;
 	a {
 		text-decoration: none;
 		color: $button_moji;
-		i {
-			color: $button_moji;
-		}
 	}
-}
-button {
-	@extend input[type="submit"];
-	border-style: solid;
-	padding: 2px;
-	background-color: $button;
-	color: $button_moji;
 }
 .oyat {
 	border-left: solid 1ex $border;

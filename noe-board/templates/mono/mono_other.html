@@ -11,13 +11,16 @@
 	</head>
 	<body>
 		<header>
-			<h1>{$btitle}</h1>
+			<h1><a href="{$self}">{$btitle}</a></h1>
+			<div>
+				<a href="{$home}" target="_top">[ホーム]</a>
+				<a href="{$self}?mode=admin_in">[管理モード]</a>
+			</div>
 			<hr>
 			<section>
 				<p class="menu">
 					<a href="{$self}">[通常モード]</a>
-					<a href="{$home}" target="_top">[ホーム]</i></a>
-					</p>
+				</p>
 			</section>
 			<section>
 				<p class="sysmsg">{$message}</p>
