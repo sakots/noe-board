@@ -1,13 +1,17 @@
 <?php
 //----------------------------------------------------------------------
-// picpost.php lot.201220  by SakaQ >> http://www.punyu.net/php/
-// & sakots >> https://poti-k.info/
+// picpost.php lot.210517  by SakaQ >> http://www.punyu.net/php/
+// & POTI改 >> https://pbbs.sakura.ne.jp/poti/
 //
 // しぃからPOSTされたお絵かき画像をTEMPに保存
 //
 // このスクリプトはPaintBBS（藍珠CGI）のPNG保存ルーチンを参考に
 // PHP用に作成したものです。
 //----------------------------------------------------------------------
+// 2021/05/17 エラーが発生した時はお絵かき画面から移動せず、エラーの内容を表示する。
+// 2021/02/17 $badfileが未定義の時は拒絶画像の処理をしない。
+// 2021/01/30 picpost.systemlogの設定をpicpost.phpに移動。raw POST データ取得処理を整理。
+// 2021/01/01 エラーログのパーミッションもconfig.phpで設定できるようにした。
 // 2020/12/20 config.phpでパーミッションを設定できるようにした。
 // 2020/12/18 php8対応。画像から続きを描くと投稿できなくなる問題を修正。
 // 2020/11/16 lot.201110の投稿完了時間が記録されないバグを修正。
@@ -34,14 +38,37 @@
 //設定
 include(__DIR__.'/config.php');
 
-if(!defined('PERMISSION_FOR_LOG')){//config.phpで未定義なら0600
-	define('PERMISSION_FOR_LOG', 0600);
+$lang = ($http_langs = $_SERVER['HTTP_ACCEPT_LANGUAGE'])
+  ? explode( ',', $http_langs )[0] : 'ja';
+if($lang==="ja"){//ブラウザの言語が日本語の時
+	$errormsg_1 = "データの取得に失敗しました。時間を置いて再度投稿してみて下さい。";
+	$errormsg_2 = "規定容量オーバー。お絵かき画像は保存されません。";
+	$errormsg_3 = "画像ファイルの作成に失敗しました。時間を置いて再度投稿してみて下さい。";
+	$errormsg_4 = "規定サイズ違反を検出しました。お絵かき画像は保存されません。";
+	$errormsg_5 = "不正な画像を検出しました。お絵かき画像は保存されません。";
+	$errormsg_6 = "PCHファイルの作成に失敗しました。時間を置いて再度投稿してみて下さい。";
+	$errormsg_7 = "ユーザーデータの作成に失敗しました。時間を置いて再度投稿してみて下さい。";
+}else{//それ以外
+	$errormsg_1 = "Failed to get data. Please try posting again after a while.";
+	$errormsg_2 = "The size of the picture is too big. The drawing image is not saved.";
+	$errormsg_3 = "Failed to create the image file. Please try posting again after a while.";
+	$errormsg_4 = "The size of the picture too large.drawng image will not be saved.";
+	$errormsg_5 = "There was an illegal image. The drawng image is not saved.";
+	$errormsg_6 = "Failed to open PCH file. Please try posting again after a while.";
+	$errormsg_7 = "Failed to create user data. Please try posting again after a while.";
 }
 
-//タイムゾーン
-if(!defined('DEFAULT_TIMEZONE')){//config.phpで未定義ならAsia/Tokyo
-	define('DEFAULT_TIMEZONE','Asia/Tokyo');
-}
+/* ---------- picpost.php用設定 ---------- */
+// システムログファイル名
+$syslog = isset($syslog) ? $syslog : "picpost.systemlog";
+//システムログ保存件数
+$syslogmax = isset($syslogmax) ? $syslogmax :'100';
+
+defined('PERMISSION_FOR_LOG') or define('PERMISSION_FOR_LOG', 0600); //config.phpで未定義なら0600
+defined('PERMISSION_FOR_DEST') or define('PERMISSION_FOR_DEST', 0606); //config.phpで未定義なら0606
+
+//タイムゾーン config.phpで未定義ならAsia/Tokyo
+defined('DEFAULT_TIMEZONE') or define('DEFAULT_TIMEZONE','Asia/Tokyo');
 date_default_timezone_set(DEFAULT_TIMEZONE);
 
 //容量違反チェックをする する:1 しない:0
@@ -61,9 +88,9 @@ function error($error){
 	$now = date("y/m/d",$time)."(".(string)$yd.")".date("H:i",$time);
 	if(!is_file($syslog)){//$syslogがなければ作成
 		file_put_contents($syslog,"\n", LOCK_EX);
-		chmod($syslog,0606);
+		chmod($syslog,PERMISSION_FOR_DEST);
 	}
-	$ep = fopen($syslog , "r+") or die($syslog."が開けません");
+	$ep = fopen($syslog , "r+");
 	flock($ep, LOCK_EX);
 	rewind($ep);
 	$key=0;
@@ -95,16 +122,12 @@ $u_host = gethostbyaddr($u_ip);
 $u_agent = getenv("HTTP_USER_AGENT");
 $u_agent = str_replace("\t", "", $u_agent);
 
+header('Content-type: text/plain');
 //raw POST データ取得
 $buffer = file_get_contents('php://input');
 if(!$buffer){
-	$stdin = @fopen("php://input", "rb");
-	$buffer = @fread($stdin, $_ENV['CONTENT_LENGTH']);
-	@fclose($stdin);
-}
-if(!$buffer){
 	error("データの取得に失敗しました。お絵かき画像は保存されません。");
-	exit;
+	die("error\n{$errormsg_1}");
 }
 
 // 拡張ヘッダー長さを獲得
@@ -114,7 +137,7 @@ $imgLength = substr($buffer, 1 + 8 + $headerLength, 8);
 // 投稿容量制限を超えていたら保存しない
 if(SIZE_CHECK && ($imgLength > PICPOST_MAX_KB * 1024)){
 	error("規定容量オーバー。お絵かき画像は保存されません。");
-	exit;
+	die("error\n{$errormsg_2}");
 }
 // 画像イメージを取り出す
 $imgdata = substr($buffer, 1 + 8 + $headerLength + 8 + 2, $imgLength);
@@ -134,8 +157,8 @@ if(is_file($full_imgfile)){
 // 画像データをファイルに書き込む
 $fp = fopen($full_imgfile,"wb");
 if(!$fp){
-	error("画像ファイルのオープンに失敗しました。お絵かき画像は保存されません。");
-	exit;
+	error("画像ファイルの作成に失敗しました。お絵かき画像は保存されません。");
+	die("error\n{$errormsg_3}");
 }else{
 	flock($fp, LOCK_EX);
 	fwrite($fp, $imgdata);
@@ -149,14 +172,16 @@ if(!$fp){
 	if($size[0] > PMAX_W || $size[1] > PMAX_H){
 		unlink($full_imgfile);
 		error("規定サイズ違反を検出しました。画像は保存されません。");
-		exit;
+		die("error\n{$errormsg_4}");
 	}
 	$chk = md5_file($full_imgfile);
-	foreach($badfile as $value){
-		if(preg_match("/^$value/",$chk)){
-			unlink($full_imgfile);
-			error("拒絶画像を検出しました。画像は保存されません。");
-			exit;
+	if(isset($badfile)&&is_array($badfile)){
+		foreach($badfile as $value){
+			if(preg_match("/^$value/",$chk)){
+				unlink($full_imgfile);
+				error("不正な画像を検出しました。画像は保存されません。");
+				die("error\n{$errormsg_5}");
+			}
 		}
 	}
 // }
@@ -193,8 +218,8 @@ if($pchLength){
 	// PCHデータをファイルに書き込む
 	$fp = fopen(TEMP_DIR.$imgfile.$ext,"wb");
 	if(!$fp){
-		error("PCHファイルのオープンに失敗しました。PCHは保存されません。");
-		exit;
+		error("PCHファイルの作成に失敗しました。PCHは保存されません。");
+		die("error\n{$errormsg_6}");
 	}else{
 		flock($fp, LOCK_EX);
 		fwrite($fp, $PCHdata);
@@ -229,8 +254,8 @@ if(is_file(TEMP_DIR.$imgfile.".dat")){
 // 情報データをファイルに書き込む
 $fp = fopen(TEMP_DIR.$imgfile.".dat","w");
 if(!$fp){
-	error("情報ファイルのオープンに失敗しました。投稿者情報は記録されません。");
-	exit;
+	error("情報ファイルの作成に失敗しました。投稿者情報は記録されません。");
+	die("error\n{$errormsg_7}");
 }else{
 	flock($fp, LOCK_EX);
 	fwrite($fp, $userdata);
